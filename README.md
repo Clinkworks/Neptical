@@ -1,4 +1,14 @@
 Neptical
 ========
+A robust test framework designed to create lightweight easy to read tests
 
-Less setup, more test.
+Current features include:
+
+Injection of @Before annotations
+
+@Named annotation support for test methods
+
+Guice specific configurations offered by the @GuiceConfig annotation
+
+see GuiceJUnit4RunnerIntegrationTest.class for examples.
+(https://github.com/AnthonyClink/Neptical/blob/master/src/test/java/com/clinkworks/neptical/junit/runners/GuiceJUnit4IntegrationTest.java)
