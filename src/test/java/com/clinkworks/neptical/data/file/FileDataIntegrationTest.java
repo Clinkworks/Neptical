@@ -1,23 +1,55 @@
 package com.clinkworks.neptical.data.file;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.clinkworks.neptical.data.Data;
 
 public class FileDataIntegrationTest {
 
+	private Data root;
+	
+	@Before
+	public void setup(){
+    	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
+        File file = new File(resourceName);
+
+        root = new FileData("", "", null, null, file);
+
+	}
+	
     @Test
     public void ensureFileDataCanLoadResourcesDirectory() {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource("data/").getFile());
 
-        FileData fileData = new FileData("", "", null, null, file);
-
-        Data data = fileData.find("users");
+        Data data = root.find("users");
 
         assertNotNull(data);
     }
+    
+    @Test
+    public void ensureFileDataCanLoadNestedResources(){
+
+        Data accounts = root.find("users.accounts");
+        Data addresses = root.find("contacts.addresses");
+        assertNotNull(accounts);
+        assertNotNull(addresses);
+    }
+    
+    @Test
+    public void ensureFileDataCanReferenceExternalPaths(){
+    	Data email = root.find("users.random-account.account.email");
+    	assertEquals("{{random-email}}", email.getAsString());
+    }
+    
+    @Test
+    public void canTraverseNodes(){
+    	Data account = root.find("users.random-account.account");
+    	assertEquals(root, account.root().root().root().root());
+    }
+    
 }

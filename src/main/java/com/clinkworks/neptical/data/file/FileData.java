@@ -1,9 +1,14 @@
 package com.clinkworks.neptical.data.file;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.clinkworks.neptical.data.Data;
+import com.clinkworks.neptical.data.DataRegistry;
+import com.google.common.collect.Sets;
+
 import static com.clinkworks.neptical.util.PathUtil.*;
 
 final public class FileData extends Data{
@@ -11,7 +16,7 @@ final public class FileData extends Data{
 	private final File data;
 	
 	public FileData(String segment, String path, Data head, Data parent, File file) {
-		super(segment, path, parent, head, file);
+		super(segment, path, head, parent, file);
 		data = file;
 	}
 
@@ -24,41 +29,113 @@ final public class FileData extends Data{
 		
 		String remainingSegment = subtractSegment(getPath(), path);
 		String nextSegment = firstSegment(remainingSegment);
-		
+
 		if(isLoaded()){
-			return getNext().find(remainingSegment);
-		}else{
-			return loadFile(nextSegment, remainingSegment);
+			return next().find(remainingSegment);
 		}
 		
+		Data data = loadFile(nextSegment);
+		
+		if(StringUtils.isBlank(nextSegment)){
+			return data;
+		}
+		
+		if(StringUtils.equals(remainingSegment, nextSegment)){
+			return data;
+		}
+		
+		return data.find(remainingSegment);
 	}
+		
 	
-	private Data loadFile(String nextSegment, String remainingSegment) {
-		return null;
+	private Data loadFile(String nextSegment) {
+		File file = getAsFile();
+		if(isDirectory()){
+			setNext(new Directory(nextSegment, getPath(), this, this, file));
+		}
+		if(isFile()){
+			setNext(DataRegistry.loadData(nextSegment, getPath(), this, file));
+		}
+		
+		return next();
 	}
 
 	public boolean isFile(){
-		return data.isFile();
+		return getAsFile().isFile();
 	}
 	
 	public boolean isDirectory(){
-		return data.isDirectory();
+		return getAsFile().isDirectory();
 	}
 	
-	public boolean isLoaded(){
-		return (isDirectory() || !(get() instanceof File));
+	public File getAsFile(){
+		return data;
+	}
+	
+	private boolean isLoaded(){
+		return next() != null;
 	}
 
-	@Override
-	public <T> T get(Class<T> type) {
-		// TODO Auto-generated method stub
-		return null;
+	private static final class Directory extends Data{
+		
+		private final Set<Data> linkedNodes;
+		
+		public Directory(String segment, String path, Data head, Data parent, File data) {
+			super(segment, path, head, parent, data);
+			linkedNodes = Sets.newConcurrentHashSet();
+			loadDirectory(data);
+		}
+		
+		@Override
+		public Data find(String path) {
+			if(getPath().equals(path)){
+				return this;
+			}
+			
+			String remainingSegment = subtractSegment(getPath(), path);
+			String nextSegment = firstSegment(remainingSegment);
+			String withPossibleExtension = nextSegment + DOT +  firstSegment(nextSegment);
+			
+			
+			for(Data data : linkedNodes){
+				if(StringUtils.equals(nextSegment, data.getSegment())){
+					return data.find(remainingSegment);
+				}
+				if(StringUtils.equals(withPossibleExtension, data.getPath())){
+					return data;
+				}
+			}
+			
+			return null;
+		}
+		
+		@Override
+		public File getAsFile(){
+			return (File)get();
+		}
+		
+		public File[] getFileList(){
+			return getAsFile().listFiles();
+		}
+		
+		private void loadDirectory(File data) {
+			for(File file : getFileList()){
+				
+				String fileName = file.getName();
+				String segment = fileName;
+				
+				if(file.isFile()){
+					if(segment.indexOf(DOT) > -1){
+						segment = chompLastSegment(fileName);
+					}
+				}
+				
+				String path = clean(getPath() + DOT + segment);
+				
+				Data dataInDiectory = new FileData(segment, path, root(), this, file);
+				
+				linkedNodes.add(dataInDiectory);
+			}
+		}
 	}
-
-	@Override
-	public <T> List<T> getList(Class<T> type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

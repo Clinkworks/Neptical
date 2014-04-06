@@ -1,14 +1,11 @@
 package com.clinkworks.neptical.data;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
 
 import com.clinkworks.neptical.data.file.FileData;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 
 /**
@@ -83,76 +80,44 @@ import com.google.gson.JsonElement;
  * 
  * 
  */
-public abstract class Data implements Iterable<Data> {
+public abstract class Data{
 
     public static final String DOT = ".";
 
-    public @interface DataProperty {
-    }
+    public @interface DataProperty {}
 
     public abstract Data find(String path);
 
-    public abstract <T> T get(Class<T> type);
-
-    public abstract <T> List<T> getList(Class<T> type);
-
-    private static final Set<String> LOADED_PATHS;
-    static {
-        LOADED_PATHS = Sets.newConcurrentHashSet();
-    }
-
     private final String path;
     private final String segment;
-    private final Data head;
+    private final Data root;
     private final Data parent;
     private Data next;
-    private final Set<Data> children;
     private Object data;
 
-    public Data(String segment, String path, Data head, Data parent, Object data) {
+    public Data(String segment, String path, Data root, Data parent, Object data) {
         this.path = path;
         this.data = data;
         this.segment = segment;
         this.parent = parent;
-        this.head = head;
-        if (head == null) {
-            head = this;
+        this.root = root;
+        if (root == null) {
+            root = this;
         }
-        children = Sets.newConcurrentHashSet();
     }
 
-    public Object get() {
+    public final Object get() {
         return data;
     }
 
-    final protected Data getHead() {
-        return head;
+    public <T> T get(Class<T> type){
+    	throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
-    final protected Data getNext() {
-        return next;
+    public <T> List<T> getList(Class<T> type){
+    	throw new UnsupportedOperationException(getClass().getSimpleName());
     }
-
-    final protected String getSegment() {
-        return segment;
-    }
-
-    final protected String getPath() {
-        return path;
-    }
-
-    final protected void addChild(Data child) {
-        children.add(child);
-    }
-
-    final protected void removeChild(Data child) {
-        children.remove(child);
-    }
-
-    final protected Set<Data> getChildren() {
-        return children;
-    }
-
+    
     public JsonElement getAsJsonElement() {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
@@ -161,6 +126,10 @@ public abstract class Data implements Iterable<Data> {
         return this instanceof FileData;
     }
 
+    public File getAsFile(){
+    	throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+    
     public boolean isPrimitive() {
         return false;
     }
@@ -212,64 +181,33 @@ public abstract class Data implements Iterable<Data> {
     public short getAsShort() {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
-
-    public DataIterator dataIterator() {
-        return new DataIterator();
+    
+    public final Data root() {
+        return root;
     }
 
+    public final Data next() {
+        return next;
+    }
+    
+    public final Data parent(){
+    	return parent;
+    }
+    
+    public final String getSegment() {
+        return segment;
+    }
+
+    public final String getPath() {
+        return path;
+    }
+    
+    final protected void setNext(Data next){
+    	this.next = next;
+    }
+    
     @Override
-    public Iterator<Data> iterator() {
-        return new DataIterator();
-    }
-
-    public class DataIterator implements ListIterator<Data> {
-
-        @Override
-        public boolean hasNext() {
-            return getNext() != null;
-        }
-
-        @Override
-        public Data next() {
-            return next;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Will support soon.. I promise");
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return parent != null;
-        }
-
-        @Override
-        public Data previous() {
-            return parent;
-        }
-
-        @Override
-        public int nextIndex() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int previousIndex() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void set(Data replacementNode) {
-            data = replacementNode.get();
-            getChildren().clear();
-            getChildren().addAll(replacementNode.getChildren());
-        }
-
-        @Override
-        public void add(Data data) {
-            getChildren().add(data);
-        }
-    }
-
+	public String toString(){
+		return getPath();
+	}
 }

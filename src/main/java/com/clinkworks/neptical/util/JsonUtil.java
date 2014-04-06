@@ -1,4 +1,4 @@
-package com.clinkworks.neptical.data.loaders.json;
+package com.clinkworks.neptical.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,7 +36,7 @@ public class JsonUtil {
 		return PARSER.parse(json);
 	}
 	
-	 static final JsonElement parse(File file){
+	 public static final JsonElement parse(File file){
 		try {
 			return parse(new BufferedReader(new FileReader(file)));
 		} catch (FileNotFoundException e) {
