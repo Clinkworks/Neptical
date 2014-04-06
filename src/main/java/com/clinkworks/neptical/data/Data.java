@@ -3,7 +3,6 @@ package com.clinkworks.neptical.data;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.List;
 
 import com.clinkworks.neptical.data.file.FileData;

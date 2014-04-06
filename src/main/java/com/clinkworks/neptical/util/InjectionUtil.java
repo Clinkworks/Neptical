@@ -13,7 +13,9 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
+import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
+import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.TestDataModule;
 import com.google.common.collect.Lists;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.ConfigurationException;
@@ -149,6 +151,8 @@ public class InjectionUtil {
 		for(Class<? extends Module> module : modules){
 			moduleList.add(createModule(module));
 		}
+		
+		moduleList.add(new GuiceJUnit4Runner.TestDataModule());
 		
 		Module[] retval = new Module[moduleList.size()];
 		

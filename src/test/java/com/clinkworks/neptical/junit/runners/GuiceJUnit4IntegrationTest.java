@@ -5,11 +5,14 @@ import static org.junit.Assert.*;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.clinkworks.neptical.util.Common.noOp;
 
+import com.clinkworks.neptical.DataLoader.TestData;
+import com.clinkworks.neptical.data.Data;
 import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
 import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BindingAnnotationForIntegerConfig;
 import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BoundIntegerModule;
@@ -24,6 +27,9 @@ import com.google.inject.name.Named;
 public class GuiceJUnit4IntegrationTest {
 	
 	boolean beforeMethodWasCalled = false;
+	
+	@TestData("users.random-account.account")
+	private Data testData;
 	
 	@Before
 	public void before(String stringBeforeInjection){
@@ -42,7 +48,6 @@ public class GuiceJUnit4IntegrationTest {
 		noOp();
 	}
 	
-	
 	@BindingAnnotationForIntegerConfig
 	@Inject
 	private Integer leetInteger;
@@ -58,15 +63,21 @@ public class GuiceJUnit4IntegrationTest {
 	}
 	
 	@Test
-	public void integrationTestExpectingTestLevelInjectionToSucceed(@BindingAnnotationForIntegerConfig Integer boundInteger){
-		assertNotNull(boundInteger);
-		assertEquals(GuiceJUnitTestModules.LEET_INTEGER, boundInteger);
+	public void integrationTestExpectingTestContextToInjectProperTestData(){
+		assertEquals("{{random-email}}", testData.find("email").getAsString());
 	}
 	
 	@Test
-	public void asdf(){
-		String data = Thread.currentThread().getContextClassLoader().getResource("data/").getFile();
-		System.out.println(data);
+	@Ignore
+	@TestData("contacts.addresses.genericAddress")
+	public void integrationTestExpectingTestContextToInjectProperTestDataInLaterContext(){
+		assertEquals("1234 my place drive", testData.find("AddressLine1"));
+	}
+	
+	@Test
+	public void integrationTestExpectingTestLevelInjectionToSucceed(@BindingAnnotationForIntegerConfig Integer boundInteger){
+		assertNotNull(boundInteger);
+		assertEquals(GuiceJUnitTestModules.LEET_INTEGER, boundInteger);
 	}
 	
 	@Test

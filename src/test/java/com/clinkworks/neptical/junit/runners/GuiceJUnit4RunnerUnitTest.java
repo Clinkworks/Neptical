@@ -58,7 +58,7 @@ public class GuiceJUnit4RunnerUnitTest {
             fail("Guice Junit Runner MUST be able to pass dependencies to test methods, JUnit disallows");
         }
     }
-
+ 
     @Test
     public void canRetrieveContextLevelConfiguration() throws InitializationError {
         GuiceJUnit4Runner runner = new GuiceJUnit4Runner(MockTestWithClassLevelGuiceConfig.class);
@@ -153,6 +153,7 @@ public class GuiceJUnit4RunnerUnitTest {
 
         assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
     }
+
 
     @Test
     public void reverseTest() {
@@ -273,7 +274,7 @@ public class GuiceJUnit4RunnerUnitTest {
             assertNull(nullInteger);
         }
     }
-
+    
     @GuiceConfig(MockTestModuleOne.class)
     public static class MockTestWithClassLevelGuiceConfig {
         @Test

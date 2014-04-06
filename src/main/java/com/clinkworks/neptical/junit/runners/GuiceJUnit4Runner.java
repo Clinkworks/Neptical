@@ -1,10 +1,12 @@
 package com.clinkworks.neptical.junit.runners;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,11 +22,20 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
+import com.clinkworks.neptical.DataLoader.TestData;
+import com.clinkworks.neptical.data.Data;
+import com.clinkworks.neptical.data.file.FileData;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;
 import com.clinkworks.neptical.util.InjectionUtil;
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.MembersInjector;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 
 public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
 	private static final Logger LOGGER = Logger.getLogger(GuiceJUnit4Runner.class);
@@ -33,6 +44,58 @@ public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
     @Retention(RetentionPolicy.RUNTIME)
     public @interface GuiceConfig {
         Class<? extends Module>[] value();
+    }
+    
+    private static final Data TEST_DATA;
+    static{
+    	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
+        File dataRoot = new File(resourceName);
+        TEST_DATA = new FileData("", "", null, null, dataRoot);
+    }
+    
+    public static class TestDataInjector<T> implements MembersInjector<T>{
+
+    	private final Field field;
+    	private final TestData anno;
+    	public TestDataInjector(Field field, TestData anno){
+    		this.field = field;
+    		this.anno = anno;
+    	}
+    	
+		@Override
+		public void injectMembers(T instance) {
+			field.setAccessible(true);
+			Data dataToInject = TEST_DATA.find(anno.value());
+			try {
+				field.set(instance, dataToInject);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} 
+		}
+    	
+    }
+    
+    public static class TestDataListener implements TypeListener{
+
+		@Override
+		public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+			for (Field field : type.getRawType().getDeclaredFields()) {
+		        if (Data.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(TestData.class)) {
+		          encounter.register(new TestDataInjector<I>(field, field.getAnnotation(TestData.class)));
+		        }
+		      }
+			
+		}
+		
+    }
+    
+    public static class TestDataModule extends AbstractModule{
+
+		@Override
+		protected void configure() {
+			bindListener(Matchers.any(), new TestDataListener());
+		}
+    	
     }
     
     public GuiceJUnit4Runner(Class<?> klass) throws InitializationError {
