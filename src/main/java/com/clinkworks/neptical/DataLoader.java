@@ -8,7 +8,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.List;
 import java.util.Map;
 
 import com.clinkworks.neptical.data.Data;

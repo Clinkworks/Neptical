@@ -1,7 +1,6 @@
 package com.clinkworks.neptical.data.file;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 

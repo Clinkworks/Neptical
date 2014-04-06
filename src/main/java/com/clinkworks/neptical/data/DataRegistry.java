@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.clinkworks.neptical.DataLoader;
 import com.clinkworks.neptical.data.file.FileData;
-import com.clinkworks.neptical.data.loaders.json.JsonData;
 import com.clinkworks.neptical.data.loaders.json.JsonDataLoader;
 import com.clinkworks.neptical.util.PathUtil;
 import com.google.common.collect.Maps;
@@ -19,10 +18,9 @@ public class DataRegistry {
 	}
 	
 	public static final Data loadData(String segment, String path, Data parent, File file){
-		Data data = null;
 		
 		if(file.isDirectory()){
-			return data = new FileData("", "", parent, parent, file);
+			return new FileData("", "", parent, parent, file);
 		}
 		
 		String extension = PathUtil.lastSegment(file.getName()).toLowerCase();

@@ -72,7 +72,6 @@ public class PathUtil {
     public static String getIndexAsString(String segment){
     	Matcher matcher = ARRAY_SYNTAX_PATTERN.matcher(segment);
     	matcher.find();
-    	String match = matcher.group(0);
     	return matcher.group(0);
     }
     
