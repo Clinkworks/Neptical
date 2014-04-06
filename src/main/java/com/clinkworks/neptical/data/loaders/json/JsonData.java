@@ -31,13 +31,14 @@ public class JsonData extends Data{
 	
 	@Override
 	public Data find(String startingPath) {
+		
 		String path = startingPath;
+		
 		if(getPath().equals(path)){
 			return this;
 		}
 		
-		if(isPrimitive() && StringUtils.isBlank(path)){
-			//ill explain this later... its probably going to be refactored
+		if(StringUtils.isBlank(path)){
 			return this;
 		}
 		
@@ -49,10 +50,6 @@ public class JsonData extends Data{
 		}
 		
 		Data data = loadJson(nextSegment);
-		
-		if(StringUtils.isBlank(nextSegment)){
-			return data;
-		}
 		
 		Data returnedData = data.find(remainingSegment);
 		

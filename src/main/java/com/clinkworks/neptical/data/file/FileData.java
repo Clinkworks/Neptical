@@ -30,6 +30,12 @@ final public class FileData extends Data{
 		String remainingSegment = subtractSegment(getPath(), path);
 		String nextSegment = firstSegment(remainingSegment);
 
+		if(StringUtils.equals(getExtension(), nextSegment)){
+
+			remainingSegment = chompFirstSegment(remainingSegment);
+
+		}
+		
 		if(isLoaded()){
 			return next().find(remainingSegment);
 		}
@@ -75,6 +81,11 @@ final public class FileData extends Data{
 	private boolean isLoaded(){
 		return next() != null;
 	}
+	
+	@Override
+	public String getExtension(){
+		return lastSegment(getAsFile().getName());
+	}
 
 	private static final class Directory extends Data{
 		
@@ -93,16 +104,11 @@ final public class FileData extends Data{
 			}
 			
 			String remainingSegment = subtractSegment(getPath(), path);
-			String nextSegment = firstSegment(remainingSegment);
-			String withPossibleExtension = nextSegment + DOT +  firstSegment(nextSegment);
-			
+			String nextSegment = firstSegment(remainingSegment);			
 			
 			for(Data data : linkedNodes){
 				if(StringUtils.equals(nextSegment, data.getSegment())){
 					return data.find(remainingSegment);
-				}
-				if(StringUtils.equals(withPossibleExtension, data.getPath())){
-					return data;
 				}
 			}
 			

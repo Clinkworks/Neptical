@@ -3,6 +3,7 @@ package com.clinkworks.neptical.data;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.List;
 
 import com.clinkworks.neptical.data.file.FileData;
@@ -95,7 +96,7 @@ public abstract class Data{
     private Data next;
     private Object data;
 
-    public Data(String segment, String path, Data root, Data parent, Object data) {
+    protected Data(String segment, String path, Data root, Data parent, Object data) {
         this.path = path;
         this.data = data;
         this.segment = segment;
@@ -134,6 +135,10 @@ public abstract class Data{
         return false;
     }
 
+    public String getExtension(){
+    	throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+    
     public boolean getAsBoolean() {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }

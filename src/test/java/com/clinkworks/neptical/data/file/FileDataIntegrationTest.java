@@ -51,4 +51,11 @@ public class FileDataIntegrationTest {
     	assertEquals(root, account.root().root().root().root());
     }
     
+    @Test
+    public void canUtilizeFileExtensions(){
+    	Data withExtension = root.find("users.json.random-account.account");
+    	Data without = root.find("users.random-account.account");
+    	assertSame(withExtension, without);
+    }
+    
 }

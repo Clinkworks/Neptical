@@ -39,6 +39,12 @@ public class PathUtil {
         return index > -1 ? segment.substring(index + 1, segment.length()) : "";
     }
 
+    public static String chompFirstSegment(String path){
+    	String firstSegment = firstSegment(path);
+    	path = path.substring(firstSegment.length());
+    	return clean(path);
+    }
+    
     public static String chompLastSegment(String path){
     	String lastSegment = lastSegment(path);
     	path = path.substring(0, path.length() - lastSegment.length());
