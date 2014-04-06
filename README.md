@@ -11,4 +11,4 @@ Injection of @Before annotations
 Guice specific configurations offered by the @GuiceConfig annotation
 
 see GuiceJUnit4RunnerIntegrationTest.class for examples.
-(https://github.com/AnthonyClink/Neptical/blob/master/src/test/java/com/clinkworks/neptical/junit/runners/GuiceJUnit4IntegrationTest.java)
+(https://github.com/Clinkworks/Neptical/blob/master/src/test/java/com/clinkworks/neptical/junit/runners/GuiceJUnit4IntegrationTest.java)
