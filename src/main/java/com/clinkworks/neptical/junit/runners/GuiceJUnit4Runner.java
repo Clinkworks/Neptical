@@ -27,6 +27,7 @@ import com.clinkworks.neptical.DataLoader.TestData;
 import com.clinkworks.neptical.data.file.FileData;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;
+import com.clinkworks.neptical.modules.DataModule;
 import com.clinkworks.neptical.util.InjectionUtil;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -46,13 +47,6 @@ public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
         Class<? extends Module>[] value();
     }
     
-    private static final Data TEST_DATA;
-    static{
-    	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
-        File dataRoot = new File(resourceName);
-        TEST_DATA = new FileData("", "", null, null, dataRoot);
-    }
-    
     public static class TestDataInjector<T> implements MembersInjector<T>{
 
     	private final Field field;
@@ -65,7 +59,7 @@ public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
 		@Override
 		public void injectMembers(T instance) {
 			field.setAccessible(true);
-			Data dataToInject = TEST_DATA.find(anno.value());
+			Data dataToInject = DataModule.SYSTEM_DATA.find(anno.value());
 			try {
 				field.set(instance, dataToInject);
 			} catch (Exception e) {

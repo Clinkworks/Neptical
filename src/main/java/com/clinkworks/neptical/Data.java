@@ -134,6 +134,11 @@ public abstract class Data{
         return false;
     }
 
+
+	public Data copyDeep() {
+		throw new UnsupportedOperationException(getClass().getSimpleName());
+	}
+    
     public String getExtension(){
     	throw new UnsupportedOperationException(getClass().getSimpleName());
     }
@@ -214,4 +219,6 @@ public abstract class Data{
 	public String toString(){
 		return getPath();
 	}
+
+    
 }

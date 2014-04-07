@@ -30,7 +30,7 @@ final public class FileData extends Data{
 		String remainingSegment = subtractSegment(getPath(), path);
 		String nextSegment = firstSegment(remainingSegment);
 
-		if(StringUtils.equals(getExtension(), nextSegment)){
+		if(StringUtils.equalsIgnoreCase(getExtension(), nextSegment)){
 
 			remainingSegment = chompFirstSegment(remainingSegment);
 
@@ -46,14 +46,34 @@ final public class FileData extends Data{
 			return data;
 		}
 		
-		if(StringUtils.equals(remainingSegment, nextSegment)){
-			return data;
+		boolean atEndOfPath = StringUtils.equalsIgnoreCase(remainingSegment, nextSegment);
+
+		if(atEndOfPath){
+			return foundData(nextSegment);
 		}
 		
 		return data.find(remainingSegment);
-	}
-		
+	}	
+
 	
+	
+	private Data foundData(String nextSegment) {
+		boolean matchesNextNodeSegment = StringUtils.equalsIgnoreCase(nextSegment, next().getSegment());
+		boolean matchesThisFilesSegment = StringUtils.equalsIgnoreCase(nextSegment, getSegment());
+		boolean nextNodeIsADirectory = isDirectory();
+		
+		
+		if(matchesThisFilesSegment && matchesNextNodeSegment){
+			return next();
+		}
+		
+		if(nextNodeIsADirectory){
+			return next().find(nextSegment);
+		}
+		
+		return next();
+	}
+
 	private Data loadFile(String nextSegment) {
 		File file = getAsFile();
 		if(isDirectory()){
@@ -66,6 +86,17 @@ final public class FileData extends Data{
 		return next();
 	}
 
+	@Override
+	public Data copyDeep(){
+		FileData fileData = new FileData(getSegment(), getPath(), root(), parent(), getAsFile());
+		Data next = next();
+		if(next == null){
+			return fileData;
+		}else{
+			return next.copyDeep();
+		}
+	}
+	
 	public boolean isFile(){
 		return getAsFile().isFile();
 	}
@@ -107,7 +138,7 @@ final public class FileData extends Data{
 			String nextSegment = firstSegment(remainingSegment);			
 			
 			for(Data data : linkedNodes){
-				if(StringUtils.equals(nextSegment, data.getSegment())){
+				if(StringUtils.equalsIgnoreCase(nextSegment, data.getSegment())){
 					return data.find(remainingSegment);
 				}
 			}

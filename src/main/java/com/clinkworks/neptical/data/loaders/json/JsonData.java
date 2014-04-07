@@ -65,6 +65,16 @@ public class JsonData extends Data{
 	}
 	
 	@Override
+	public Data copyDeep(){
+		JsonElement json = getAsJsonElement();
+		
+		JsonElement clone = JsonUtil.toObject(JsonElement.class, json);
+		
+		Data data = new JsonData(getSegment(), getPath(), root(), parent(), clone);
+		return data;
+	}
+	
+	@Override
 	public boolean isPrimitive(){
 		return getAsJsonElement().isJsonPrimitive();
 	}

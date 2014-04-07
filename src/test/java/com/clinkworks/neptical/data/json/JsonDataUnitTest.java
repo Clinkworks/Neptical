@@ -26,6 +26,24 @@ public class JsonDataUnitTest {
 	}
 	
 	@Test
+	public void canCloneJsonNodes(){
+		
+		JsonElement jsonElement = JsonUtil.parse(ACCOUNTS_JSON);
+		jsonData = new JsonData("", "", null, null, jsonElement);
+		
+		Data randomAccount = jsonData.find("accounts.random-account");
+		Data searchedAgain = jsonData.find("accounts.random-account");
+		
+		assertSame(randomAccount, searchedAgain);
+		
+		searchedAgain = searchedAgain.copyDeep();
+		
+		assertNotSame(randomAccount, searchedAgain);
+		
+	}
+	
+	
+	@Test
 	public void canProperlySearchThroughArrays(){
 		JsonElement jsonElement = JsonUtil.parse(ARRAY_JSON);
 		jsonData = new JsonData("", "", null, null, jsonElement);

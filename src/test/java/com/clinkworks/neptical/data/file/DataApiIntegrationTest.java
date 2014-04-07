@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.clinkworks.neptical.Data;
 
-public class FileDataIntegrationTest {
+public class DataApiIntegrationTest {
 
 	private Data root;
 	
@@ -43,6 +43,22 @@ public class FileDataIntegrationTest {
     public void ensureFileDataCanReferenceExternalPaths(){
     	Data email = root.find("users.random-account.account.email");
     	assertEquals("{{random-email}}", email.getAsString());
+    }
+    
+    @Test
+    public void canCopy(){
+    	Data account = root.find("users.random-account.account");
+    	Data foundAgain = root.find("users.random-account.account");
+    	assertSame(account, foundAgain);
+    	Data cloned = foundAgain.copyDeep();
+    	assertNotSame(cloned, foundAgain);
+    }
+    
+    @Test
+    public void canCloneFiles(){
+    	Data file = root.find("users");
+    	assertSame(file, root.find("users"));
+    	assertNotSame(file, root.find("users").copyDeep());
     }
     
     @Test
