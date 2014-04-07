@@ -3,7 +3,7 @@ package com.clinkworks.neptical.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import static com.clinkworks.neptical.util.InjectionUtil.*;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.*;
 
 import org.junit.Before;
 import org.junit.Test;

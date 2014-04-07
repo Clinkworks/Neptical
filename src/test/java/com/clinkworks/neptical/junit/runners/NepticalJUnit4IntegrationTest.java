@@ -13,18 +13,18 @@ import static com.clinkworks.neptical.util.Common.noOp;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataLoader.TestData;
-import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BindingAnnotationForIntegerConfig;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BoundIntegerModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.IntegerModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.NamedModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.StringModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BindingAnnotationForIntegerConfig;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BoundIntegerModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.IntegerModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.NamedModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.StringModule;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-@RunWith(GuiceJUnit4Runner.class)
-@GuiceConfig({StringModule.class, NamedModule.class, BoundIntegerModule.class})
-public class GuiceJUnit4IntegrationTest {
+@RunWith(NepticalJUnit4Runner.class)
+@NepticalConfiguration({StringModule.class, NamedModule.class, BoundIntegerModule.class})
+public class NepticalJUnit4IntegrationTest {
 	
 	boolean beforeMethodWasCalled = false;
 	
@@ -34,13 +34,13 @@ public class GuiceJUnit4IntegrationTest {
 	@Before
 	public void before(String stringBeforeInjection){
 		beforeMethodWasCalled = true;
-		assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, stringBeforeInjection);
+		assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, stringBeforeInjection);
 	}
 	
 	@After
 	public void afterMethodCalled(String stringBeforeInjection){
 		beforeMethodWasCalled = true;
-		assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, stringBeforeInjection);
+		assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, stringBeforeInjection);
 	}
 	
 	@After
@@ -59,7 +59,7 @@ public class GuiceJUnit4IntegrationTest {
 	@Test
 	public void integrationTestExpectingTestContextLevelInjectionToSucceed(){
 		assertNotNull(leetInteger);
-		assertEquals(GuiceJUnitTestModules.LEET_INTEGER, leetInteger);
+		assertEquals(NepticalJUnitTestModules.LEET_INTEGER, leetInteger);
 	}
 	
 	@Test
@@ -77,23 +77,23 @@ public class GuiceJUnit4IntegrationTest {
 	@Test
 	public void integrationTestExpectingTestLevelInjectionToSucceed(@BindingAnnotationForIntegerConfig Integer boundInteger){
 		assertNotNull(boundInteger);
-		assertEquals(GuiceJUnitTestModules.LEET_INTEGER, boundInteger);
+		assertEquals(NepticalJUnitTestModules.LEET_INTEGER, boundInteger);
 	}
 	
 	@Test
 	public void integrationTestMissingIntegerWithNamedAnnotationConfigurationExpectingNullInteger(Integer nullInteger, String stringA, String stringB, @Named("String1") String string1, @Named("String2") String string2){
 		assertTrue(StringUtils.isNotBlank(string1));
-		assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, stringA);
+		assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, stringA);
 		assertEquals(stringA, stringB);
-		assertEquals(GuiceJUnitTestModules.STRING_ONE, string1);
-		assertEquals(GuiceJUnitTestModules.STRING_TWO, string2);
+		assertEquals(NepticalJUnitTestModules.STRING_ONE, string1);
+		assertEquals(NepticalJUnitTestModules.STRING_TWO, string2);
 		assertNull(nullInteger);
 	}
 	
 	@Test
-	@GuiceConfig(IntegerModule.class)
+	@NepticalConfiguration(IntegerModule.class)
 	public void integeationConfigTestForTestLevelConfiguration(Integer integer){
-		assertEquals(GuiceJUnitTestModules.DEFAULT_INTEGER, integer);
+		assertEquals(NepticalJUnitTestModules.DEFAULT_INTEGER, integer);
 	}
 	
 }

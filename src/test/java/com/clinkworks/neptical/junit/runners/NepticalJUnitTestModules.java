@@ -14,7 +14,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.name.Names;
 
-public class GuiceJUnitTestModules {
+public class NepticalJUnitTestModules {
 
 	public static final String DEFAULT_STRING = "I_AM_DEFAULT";
 	public static final String STRING_ONE = "I_AM_STRING_ONE";

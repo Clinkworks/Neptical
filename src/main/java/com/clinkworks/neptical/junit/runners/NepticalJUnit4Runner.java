@@ -1,6 +1,5 @@
 package com.clinkworks.neptical.junit.runners;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,7 +27,7 @@ import com.clinkworks.neptical.data.file.FileData;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;
 import com.clinkworks.neptical.modules.DataModule;
-import com.clinkworks.neptical.util.InjectionUtil;
+import com.clinkworks.neptical.util.GuiceInjectionUtil;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.MembersInjector;
@@ -38,12 +37,12 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
-public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
-	private static final Logger LOGGER = Logger.getLogger(GuiceJUnit4Runner.class);
+public class NepticalJUnit4Runner extends BlockJUnit4ClassRunner {
+	private static final Logger LOGGER = Logger.getLogger(NepticalJUnit4Runner.class);
 
     @Target({ElementType.TYPE, ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface GuiceConfig {
+    public @interface NepticalConfiguration {
         Class<? extends Module>[] value();
     }
     
@@ -92,7 +91,7 @@ public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
     	
     }
     
-    public GuiceJUnit4Runner(Class<?> klass) throws InitializationError {
+    public NepticalJUnit4Runner(Class<?> klass) throws InitializationError {
         super(klass);
     }   
     
@@ -181,7 +180,7 @@ public class GuiceJUnit4Runner extends BlockJUnit4ClassRunner {
     	String testName = method.getMethod().getName();
     	String fullName = testContextName + "." + testName;
     	LOGGER.debug(" ---- Building test: " + fullName + " ---- ");
-    	return InjectionUtil.createInjector(getTestClass(), method);
+    	return GuiceInjectionUtil.createInjector(getTestClass(), method);
     }
 
 }

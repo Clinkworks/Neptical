@@ -1,9 +1,9 @@
 package com.clinkworks.neptical.junit.runners;
 
-import static com.clinkworks.neptical.util.InjectionUtil.createInjector;
-import static com.clinkworks.neptical.util.InjectionUtil.getConfiguredContextModules;
-import static com.clinkworks.neptical.util.InjectionUtil.getConfiguredTestModules;
-import static com.clinkworks.neptical.util.InjectionUtil.getParameterValuesToInject;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.createInjector;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.getConfiguredContextModules;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.getConfiguredTestModules;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.getParameterValuesToInject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -25,22 +25,22 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.AssertionDependency;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.AssertionModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BindingAnnotationForIntegerConfig;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BoundIntegerModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.IntegerModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.MockTestModuleOne;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.MockTestModuleTwo;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.NamedModule;
-import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.StringModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.AssertionDependency;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.AssertionModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BindingAnnotationForIntegerConfig;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BoundIntegerModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.IntegerModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.MockTestModuleOne;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.MockTestModuleTwo;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.NamedModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.StringModule;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class GuiceJUnit4RunnerUnitTest {
+public class NepticalJUnit4RunnerUnitTest {
 
     private static final String BEFORE_METHOD_TEST_METHOD = "testMethodToEnsureBeforeMethodInjection";
     private static final String BINDING_ANNOTATION_TEST_METHOD = "testMethodWithUnConfiguredIntegerAndBoundInteger";
@@ -53,7 +53,7 @@ public class GuiceJUnit4RunnerUnitTest {
     @Test
     public void canCreateTestContextThatHasParametersInTestMethodSignatures() {
         try {
-            new GuiceJUnit4Runner(MockTestWithMethodParams.class);
+            new NepticalJUnit4Runner(MockTestWithMethodParams.class);
         } catch (InitializationError e) {
             fail("Guice Junit Runner MUST be able to pass dependencies to test methods, JUnit disallows");
         }
@@ -61,7 +61,7 @@ public class GuiceJUnit4RunnerUnitTest {
  
     @Test
     public void canRetrieveContextLevelConfiguration() throws InitializationError {
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(MockTestWithClassLevelGuiceConfig.class);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(MockTestWithClassLevelGuiceConfig.class);
         Class<?>[] modules = getConfiguredContextModules(runner.getTestClass());
         assertEquals(1, modules.length);
         assertEquals(MockTestModuleOne.class, modules[0]);
@@ -84,7 +84,7 @@ public class GuiceJUnit4RunnerUnitTest {
     public void canCreateInstancesOfParameterDependencies() throws InitializationError {
 
         Class<MockTestWithStringDependency> test = MockTestWithStringDependency.class;
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         FrameworkMethod method = getFrameworkMethod(test, STRING_DEPENDENCY_TEST_METHOD);
         Injector injector = createInjector(runner.getTestClass(), method);
@@ -92,7 +92,7 @@ public class GuiceJUnit4RunnerUnitTest {
         List<Object> parametersToInject = getParameterValuesToInject(method, injector);
 
         assertEquals(1, parametersToInject.size());
-        assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, parametersToInject.get(0));
+        assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, parametersToInject.get(0));
 
     }
 
@@ -101,22 +101,22 @@ public class GuiceJUnit4RunnerUnitTest {
 
         Class<MockTestThatEnsuresInstancesArePassedToTestMethods> test = MockTestThatEnsuresInstancesArePassedToTestMethods.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         runTestMethod(runner, test, DEPENDENCY_METHOD_INJECTION_TEST_METHOD);
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
     }
 
     @Test
     public void canConfigureBothContextLevelAndTestLevelConfigurations() throws Throwable {
         Class<MockTestFullIntegrationMethodLevelClassLevelConfigurations> test = MockTestFullIntegrationMethodLevelClassLevelConfigurations.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         runTestMethod(runner, test, FULL_INTEGRATION_TEST_METHOD);
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
 
     }
 
@@ -124,22 +124,22 @@ public class GuiceJUnit4RunnerUnitTest {
     public void namedAnnotationIsSupportedForTestLevelInjection() throws Throwable {
         Class<MockTestThatNeedsSupportForNamedAnnotation> test = MockTestThatNeedsSupportForNamedAnnotation.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         runTestMethod(runner, test, NAMED_CONFIGURATION_TEST_METHOD);
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
     }
 
     @Test
     public void bindingAnnotationsAreSupported() throws Throwable {
         Class<MockTestWithBoundAnnotationDependency> test = MockTestWithBoundAnnotationDependency.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         runTestMethod(runner, test, BINDING_ANNOTATION_TEST_METHOD);
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
 
     }
 
@@ -147,11 +147,11 @@ public class GuiceJUnit4RunnerUnitTest {
     public void runnerSupportsInjectionIntoBeforeMethods() throws Throwable {
         Class<MockTestWithBeforeMethod> test = MockTestWithBeforeMethod.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         runTestMethod(runner, test, BEFORE_METHOD_TEST_METHOD);
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
     }
 
 
@@ -173,7 +173,7 @@ public class GuiceJUnit4RunnerUnitTest {
     public void unConfiguredTestLevelInjectionDoesNotFail() throws Throwable {
         Class<MockTestRequiresUnConfiguredDependency> test = MockTestRequiresUnConfiguredDependency.class;
 
-        GuiceJUnit4Runner runner = new GuiceJUnit4Runner(test);
+        NepticalJUnit4Runner runner = new NepticalJUnit4Runner(test);
 
         try {
             runTestMethod(runner, test, STRING_DEPENDENCY_TEST_METHOD);
@@ -181,7 +181,7 @@ public class GuiceJUnit4RunnerUnitTest {
             fail("Configuration exception should no longer be thrown from method level injection");
         }
 
-        assertTrue(GuiceJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
+        assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
     }
 
     // Guice Test classes for test senarios
@@ -190,13 +190,13 @@ public class GuiceJUnit4RunnerUnitTest {
     public static class MockTestThatNeedsSupportForNamedAnnotation {
 
         @Test
-        @GuiceConfig({ NamedModule.class, AssertionModule.class })
+        @NepticalConfiguration({ NamedModule.class, AssertionModule.class })
         public void testNamedConfiguration(@Named("String1") String string1, @Named("String2") String string2,
                 AssertionDependency assertionDependency) {
             assertTrue(StringUtils.isNotBlank(string1));
             assertTrue(StringUtils.isNotBlank(string2));
-            assertionDependency.assertEquals(GuiceJUnitTestModules.STRING_ONE, string1);
-            assertionDependency.assertEquals(GuiceJUnitTestModules.STRING_TWO, string2);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.STRING_ONE, string1);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.STRING_TWO, string2);
         }
     }
 
@@ -205,7 +205,7 @@ public class GuiceJUnit4RunnerUnitTest {
         private AssertionDependency assertionDependency;
 
         @Test
-        @GuiceConfig(AssertionModule.class)
+        @NepticalConfiguration(AssertionModule.class)
         public void testMethodToTestInjectedDependencies(AssertionDependency assertionDependency) {
             this.assertionDependency = assertionDependency;
             assertionDependency.assertEquals("", "");
@@ -216,20 +216,20 @@ public class GuiceJUnit4RunnerUnitTest {
         }
     }
 
-    @GuiceConfig({ AssertionModule.class, StringModule.class })
+    @NepticalConfiguration({ AssertionModule.class, StringModule.class })
     public static class MockTestFullIntegrationMethodLevelClassLevelConfigurations {
         @Test
-        @GuiceConfig(IntegerModule.class)
+        @NepticalConfiguration(IntegerModule.class)
         public void testMethodWithStringAndIntegerDependencys(String stringToInject, Integer integerToInject,
                 AssertionDependency assertionDependency) {
             assertNotNull(integerToInject);
             assertTrue(StringUtils.isNotBlank(stringToInject));
-            assertionDependency.assertEquals(GuiceJUnitTestModules.DEFAULT_INTEGER, integerToInject);
-            assertionDependency.assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, stringToInject);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.DEFAULT_INTEGER, integerToInject);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, stringToInject);
         }
     }
 
-    @GuiceConfig(StringModule.class)
+    @NepticalConfiguration(StringModule.class)
     public static class MockTestWithStringDependency {
         @Test
         public void testMethodWithStringDependency(String stringToInject) {
@@ -242,11 +242,11 @@ public class GuiceJUnit4RunnerUnitTest {
         }
     }
 
-    @GuiceConfig({ StringModule.class, AssertionModule.class })
+    @NepticalConfiguration({ StringModule.class, AssertionModule.class })
     public static class MockTestWithBeforeMethod {
         @Before
         public void setup(String defaultString, AssertionDependency assertionDependency) {
-            assertionDependency.assertEquals(GuiceJUnitTestModules.DEFAULT_STRING, defaultString);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.DEFAULT_STRING, defaultString);
         }
 
         @Test
@@ -254,7 +254,7 @@ public class GuiceJUnit4RunnerUnitTest {
         }
     }
 
-    @GuiceConfig(AssertionModule.class)
+    @NepticalConfiguration(AssertionModule.class)
     public static class MockTestRequiresUnConfiguredDependency {
         @Test
         public void testMethodWithStringDependency(String stringToInject, AssertionDependency assertionDependency) {
@@ -263,19 +263,19 @@ public class GuiceJUnit4RunnerUnitTest {
         }
     }
 
-    @GuiceConfig({ AssertionModule.class, BoundIntegerModule.class })
+    @NepticalConfiguration({ AssertionModule.class, BoundIntegerModule.class })
     public static class MockTestWithBoundAnnotationDependency {
 
         @Test
         public void testMethodWithUnConfiguredIntegerAndBoundInteger(
                 @BindingAnnotationForIntegerConfig Integer leetInteger, Integer nullInteger,
                 AssertionDependency assertionDependency) {
-            assertionDependency.assertEquals(GuiceJUnitTestModules.LEET_INTEGER, leetInteger);
+            assertionDependency.assertEquals(NepticalJUnitTestModules.LEET_INTEGER, leetInteger);
             assertNull(nullInteger);
         }
     }
     
-    @GuiceConfig(MockTestModuleOne.class)
+    @NepticalConfiguration(MockTestModuleOne.class)
     public static class MockTestWithClassLevelGuiceConfig {
         @Test
         public void emptyTestMethod() {
@@ -283,7 +283,7 @@ public class GuiceJUnit4RunnerUnitTest {
     }
 
     public static class MockTestWithMethodLevelGuiceConfig {
-        @GuiceConfig(MockTestModuleTwo.class)
+        @NepticalConfiguration(MockTestModuleTwo.class)
         @Test
         public void annotatedTestMethod() {
         };
@@ -332,7 +332,7 @@ public class GuiceJUnit4RunnerUnitTest {
     }
 
     @SuppressWarnings("deprecation")
-    private static void runTestMethod(GuiceJUnit4Runner runnerInstance, Class<?> testClass, String testMethodName)
+    private static void runTestMethod(NepticalJUnit4Runner runnerInstance, Class<?> testClass, String testMethodName)
             throws Throwable {
         try {
             runnerInstance.run(new RunNotifier());

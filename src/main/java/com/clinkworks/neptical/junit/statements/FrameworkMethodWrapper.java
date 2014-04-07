@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
-import com.clinkworks.neptical.util.InjectionUtil;
+import com.clinkworks.neptical.util.GuiceInjectionUtil;
 import com.google.inject.Injector;
 
 public class FrameworkMethodWrapper extends Statement{
@@ -24,7 +24,7 @@ public class FrameworkMethodWrapper extends Statement{
     	this.name = testMethod.getName();
     	LOGGER.debug(" ---- Preparing method with test dependencies ---- ");
     	LOGGER.debug(" ---- Gathering test dependencies ---- ");
-    	fParams = InjectionUtil.getParameterValuesToInject(testMethod, injector).toArray();
+    	fParams = GuiceInjectionUtil.getParameterValuesToInject(testMethod, injector).toArray();
     	LOGGER.debug(" ---- Initalizing test statement with required dependencies " + Arrays.toString(fParams) + " ---- ");
     }	
 	

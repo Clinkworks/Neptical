@@ -13,9 +13,9 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
-import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner;
-import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
-import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.TestDataModule;
+import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
+import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.TestDataModule;
 import com.google.common.collect.Lists;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.ConfigurationException;
@@ -27,9 +27,9 @@ import com.google.inject.ProvisionException;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
-public class InjectionUtil {
+public class GuiceInjectionUtil {
 	
-	private static final Logger LOGGER = Logger.getLogger(InjectionUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(GuiceInjectionUtil.class);
 	
 	private static final String CREATING_GUICE_INJECTOR = " ---- Creating Guice Injector ---- ";
 	private static final String CREATING_CLASS_DEBUG_MESSAGE = " ---- Creating Guice Module: %s ---- ";
@@ -113,7 +113,7 @@ public class InjectionUtil {
  
     public static Class<? extends Module>[] getConfiguredContextModules(TestClass junitTestClass){
     	LOGGER.debug(" ---- Discovering context level guice configuration ---- ");
-    	GuiceConfig classConfig = junitTestClass.getJavaClass().getAnnotation(GuiceConfig.class);
+    	NepticalConfiguration classConfig = junitTestClass.getJavaClass().getAnnotation(NepticalConfiguration.class);
     	return classConfig == null ? getNewEmptyModuleArray() : classConfig.value();
     }
     
@@ -121,10 +121,10 @@ public class InjectionUtil {
     	
     	LOGGER.debug(" ---- Discovering test level guice configuration ---- ");
     	
-    	GuiceConfig annotation = null;
+    	NepticalConfiguration annotation = null;
     	
     	if(frameworkMethod != null){
-    		annotation = frameworkMethod.getAnnotation(GuiceConfig.class);
+    		annotation = frameworkMethod.getAnnotation(NepticalConfiguration.class);
     	}
         
         return annotation == null ? getNewEmptyModuleArray() : annotation.value();
@@ -152,7 +152,7 @@ public class InjectionUtil {
 			moduleList.add(createModule(module));
 		}
 		
-		moduleList.add(new GuiceJUnit4Runner.TestDataModule());
+		moduleList.add(new NepticalJUnit4Runner.TestDataModule());
 		
 		Module[] retval = new Module[moduleList.size()];
 		
@@ -210,7 +210,7 @@ public class InjectionUtil {
 		}
 		
 		if(Modifier.isProtected(constructorModifiers)){
-			Package thisPackage = InjectionUtil.class.getPackage();
+			Package thisPackage = GuiceInjectionUtil.class.getPackage();
 			Package modulePackage = constructor.getDeclaringClass().getPackage();
 			return thisPackage.equals(modulePackage);
 		}
