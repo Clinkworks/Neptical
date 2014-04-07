@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.clinkworks.neptical.data.Data;
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.loaders.json.JsonData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.gson.JsonArray;

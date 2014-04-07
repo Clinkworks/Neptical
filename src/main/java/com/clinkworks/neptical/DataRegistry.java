@@ -1,9 +1,8 @@
-package com.clinkworks.neptical.data;
+package com.clinkworks.neptical;
 
 import java.io.File;
 import java.util.Map;
 
-import com.clinkworks.neptical.DataLoader;
 import com.clinkworks.neptical.data.file.FileData;
 import com.clinkworks.neptical.data.loaders.json.JsonDataLoader;
 import com.clinkworks.neptical.util.PathUtil;

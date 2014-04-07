@@ -22,8 +22,8 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataLoader.TestData;
-import com.clinkworks.neptical.data.Data;
 import com.clinkworks.neptical.data.file.FileData;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;

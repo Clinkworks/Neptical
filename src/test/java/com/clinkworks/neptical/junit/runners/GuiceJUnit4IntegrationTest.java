@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 
 import static com.clinkworks.neptical.util.Common.noOp;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataLoader.TestData;
-import com.clinkworks.neptical.data.Data;
 import com.clinkworks.neptical.junit.runners.GuiceJUnit4Runner.GuiceConfig;
 import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BindingAnnotationForIntegerConfig;
 import com.clinkworks.neptical.junit.runners.GuiceJUnitTestModules.BoundIntegerModule;

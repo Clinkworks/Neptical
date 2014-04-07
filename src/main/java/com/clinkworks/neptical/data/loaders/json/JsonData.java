@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.clinkworks.neptical.data.Data;
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.util.JsonUtil;
 
 import static com.clinkworks.neptical.util.PathUtil.*;

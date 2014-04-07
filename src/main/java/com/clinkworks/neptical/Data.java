@@ -1,4 +1,4 @@
-package com.clinkworks.neptical.data;
+package com.clinkworks.neptical;
 
 import java.io.File;
 import java.math.BigDecimal;
