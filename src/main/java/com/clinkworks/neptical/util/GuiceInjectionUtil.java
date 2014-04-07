@@ -76,7 +76,7 @@ public class GuiceInjectionUtil {
     		try{
     			return injector.getInstance(parameterType);
     		}catch(ConfigurationException e){
-    			LOGGER.warn(String.format("The parameter in method %s at index %s is set to null, please configure Guice for this dependency (%s)",
+    			LOGGER.warn(String.format("The parameter in method %s at index %s is set to null, please configure Neptical for this dependency (%s)",
     					method.getName(), parameterIndex, parameterType));
     			return null;
     		}
