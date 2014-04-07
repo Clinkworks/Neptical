@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.clinkworks.neptical.data.file.FileData;
+import com.clinkworks.neptical.util.PathUtil;
 import com.google.gson.JsonElement;
 
 /**
@@ -96,9 +97,9 @@ public abstract class Data{
     private Object data;
 
     protected Data(String segment, String path, Data root, Data parent, Object data) {
-        this.path = path;
+        this.path = PathUtil.clean(path);
         this.data = data;
-        this.segment = segment;
+        this.segment = PathUtil.clean(segment);
         this.parent = parent;
         this.root = root;
         if (root == null) {
