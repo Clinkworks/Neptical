@@ -23,7 +23,7 @@ final public class FileData extends Data{
 	@Override
 	public Data find(String path) {
 		
-		if(getPath().equals(path)){
+		if(StringUtils.equalsIgnoreCase(getPath(), path)){
 			return this;
 		}
 		
