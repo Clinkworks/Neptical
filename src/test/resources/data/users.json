@@ -5,7 +5,7 @@
         "screenName":"MageSource",
         "firstName":"{{random-firstName}}",
         "lastName":"{{random-lastName}}",
-        "middleName":"{{random-middleName}"
+        "middleName":"{{random-middleName}}"
      }
   }
 }
