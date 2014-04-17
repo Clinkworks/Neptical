@@ -64,7 +64,9 @@ public class DataApiIntegrationTest {
     @Test
     public void canTraverseNodes(){
     	Data account = root.find("users.random-account.account");
-    	assertEquals(root, account.root().root().root().root());
+    	Data randomAccountInfo = root.find("users.random-account");
+    	assertEquals(root, account.root());
+    	assertEquals(randomAccountInfo, account.parent());
     }
     
     @Test

@@ -191,7 +191,7 @@ public class JsonData extends Data{
 				for(Map.Entry<String, JsonElement> properties : data.getAsJsonObject().entrySet()){
 					String segment = properties.getKey();
 					String path = clean(getPath() + DOT + segment);
-					Data jsonProperty = new JsonData(segment, path, parent(), parent(), properties.getValue());
+					Data jsonProperty = new JsonData(segment, path, root(), parent(), properties.getValue());
 					linkedNodes.add(jsonProperty);
 				}
 			}
@@ -203,7 +203,7 @@ public class JsonData extends Data{
 					JsonElement arrayElement = arrayElements.next();
 					String segment = "[" + i++ + "]";
 					String path = clean(getPath() + segment);
-					JsonData jsonProperty = new JsonData(segment, path, parent(), parent(), arrayElement);
+					JsonData jsonProperty = new JsonData(segment, path, root(), parent(), arrayElement);
 					linkedNodes.add(jsonProperty);
 				}
 			}

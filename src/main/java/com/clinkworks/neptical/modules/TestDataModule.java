@@ -16,6 +16,7 @@ import com.google.inject.spi.TypeListener;
 public class TestDataModule extends AbstractModule{
 	
 	public static final Data TEST_DATA;
+	
 	static{
 		File dataDir = new File(Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " "));
 		TEST_DATA = new FileData(null, null, null, null, dataDir);		

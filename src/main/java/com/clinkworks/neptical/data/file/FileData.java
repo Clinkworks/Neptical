@@ -77,10 +77,10 @@ final public class FileData extends Data{
 	private Data loadFile(String nextSegment) {
 		File file = getAsFile();
 		if(isDirectory()){
-			setNext(new Directory(nextSegment, getPath(), this, this, file));
+			setNext(new Directory(nextSegment, getPath(), root(), this, file));
 		}
 		if(isFile()){
-			setNext(DataRegistry.loadData(nextSegment, getPath(), this, file));
+			setNext(DataRegistry.loadData(nextSegment, getPath(), root(), this, file));
 		}
 		
 		return next();

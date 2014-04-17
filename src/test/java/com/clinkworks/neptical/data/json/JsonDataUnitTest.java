@@ -53,7 +53,7 @@ public class JsonDataUnitTest {
 		Data val1 = jsonData.find("object1.prop1.array1[0][0]");
 		
 		assertEquals("val1", val1.getAsString());
-		assertSame(jsonArray, val1.root().root().getAsJsonElement());
+		assertSame(jsonArray, val1.parent().parent().getAsJsonElement());
 		assertEquals("val2", jsonData.find("object1.prop1.array1[1]").getAsString());
 		
 		assertTrue(val1.isPrimitive());

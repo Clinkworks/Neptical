@@ -12,14 +12,13 @@ public class PathUtil {
     public static final char LEFT_BRACKET = '[';
     public static final char RIGHT_BRACKET = ']';
     public static final Pattern SPLIT_BY_DOT_PATTERN = Pattern.compile("\\.");
-    public static final Pattern SEGMENT_CONTAINS_ARRAY_SYNTAX_PATTERN = Pattern.compile("^\\w+(?:\\[(\\d+)\\])+$");
+    public static final Pattern SEGMENT_CONTAINS_ARRAY_SYNTAX = Pattern.compile("^\\w+(?:\\[(\\d+)\\])+$");
     public static final Pattern ARRAY_SYNTAX_PATTERN = Pattern.compile("\\[(\\d+)\\]");
 
-    private PathUtil() {
-        super();
-    }
+    //muhahaha no construction
+    private PathUtil() {}
 
-    public static String firstSegment(String segment) {
+    public static final String firstSegment(String segment) {
         segment = clean(segment);
         int index = segment.indexOf(DOT);
         return index > -1 ? firstArraySegment(segment.substring(0, index)) : segment;
@@ -33,25 +32,25 @@ public class PathUtil {
     	}
     }
     
-    public static String lastSegment(String segment) {
+    public static final String lastSegment(String segment) {
         segment = clean(segment);
         int index = segment.indexOf(DOT);
         return index > -1 ? segment.substring(index + 1, segment.length()) : "";
     }
 
-    public static String chompFirstSegment(String path){
+    public static final String chompFirstSegment(String path){
     	String firstSegment = firstSegment(path);
     	path = path.substring(firstSegment.length());
     	return clean(path);
     }
     
-    public static String chompLastSegment(String path){
+    public static final String chompLastSegment(String path){
     	String lastSegment = lastSegment(path);
     	path = path.substring(0, path.length() - lastSegment.length());
     	return clean(path);
     }
     
-    public static String subtractSegment(String segment, String path) {
+    public static final String subtractSegment(String segment, String path) {
     	segment = clean(segment);
     	path = clean(path);
     	
@@ -65,30 +64,42 @@ public class PathUtil {
         return clean(path);
     }
 
-    public static boolean segmentContainsArraySyntax(String segment) {
+    public static final boolean segmentContainsArraySyntax(String segment) {
         segment = clean(segment);
         
         if (segment.indexOf(DOT) != -1) {
             return false;
         }
 
-        return SEGMENT_CONTAINS_ARRAY_SYNTAX_PATTERN.matcher(segment).find();
+        return SEGMENT_CONTAINS_ARRAY_SYNTAX.matcher(segment).find();
     }
 
-    public static String getIndexAsString(String segment){
+    public static final String getIndexAsString(String segment){
     	Matcher matcher = ARRAY_SYNTAX_PATTERN.matcher(segment);
     	matcher.find();
     	return matcher.group(0);
     }
     
-    public static int getIndex(String segment) {
+    public static final int getIndex(String segment) {
         if (segmentContainsArraySyntax(segment)) {
             return Integer.valueOf(ARRAY_SYNTAX_PATTERN.matcher(segment).group(1));
         }
         return -1;
     }
     
-    private static final String stripDotsFromStartAndEndOfPath(String path){
+    public static final String clean(String path) {
+    	
+    	if(StringUtils.isBlank(path)){
+    		return EMPTY_STRING;
+    	}
+    	
+    	path = stripDots(path);
+        return path;
+    }
+    
+    private static final String stripDots(String path){
+    	
+    	path = path.trim();
 
     	if(path.charAt(0) == DOT){
     		path = path.substring(1);
@@ -98,15 +109,5 @@ public class PathUtil {
     	}
 
 		return path;
-    }
-
-    public static final String clean(String path) {
-    	
-    	if(StringUtils.isBlank(path)){
-    		return EMPTY_STRING;
-    	}
-    	
-    	path = stripDotsFromStartAndEndOfPath(path).trim();
-        return path;
     }
 }

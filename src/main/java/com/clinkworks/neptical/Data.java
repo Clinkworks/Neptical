@@ -101,9 +101,10 @@ public abstract class Data{
         this.data = data;
         this.segment = PathUtil.clean(segment);
         this.parent = parent;
-        this.root = root;
         if (root == null) {
-            root = this;
+            this.root = this;
+        }else{
+        	this.root = root;
         }
     }
 

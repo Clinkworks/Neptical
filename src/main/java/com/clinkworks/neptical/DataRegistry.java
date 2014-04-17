@@ -11,15 +11,16 @@ import com.google.common.collect.Maps;
 public class DataRegistry {
 	//TODO: find a way not to hard code the loaders
 	private static final Map<String, DataLoader> registeredDataLoaders;
+	
 	static{
 		registeredDataLoaders = Maps.newConcurrentMap();
 		registeredDataLoaders.put("json", new JsonDataLoader());
 	}
 	
-	public static final Data loadData(String segment, String path, Data parent, File file){
+	public static final Data loadData(String segment, String path, Data root, Data parent, File file){
 		
 		if(file.isDirectory()){
-			return new FileData("", "", parent, parent, file);
+			return new FileData(segment, path, root, parent, file);
 		}
 		
 		String extension = PathUtil.lastSegment(file.getName()).toLowerCase();
@@ -31,7 +32,7 @@ public class DataRegistry {
 		}
 		
 		
-		return dataLoader.loadData(segment, path, parent, parent, file);
+		return dataLoader.loadData(segment, path, root, parent, file);
 	}
 	
 }
