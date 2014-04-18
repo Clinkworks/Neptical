@@ -17,6 +17,13 @@ public class DataRegistry {
 		registeredDataLoaders.put("json", new JsonDataLoader());
 	}
 	
+	public static final Data loadData(){
+    	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
+        File file = new File(resourceName);
+
+        return loadData("", "", null, null, file);
+	}
+	
 	public static final Data loadData(String segment, String path, Data root, Data parent, File file){
 		
 		if(file.isDirectory()){
