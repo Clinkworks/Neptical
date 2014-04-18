@@ -56,6 +56,7 @@ public class NepticalJUnit4IntegrationTest {
 	public void integrationTestExpectingTheBeforeMethodTohaveRunSuccessfully(){
 		assertTrue(beforeMethodWasCalled);
 	}
+	
 	@Test
 	public void integrationTestExpectingTestContextLevelInjectionToSucceed(){
 		assertNotNull(leetInteger);

@@ -6,6 +6,7 @@
         "firstName":"{{random-firstName}}",
         "lastName":"{{random-lastName}}",
         "middleName":"{{random-middleName}}"
+        "address" : "{{data-contacts.addresses.genericAddress}}"
      }
   }
 }
