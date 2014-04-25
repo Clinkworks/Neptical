@@ -18,11 +18,19 @@ public class DataRegistry {
 	}
 	
 	public static final Data loadData(){
-    	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
-        File file = new File(resourceName);
-
-        return loadData("", "", null, null, file);
+		File file = new File(System.getProperty("user.home") + "/neptical-data");
+	
+		if(file.exists()){
+			return loadData(file);
+		}
+	
+		if(!file.mkdir()){
+			throw new IllegalStateException("Neptical expects \"for now\" the data directory to be the ${user.home}/neptical-data directory on your filesystem");
+		}
+		
+		return loadData(file);
 	}
+	
 	
 	public static final Data loadData(String segment, String path, Data root, Data parent, File file){
 		
