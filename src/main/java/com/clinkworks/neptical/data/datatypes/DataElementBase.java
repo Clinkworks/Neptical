@@ -143,6 +143,9 @@ public abstract class DataElementBase implements ListableData, ListableTransform
 
 	@Override
 	public boolean isLoaded() {
+		if(!isLoadableData()){
+			return true;
+		}
 		return getAsLoadableData().isLoaded();
 	}
 

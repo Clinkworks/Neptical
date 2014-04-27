@@ -110,4 +110,17 @@ public class PathUtil {
 
 		return path;
     }
+
+	public static String addSegment(String path, String segment) {
+
+		path = clean(path);
+		segment = firstSegment(segment);
+		if(segment.indexOf('[') == 0) {
+			path = path + segment;
+		}else{
+			path = path + DOT + segment;
+		}
+		
+		return path;
+	}
 }

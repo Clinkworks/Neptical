@@ -1,7 +1,13 @@
 package com.clinkworks.neptical.util;
 
-import static com.clinkworks.neptical.util.PathUtil.*;
-import static org.junit.Assert.*;
+import static com.clinkworks.neptical.util.PathUtil.addSegment;
+import static com.clinkworks.neptical.util.PathUtil.firstSegment;
+import static com.clinkworks.neptical.util.PathUtil.lastSegment;
+import static com.clinkworks.neptical.util.PathUtil.segmentContainsArraySyntax;
+import static com.clinkworks.neptical.util.PathUtil.subtractSegment;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -69,5 +75,15 @@ public class PathUtilUnitTest {
     	
     	assertEquals("[0]", subtractSegment(segment1, segment2));
     	assertEquals("", subtractSegment(segment1, segment1));
+    }
+    
+    @Test
+    public void canAppendPaths(){
+    	String path = "account";
+    	String segment = "transactions";
+    	
+    	assertEquals("account.transactions", addSegment(path, segment));
+    	assertEquals("account[0]", addSegment(path, "[0]"));
+    	
     }
 }

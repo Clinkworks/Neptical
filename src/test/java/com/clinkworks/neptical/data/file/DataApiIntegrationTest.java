@@ -2,6 +2,7 @@ package com.clinkworks.neptical.data.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
+import com.clinkworks.neptical.data.domain.FileData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.modules.NepticalDataModule;
@@ -34,20 +36,20 @@ public class DataApiIntegrationTest {
 	}
 	
     @Test
-    public void ensureDataServiceCanLoadResourcesDirectory() {
-    	assertNull(cursor.get());
-    	assertEquals(dataDirectory, cursor.find("root").get());
+    public void ensureCursorCanFindTheRootNode() {
     	assertNull(cursor.find("abc"));
+    	assertEquals(dataDirectory, cursor.find("root").get());
     	assertEquals(dataDirectory, cursor.find("//").get());
+    	assertEquals(dataDirectory, cursor.find("").get());
+    	assertNull(cursor.find("123"));
     }
     
     @Test
     public void ensureFileDataCanLoadNestedResources(){
 
-        Cursor accounts = cursor.find("users.accounts");
-        NepticalData addresses = root.find("contacts.addresses");
-        assertNotNull(accounts);
-        assertNotNull(addresses);
+        FileData accounts = cursor.find("contacts").getAsFileData();
+        
+        assertTrue(accounts.isDirectory());
     }
     
     @Test

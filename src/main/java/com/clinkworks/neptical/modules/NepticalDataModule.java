@@ -7,7 +7,7 @@ import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
 import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
-import com.clinkworks.neptical.data.graph.DataGraph;
+import com.clinkworks.neptical.data.graph.TraversableDataMap;
 import com.clinkworks.neptical.data.loader.FileDataLoader;
 import com.clinkworks.neptical.data.loader.JsonDataLoader;
 import com.google.common.collect.Maps;
@@ -25,7 +25,7 @@ public class NepticalDataModule extends AbstractModule{
 
 		FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
-		builder.implement(Cursor.class, DataGraph.class);
+		builder.implement(Cursor.class, TraversableDataMap.class);
 
 		install(builder.build(NepticalDataApiFactory.class));
 	}
