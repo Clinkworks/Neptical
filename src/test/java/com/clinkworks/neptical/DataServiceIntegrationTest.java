@@ -8,7 +8,7 @@ import java.io.File;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.clinkworks.neptical.data.domain.DataElement;
+import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;

@@ -1,18 +1,18 @@
 package com.clinkworks.neptical.data.graph;
 
-import com.clinkworks.neptical.data.domain.DataElement;
+import java.io.Serializable;
 
+import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.data.datatypes.Data;
 
 public interface Node {
 	
-	public String getIdentity();
+	public <T extends Data> T getDataAsType(Class<T> dataType);
 	
-	//use this interface is its possible for two identities to be shared.
-	//arcs are made from the relationships between identities.
-	public String getConflictIdentifier();
+	public Serializable getIdentity();
+	
+	public Serializable getConflictIdentifier();
 	
 	public DataElement getContents();
-	
-	public String getContentsAsString();
 	
 }

@@ -10,9 +10,9 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clinkworks.neptical.data.datatypes.DataLoader;
+import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.domain.DataElement;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -22,12 +22,10 @@ public class DataServiceUnitTest {
 	
 	@Before
 	public void setup(){
-		
 		Map<Serializable, DataLoader> dataLoaderRegistry = Maps.newHashMap();
 		dataLoaderRegistry.put("mock", new MockDataLoader());
-		dataService = new DataService(null, dataLoaderRegistry);
+		dataService = new DataService(null, null, dataLoaderRegistry);
 	}
-	
 	
 	@Test
 	public void ensureTheDataServiceProperlyCallsLoadersfromTheRegistry(){

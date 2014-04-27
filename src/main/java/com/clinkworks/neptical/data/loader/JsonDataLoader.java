@@ -1,4 +1,4 @@
-package com.clinkworks.neptical.data;
+package com.clinkworks.neptical.data.loader;
 
 import java.io.File;
 import java.io.Serializable;
@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import com.clinkworks.neptical.data.datatypes.DataLoader;
+import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.domain.DataElement;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.common.collect.Sets;

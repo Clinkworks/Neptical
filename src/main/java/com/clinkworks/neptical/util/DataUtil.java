@@ -2,8 +2,8 @@ package com.clinkworks.neptical.util;
 
 import org.apache.commons.lang3.ClassUtils;
 
+import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.datatypes.Data;
-import com.clinkworks.neptical.data.domain.DataElement;
 
 public class DataUtil {
 	

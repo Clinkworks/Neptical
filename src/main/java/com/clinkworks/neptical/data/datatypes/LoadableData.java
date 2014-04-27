@@ -26,7 +26,10 @@ public interface LoadableData extends Data {
 	 * @param typeToLoad
 	 */
 	public abstract Serializable getLoaderCriterian();
+	
 	public abstract boolean isLoaded();
+	
 	public abstract void toggleLoadedTrue();
+	
 	public abstract void toggleLoadedFalse();
 }

@@ -4,39 +4,38 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.clinkworks.neptical.data.datatypes.Data;
-import com.clinkworks.neptical.data.datatypes.DataLoader;
+import com.clinkworks.neptical.data.api.Cursor;
+import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.datatypes.MutableData;
-import com.clinkworks.neptical.data.domain.DataElement;
-import com.clinkworks.neptical.data.domain.GenericLoadableData;
-import com.clinkworks.neptical.data.domain.GenericMutableData;
-import com.clinkworks.neptical.data.graph.DataMultiGraph;
+import com.clinkworks.neptical.data.domain.FileData;
+import com.clinkworks.neptical.modules.NepticalDataModule.NepticalDataApiFactory;
+import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DataService{
 	
-	//TODO: reimplement this
-	public static final Data loadData(){
-		return null;
-	}
-	
 	private final Map<Serializable, DataLoader> dataLoaderRegistry;
-	private final DataMultiGraph dataMultiGraph;
+	private final NepticalDataApiFactory dataApiFactory;
+	
+	private File dataDirectory;
 	
 	@Inject
-	public DataService(DataMultiGraph dataMultiGraph, Map<Serializable, DataLoader> dataLoaderRegistry){
+	public DataService(@DataDirectory File dataDirectory, NepticalDataApiFactory dataApiFactory, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
-		this.dataMultiGraph = dataMultiGraph;
+		this.dataApiFactory = dataApiFactory;
+		this.dataDirectory = dataDirectory;
+	}
+	
+	public Cursor loadData(){
+		return dataApiFactory.create(loadFile(dataDirectory));
 	}
 	
 	public DataElement loadFile(File file){
-		MutableData mutableData = new GenericMutableData();
-		LoadableData loadableData = new GenericLoadableData(File.class, mutableData);
-		mutableData.set(file);
-		return loadData(loadableData);
+		FileData fileData = new FileData(file);
+		return loadData(fileData);
 	}
 
 	public DataElement loadData(LoadableData loadableData) {

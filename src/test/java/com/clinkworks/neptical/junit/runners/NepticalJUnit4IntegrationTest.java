@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import static com.clinkworks.neptical.util.Common.noOp;
 
 import com.clinkworks.neptical.NepticalData;
-import com.clinkworks.neptical.data.datatypes.DataLoader.TestData;
+import com.clinkworks.neptical.data.api.DataLoader.TestData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BindingAnnotationForIntegerConfig;
 import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BoundIntegerModule;
