@@ -35,6 +35,10 @@ public class GuiceInjectionUtil {
 	private static final String CONSTRUCTING_INJECTOR_DEBUG_MESSAGE = " ---- Instancating Guice Injector with modules: %s ---- ";
 	private static final String FINISHED_CONSTRUCTING_INJECTOR = " ---- Guice injector created, enjoy! ---- ";
 
+	private GuiceInjectionUtil(){
+		Common.noOp("This class is designed to be used as a static utility");
+	}
+	
     public static List<Object> getParameterValuesToInject(FrameworkMethod method, Injector injector){
     	
 		List<Object> params = new ArrayList<Object>();
@@ -279,8 +283,7 @@ public class GuiceInjectionUtil {
     }
     
     private static Annotation getBoundAnnotation(Annotation[] annotationsForParameter){
-    	for(int i = 0; i < annotationsForParameter.length; i++){
-    		Annotation annotation = annotationsForParameter[i];
+    	for (Annotation annotation : annotationsForParameter) {
     		if(annotation.annotationType().getAnnotation(BindingAnnotation.class) != null){
     			return annotation;
     		}

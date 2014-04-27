@@ -7,25 +7,26 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clinkworks.neptical.Data;
+import com.clinkworks.neptical.NepticalData;
+import com.clinkworks.neptical.data.json.JsonFileNode;
 
 public class DataApiIntegrationTest {
 
-	private Data root;
+	private NepticalData root;
 	
 	@Before
 	public void setup(){
     	String resourceName = Thread.currentThread().getContextClassLoader().getResource("data").getFile().replace("%20", " ");
         File file = new File(resourceName);
 
-        root = new FileData("", "", null, null, file);
+        root = new JsonFileNode("", "", null, null, file);
 
 	}
 	
     @Test
     public void ensureFileDataCanLoadResourcesDirectory() {
 
-        Data data = root.find("users");
+        NepticalData data = root.find("users");
 
         assertNotNull(data);
     }
@@ -33,46 +34,46 @@ public class DataApiIntegrationTest {
     @Test
     public void ensureFileDataCanLoadNestedResources(){
 
-        Data accounts = root.find("users.accounts");
-        Data addresses = root.find("contacts.addresses");
+        NepticalData accounts = root.find("users.accounts");
+        NepticalData addresses = root.find("contacts.addresses");
         assertNotNull(accounts);
         assertNotNull(addresses);
     }
     
     @Test
     public void ensureFileDataCanReferenceExternalPaths(){
-    	Data email = root.find("users.random-account.account.email");
+    	NepticalData email = root.find("users.random-account.account.email");
     	assertEquals("{{random-email}}", email.getAsString());
     }
     
     @Test
     public void canCopy(){
-    	Data account = root.find("users.random-account.account");
-    	Data foundAgain = root.find("users.random-account.account");
+    	NepticalData account = root.find("users.random-account.account");
+    	NepticalData foundAgain = root.find("users.random-account.account");
     	assertSame(account, foundAgain);
-    	Data cloned = foundAgain.copyDeep();
+    	NepticalData cloned = foundAgain.copyDeep();
     	assertNotSame(cloned, foundAgain);
     }
     
     @Test
     public void canCloneFiles(){
-    	Data file = root.find("users");
+    	NepticalData file = root.find("users");
     	assertSame(file, root.find("users"));
     	assertNotSame(file, root.find("users").copyDeep());
     }
     
     @Test
     public void canTraverseNodes(){
-    	Data account = root.find("users.random-account.account");
-    	Data randomAccountInfo = root.find("users.random-account");
+    	NepticalData account = root.find("users.random-account.account");
+    	NepticalData randomAccountInfo = root.find("users.random-account");
     	assertEquals(root, account.root());
     	assertEquals(randomAccountInfo, account.parent());
     }
     
     @Test
     public void canUtilizeFileExtensions(){
-    	Data withExtension = root.find("users.json.random-account.account");
-    	Data without = root.find("users.random-account.account");
+    	NepticalData withExtension = root.find("users.json.random-account.account");
+    	NepticalData without = root.find("users.random-account.account");
     	assertSame(withExtension, without);
     }
     

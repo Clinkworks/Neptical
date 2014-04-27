@@ -17,9 +17,13 @@ public class JsonUtil {
 	private static final JsonParser PARSER = new JsonParser();
 	
 	private JsonUtil(){
-		
+		Common.noOp("This class is designed to be used as a static utility");
 	}
-
+	
+	public static final JsonElement toJson(Object object){
+		return GSON.toJsonTree(object);
+	}
+	
 	public static final JsonElement parseFromFile(String path){
 		return parse(new File(path));
 	}

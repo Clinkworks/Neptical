@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.clinkworks.neptical.Data;
+import com.clinkworks.neptical.NepticalData;
 import com.clinkworks.neptical.data.loaders.json.JsonData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.gson.JsonArray;
@@ -21,7 +21,7 @@ public class JsonDataUnitTest {
 		JsonElement jsonElement = JsonUtil.parse(ACCOUNTS_JSON);
 		jsonData = new JsonData("", "", null, null, jsonElement);
 		
-		Data emailElement = jsonData.find("accounts.random-account.email");
+		NepticalData emailElement = jsonData.find("accounts.random-account.email");
 		assertEquals("{{random-email}}", emailElement.getAsString());
 	}
 	
@@ -31,8 +31,8 @@ public class JsonDataUnitTest {
 		JsonElement jsonElement = JsonUtil.parse(ACCOUNTS_JSON);
 		jsonData = new JsonData("", "", null, null, jsonElement);
 		
-		Data randomAccount = jsonData.find("accounts.random-account");
-		Data searchedAgain = jsonData.find("accounts.random-account");
+		NepticalData randomAccount = jsonData.find("accounts.random-account");
+		NepticalData searchedAgain = jsonData.find("accounts.random-account");
 		
 		assertSame(randomAccount, searchedAgain);
 		
@@ -50,7 +50,7 @@ public class JsonDataUnitTest {
 		
 		JsonArray jsonArray = jsonData.find("object1.prop1.array1").getAsJsonElement().getAsJsonArray();
 		
-		Data val1 = jsonData.find("object1.prop1.array1[0][0]");
+		NepticalData val1 = jsonData.find("object1.prop1.array1[0][0]");
 		
 		assertEquals("val1", val1.getAsString());
 		assertSame(jsonArray, val1.parent().parent().getAsJsonElement());

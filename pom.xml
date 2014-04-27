@@ -38,7 +38,6 @@
 		<guice.version>3.0</guice.version>
 		<apache.commons.version>3.1</apache.commons.version>
 		<guava.version>15.0</guava.version>
-		<guava.java.classifier>cdi1.0</guava.java.classifier> <!-- remove this line for java 1.7 -->
 		<jmockit.version>1.5</jmockit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<junit.version>[4.0,5.0)</junit.version>
@@ -100,7 +99,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
-			<classifier>${guava.java.classifier}</classifier>
 		</dependency>
 
 		<dependency>
