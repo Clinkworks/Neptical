@@ -7,6 +7,7 @@ import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
 import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
+import com.clinkworks.neptical.data.domain.DotNotation;
 import com.clinkworks.neptical.data.graph.TraversableDataMap;
 import com.clinkworks.neptical.data.loader.FileDataLoader;
 import com.clinkworks.neptical.data.loader.JsonDataLoader;
@@ -49,6 +50,7 @@ public class NepticalDataModule extends AbstractModule{
 	
 	public static interface NepticalDataApiFactory{
 		public Cursor create(DataElement dataElement);
+		public DotNotation create(String notation);
 	}
 	
 }

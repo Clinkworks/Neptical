@@ -2,5 +2,5 @@ package com.clinkworks.neptical.data.api;
 
 
 public interface Cursor{
-	public DataElement find(String dotNotation);
+	public DataElement find(String notation);
 }
