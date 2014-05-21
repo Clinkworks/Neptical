@@ -31,6 +31,9 @@ public class DataRegistry {
 		return loadData(file);
 	}
 	
+	public static final Data loadData(File file){
+		return loadData("", "", null, null, file);
+	}
 	
 	public static final Data loadData(String segment, String path, Data root, Data parent, File file){
 		

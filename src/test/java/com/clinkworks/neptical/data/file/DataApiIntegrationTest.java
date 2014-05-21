@@ -37,6 +37,7 @@ public class DataApiIntegrationTest {
         Data addresses = root.find("contacts.addresses");
         assertNotNull(accounts);
         assertNotNull(addresses);
+        
     }
     
     @Test
