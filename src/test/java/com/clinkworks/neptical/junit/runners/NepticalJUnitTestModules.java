@@ -21,7 +21,7 @@ public class NepticalJUnitTestModules {
 	public static final String STRING_TWO = "I_AM_STRING_TWO";
 	public static final Integer DEFAULT_INTEGER = new Integer(1092);
 	public static final Integer LEET_INTEGER = new Integer(1337);
-	public static AssertionDependency ASSERTION_DEPENDENCY; 
+	public static transient AssertionDependency ASSERTION_DEPENDENCY; 
 	
 
 	//Test dependency classes to inject into test

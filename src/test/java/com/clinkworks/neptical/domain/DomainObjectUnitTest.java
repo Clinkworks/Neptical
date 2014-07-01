@@ -1,7 +1,6 @@
 package com.clinkworks.neptical.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -43,6 +42,7 @@ public class DomainObjectUnitTest {
 		TransformableData item1 = new JsonData("", jsonData.getAsJsonArray().get(0));
 		
 		assertEquals("ITEM1", item1.getAs(String.class));
+		assertSame(strings.get(0), item1.getAs(String.class));
 		
 	}
 }

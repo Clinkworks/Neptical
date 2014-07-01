@@ -82,8 +82,12 @@ public class PathUtilUnitTest {
     	String path = "account";
     	String segment = "transactions";
     	
+    	String startingPath = "account.transactions[0][1]";
+    	String expectedComplexPath = "account.transactions[0][1].value";
+    	
     	assertEquals("account.transactions", addSegment(path, segment));
     	assertEquals("account[0]", addSegment(path, "[0]"));
-    	
+    	assertEquals("account[0][1]", addSegment(addSegment(path, "[0]"), "[1]"));
+    	assertEquals(expectedComplexPath, addSegment(startingPath, "value"));
     }
 }
