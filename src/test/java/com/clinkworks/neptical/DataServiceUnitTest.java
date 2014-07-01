@@ -24,7 +24,7 @@ public class DataServiceUnitTest {
 	public void setup(){
 		Map<Serializable, DataLoader> dataLoaderRegistry = Maps.newHashMap();
 		dataLoaderRegistry.put("mock", new MockDataLoader());
-		dataService = new DataService(null, null);
+		dataService = new DataService(null, dataLoaderRegistry);
 	}
 	
 	@Test
