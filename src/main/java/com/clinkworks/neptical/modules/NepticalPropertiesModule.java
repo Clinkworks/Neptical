@@ -18,8 +18,6 @@ public class NepticalPropertiesModule extends AbstractModule{
     @Retention(RetentionPolicy.RUNTIME)
 	public static @interface DataDirectory{}
 	
-
-	
 	@Override
 	protected void configure() {
 		bind(File.class).

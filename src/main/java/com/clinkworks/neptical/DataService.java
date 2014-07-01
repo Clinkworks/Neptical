@@ -9,7 +9,6 @@ import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.clinkworks.neptical.data.domain.FileData;
-import com.clinkworks.neptical.modules.NepticalDataModule.NepticalDataApiFactory;
 import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,20 +16,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class DataService{
 	
-	private final Map<Serializable, DataLoader> dataLoaderRegistry;
-	private final NepticalDataApiFactory dataApiFactory;
-	
+	private final Map<Serializable, DataLoader> dataLoaderRegistry;	
 	private File dataDirectory;
 	
 	@Inject
-	public DataService(@DataDirectory File dataDirectory, NepticalDataApiFactory dataApiFactory, Map<Serializable, DataLoader> dataLoaderRegistry){
+	public DataService(@DataDirectory File dataDirectory, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
-		this.dataApiFactory = dataApiFactory;
 		this.dataDirectory = dataDirectory;
 	}
 	
-	public Cursor loadData(){
-		return dataApiFactory.create(loadFile(dataDirectory));
+	public DataElement loadData(){
+		return loadFile(dataDirectory);
 	}
 	
 	public DataElement loadFile(File file){

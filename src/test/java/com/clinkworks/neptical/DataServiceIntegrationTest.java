@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-
+import com.clinkworks.neptical.modules.NepticalPropertiesModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,7 +16,7 @@ import com.clinkworks.neptical.modules.NepticalDataModule;
 import com.google.inject.Inject;
 
 @RunWith(NepticalJUnit4Runner.class)
-@NepticalConfiguration({NepticalDataModule.class})
+@NepticalConfiguration({NepticalPropertiesModule.class, NepticalDataModule.class})
 public class DataServiceIntegrationTest {
 	
 	@Inject

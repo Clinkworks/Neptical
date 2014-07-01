@@ -36,10 +36,12 @@ public class Common {
     	    	sb.append(line);
     	    }
     	}catch(Exception e){
-    	    throw new RuntimeException("Could not read file", e);
+    	    throw new RuntimeException("Could not read file: " + e.getMessage(), e);
     	}finally{
     		try {
-				reader.close();
+    			if(reader != null){
+    				reader.close();
+    			}
 			} catch (IOException e) {
 				System.out.println("Problem closing file... eating exception");
 				e.printStackTrace();
