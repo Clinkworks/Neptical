@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import com.clinkworks.neptical.modules.NepticalPropertiesModule;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,17 +28,18 @@ public class DataServiceIntegrationTest {
 
 	@Test
 	public void ensureDataServiceCanLoadDirectories(){
-		File file = new File(System.getProperty("user.home") + "/neptical-data");
-		
+		File file = getFile("");
 		DataElement data = dataService.loadFile(file);
-		
+		assertTrue(data.isFileData());
 		assertTrue(data.isLoaded());
-		assertEquals("neptical-data", data.getName());
+		assertEquals("data", data.getName());
+		assertTrue(data.getAsFileData().getAsFile().isDirectory());
 	}
 	
 	@Test
-	public void ensureDataServiceCanLoadFiles(){
-		File file = getFile("neptical-data/hello neptical.txt");
+	public void ensureDataServiceCanLoadFiles() throws IOException{
+
+		File file = getFile("hello neptical.txt");
 		DataElement data = dataService.loadFile(file);
 		
 		assertTrue(data.isLoaded());
@@ -45,16 +50,17 @@ public class DataServiceIntegrationTest {
 	
 	@Test
 	public void ensureDataServiceCanLoadJson(){
-		File file = getFile("/neptical-data/example.json");
+		File file = getFile("example.json");
 		
 		String expectedValue = "Neptical";
 		
-		JsonData jsonData = dataService.loadFile(file).getAsDataType(JsonData.class);
+		JsonData jsonData = dataService.loadFile(file).getAsJsonData();
 		
 		assertEquals(expectedValue, jsonData.getAsJsonElement().getAsJsonObject().get("hello").getAsString());
 	}
 	
 	private File getFile(String relPath){
-		return new File(System.getProperty("user.home") + "/" + relPath); 
+		URL classesRootDir = getClass().getProtectionDomain().getCodeSource().getLocation();
+		return new File(classesRootDir.getFile() + "/data/" + relPath);
 	}
 }

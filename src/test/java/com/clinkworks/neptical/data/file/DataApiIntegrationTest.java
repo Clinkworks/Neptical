@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 
 import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
+import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.data.datatypes.Data;
 import com.clinkworks.neptical.data.domain.FileData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
@@ -24,7 +26,7 @@ import com.google.inject.Inject;
 @RunWith(NepticalJUnit4Runner.class)
 public class DataApiIntegrationTest {
 	
-	private Cursor cursor;
+	private DataElement data;
 	
 	@Inject
 	@DataDirectory
@@ -32,12 +34,12 @@ public class DataApiIntegrationTest {
 	
 	@Before
 	public void setup(DataService dataService){
-		cursor = dataService.loadData();
+		data = dataService.loadData();
 	}
 	
     @Test
     public void ensureCursorCanFindTheRootNode() {
-    	assertNull(cursor.find("abc"));
+    	assertNull(data.find("abc"));
     	assertEquals(dataDirectory, cursor.find("root").get());
     	assertEquals(dataDirectory, cursor.find("//").get());
     	assertEquals(dataDirectory, cursor.find("").get());

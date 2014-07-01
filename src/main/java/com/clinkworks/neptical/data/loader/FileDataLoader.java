@@ -10,6 +10,7 @@ import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.clinkworks.neptical.data.datatypes.MutableData;
+import com.clinkworks.neptical.data.domain.FileData;
 import com.clinkworks.neptical.data.domain.GenericLoadableData;
 import com.clinkworks.neptical.data.domain.GenericMutableData;
 import com.clinkworks.neptical.data.domain.GenericPrimitiveData;
@@ -56,7 +57,7 @@ public class FileDataLoader implements DataLoader{
 		if(ObjectUtils.equals(loadableData.getLoaderCriterian(), File.class)){
 			
 			if(file.isDirectory()){
-				LoadableData loadedData = buildGenericLoadableData(File.class, file);
+				LoadableData loadedData = new FileData(file);
 				loadableData.toggleLoadedTrue();
 				loadedData.toggleLoadedTrue();
 				return new DataElement(loadedData);
