@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.clinkworks.neptical.data.api.DataLoader;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 

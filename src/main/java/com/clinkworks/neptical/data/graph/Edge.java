@@ -1,11 +1,15 @@
 package com.clinkworks.neptical.data.graph;
 
-public interface Edge {
+import java.io.Serializable;
+
+import com.clinkworks.neptical.data.api.NepticalProperty;
+
+public interface Edge extends NepticalProperty{
+		
+	public Node getStart();
 	
-	public Node getSourceNode();
-	
-	public Node getTargetNode();
-	
-	public String getIdentity();
+	public Node getEnd();
+		
+	public NepticalProperty createAlias(Serializable aliasId);
 	
 }

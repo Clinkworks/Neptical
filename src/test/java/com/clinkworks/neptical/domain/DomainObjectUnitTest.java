@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.clinkworks.neptical.data.datatypes.TransformableData;
+import com.clinkworks.neptical.data.datatype.TransformableData;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.gson.JsonElement;

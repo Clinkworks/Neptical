@@ -1,6 +1,6 @@
 package com.clinkworks.neptical.data.domain;
 
-import com.clinkworks.neptical.data.datatypes.MutableData;
+import com.clinkworks.neptical.data.datatype.MutableData;
 import com.clinkworks.neptical.util.Common;
 
 

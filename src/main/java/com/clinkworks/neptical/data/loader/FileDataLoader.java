@@ -4,16 +4,16 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.api.DataLoader;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.datatypes.MutableData;
-import com.clinkworks.neptical.data.domain.FileData;
-import com.clinkworks.neptical.data.domain.GenericLoadableData;
-import com.clinkworks.neptical.data.domain.GenericMutableData;
-import com.clinkworks.neptical.data.domain.GenericPrimitiveData;
+import com.clinkworks.neptical.data.api.NepticalData;
+import com.clinkworks.neptical.data.datatype.FileData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
+import com.clinkworks.neptical.data.domain.GenericFileData;
+import com.clinkworks.neptical.property.FileProperty;
 import com.clinkworks.neptical.util.Common;
 import com.clinkworks.neptical.util.PathUtil;
 import com.google.common.collect.Sets;
@@ -24,11 +24,14 @@ public class FileDataLoader implements DataLoader{
 		READ_AS_TEXT;
 	}
 	
+	public static final Set<String> HANDLED_EXTENSIONS;
 	private static final Set<Serializable> HANDLED_CRITERIAN;
+
 	static{
+		HANDLED_EXTENSIONS= Sets.newHashSet("txt", "csv");
+		
 		Set<Serializable> criterian = Sets.newHashSet((Serializable[])FileDataLoaderCriterian.values());
-		criterian.add("txt");
-		criterian.add("csv");
+		criterian.addAll(HANDLED_EXTENSIONS);
 		criterian.add(File.class);
 		HANDLED_CRITERIAN = criterian;
 	}
@@ -41,7 +44,11 @@ public class FileDataLoader implements DataLoader{
 	public Data loadData(LoadableData loadableData) {
 		
 		if(loadableData.isLoaded()){
-			return (Data)loadableData;
+			if(isAlreadyDataWrapped(loadableData)){
+				return (Data)loadableData;
+			}else{
+				return new Data(loadableData);
+			}
 		}
 		
 		return handleLoaderCriterian(loadableData);
@@ -52,18 +59,8 @@ public class FileDataLoader implements DataLoader{
 		
 		Serializable loaderCriterian = loadableData.getLoaderCriterian();
 		
-		File file = getFile(loadableData);
-		
-		if(ObjectUtils.equals(loadableData.getLoaderCriterian(), File.class)){
-			
-			if(file.isDirectory()){
-				LoadableData loadedData = new FileData(file);
-				loadableData.toggleLoadedTrue();
-				loadedData.toggleLoadedTrue();
-				return new Data(loadedData);
-			}
-			
-			return initNewDataElementForLoadByExtension(file);
+		if(loaderCriterianIsFileClass(loaderCriterian)){
+			return handleFile(loadableData);
 		}
 		
 		if(shouldReadFile(loaderCriterian)){
@@ -73,54 +70,122 @@ public class FileDataLoader implements DataLoader{
 		throw new UnsupportedOperationException("The file data loader cannot handle loader criterian: " + loaderCriterian);
 	}
 	
-	private Data initNewDataElementForLoadByExtension(File file){
-		GenericLoadableData genericLoadableData = buildGenericLoadableData(getExtension(file), file);
+	private Data handleFile(LoadableData loadableData){
 		
-		return new Data(genericLoadableData);
+		File file = getFile(loadableData);
+		
+		if(file.isDirectory()){
+			
+			loadableData.toggleLoadedTrue();
+			
+			if(isAlreadyDataWrapped(loadableData)){
+				Data loadedData = (Data)loadableData;
+				if(loadedData.isDataType(FileProperty.class)){
+					return (Data)loadableData;
+				}
+			}
+			
+			if(isFileResource(loadableData)){
+				return new Data(loadableData);
+			}else if(isFileData(loadableData)){
+				LoadableData newResource = new FileProperty(new FileProperty((FileData)loadableData));
+				newResource.toggleLoadedTrue();
+				return new Data(newResource);
+			}
+			
+		}
+		
+		return createUnloadedDataWithExtensionAsCriterian(loadableData);
+	}
+
+
+
+	private boolean isFileData(LoadableData loadableData) {
+		return ClassUtils.isAssignable(loadableData.getClass(), FileData.class);
+	}
+
+	private Data createUnloadedDataWithExtensionAsCriterian(LoadableData loadableData) {
+		return new Data(buildFileResource(getExtension(getFile(loadableData)), loadableData));
+	}
+
+	private boolean loaderCriterianIsFileClass(Serializable loaderCriterian) {
+		return ObjectUtils.equals(loaderCriterian, File.class);
 	}
 	
 	private Data handleRead(LoadableData loadableData){
 		
 		File file = getFile(loadableData);
-		String fileData = Common.readFile(file);
-		String name = getName(file);
+		Data data = getOrCreateFileResourceDataFromLoadableData(loadableData);
 		
-		MutableData mutableData = new GenericPrimitiveData();
+		if(file.isDirectory()){
+			data.set(file);
+		}else{
+			String fileData = Common.readFile(file);
+			data.set(fileData);
+			data.setName(hasExtension(file) ? PathUtil.chompLastSegment(file.getName()) : file.getName());
+		}
 		
-		mutableData.setName(name);
+		data.toggleLoadedTrue();
 		
-		mutableData.set(fileData);
-		
-		LoadableData newData = new GenericLoadableData(File.class, mutableData);
-		
-		newData.toggleLoadedTrue();
-		
-		return new Data(newData);
-		
+		return data;
 	}
 	
+	private Data getOrCreateFileResourceDataFromLoadableData(LoadableData loadableData) {
+		
+		FileProperty fileResource = null;
+		
+		if(isAlreadyDataWrapped(loadableData)){
+			Data data = (Data)loadableData;
+				
+			if(data.isDataType(FileProperty.class)){
+				fileResource = data.getAsDataType(FileProperty.class);
+			}else if(data.isFileData()){
+				fileResource = new FileProperty(data.getAsFileData());
+			}else{
+				//assuming a generic NepticalData element with a file as its stored object
+				fileResource = new FileProperty((File)data.get()); //will result in a class cast if somehow
+				//this is possible
+			}
+		}else{
+			if(isFileResource(loadableData)){
+				fileResource = (FileProperty)loadableData;
+			}
+			
+			if(fileResource == null){
+				//should not have ever made it this far without a file actually being in the NepticalData
+				fileResource = new FileProperty((File)loadableData.get());
+			}
+		}
+		
+		return isAlreadyDataWrapped(fileResource) ? (Data)(NepticalData)fileResource : new Data(fileResource);
+		
+	}
+
+	private boolean isFileResource(LoadableData loadableData) {
+		return ClassUtils.isAssignable(loadableData.getClass(), FileProperty.class);
+	}
+
+	private boolean isAlreadyDataWrapped(LoadableData loadableData) {
+		return ClassUtils.isAssignable(loadableData.getClass(), Data.class);
+	}
+
 	private boolean shouldReadFile(Serializable loaderCriterian){
 		return getHandledDataLoaderCriterian().contains(loaderCriterian);
 	}
 	
-	private GenericLoadableData buildGenericLoadableData(Serializable loaderCriterian, File file){
-		return new GenericLoadableData(loaderCriterian, buildGenericData(file));
+	private FileProperty buildFileResource(Serializable loaderCriterian, LoadableData loadableData){
+		return new FileProperty(getNepticalId(loadableData), loaderCriterian, getFile(loadableData));
 	}
 	
-	private MutableData buildGenericData(File file){
-
-		MutableData mutableData = new GenericMutableData();
-		
-		String name = getName(file);
-		
-		mutableData.setName(name);
-		mutableData.set(file);
-		
-		return mutableData;
+	private Serializable getNepticalId(LoadableData loadableData) {
+		if(ClassUtils.isAssignable(loadableData.getClass(), FileProperty.class)){
+			return ((FileProperty)loadableData).getLoaderCriterian();
+		}
+		return getFile(loadableData).getAbsolutePath();
 	}
 	
 	private boolean hasExtension(File file){
-		return file.getName().indexOf(PathUtil.DOT) > 0;
+		return file.getName().lastIndexOf(PathUtil.DOT) > 0;
 	}
 	
 	private String getExtension(File file){
@@ -131,14 +196,8 @@ public class FileDataLoader implements DataLoader{
 	}
 	
 	private File getFile(LoadableData loadableData){
-		//intentional unchecked cast, only the data service should have called this method
+		//intentional unchecked cast, only raw system files should be handled by this class by contract
 		return (File)loadableData.get();
-	}
-	
-	private String getName(File file){
-		return hasExtension(file) ? 
-				PathUtil.chompLastSegment(file.getName()) : 
-					file.getName();
 	}
 
 	@Override

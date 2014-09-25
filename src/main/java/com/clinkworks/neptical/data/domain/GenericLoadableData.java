@@ -2,8 +2,8 @@ package com.clinkworks.neptical.data.domain;
 
 import java.io.Serializable;
 
-import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.datatypes.MutableData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
+import com.clinkworks.neptical.data.datatype.MutableData;
 
 public class GenericLoadableData implements LoadableData, MutableData{
 	

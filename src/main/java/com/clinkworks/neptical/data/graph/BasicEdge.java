@@ -1,33 +1,40 @@
 package com.clinkworks.neptical.data.graph;
 
+import java.io.Serializable;
 
 public class BasicEdge implements Edge{
 	
-	String identity;
-	Node sourceNode;
-	Node targetNode;
+	private final Serializable nepticalId;
+	private Node start;
+	private Node end;
 	
-	BasicEdge(String identity, Node sourceNode, Node targetNode){
-		this.identity = identity;
-		this.sourceNode = sourceNode;
-		this.targetNode = targetNode;
+	public BasicEdge(Serializable nepticalId){
+		this.nepticalId = nepticalId;
+	}
+	
+	public Node getStart(){
+		return start;
+	}
+	
+	public Node getEnd(){
+		return end;
 	}
 	
 	@Override
-	public Node getSourceNode(){
-		return sourceNode;
+	public Serializable getNepticalId() {
+		return nepticalId;
 	}
 	
-	@Override
-	public Node getTargetNode(){
-		return targetNode;
-	}
-	
-	@Override
-	public String getIdentity(){
-		return identity;
+	public synchronized void setEnd(Node end) {
+		this.end = end;
 	}
 
+	public synchronized void setStart(Node start) {
+		this.start = start;
+	}
 	
+	public Edge createAlias(Serializable aliasId){
+		return new EdgeAlias(this, aliasId);
+	}
 
 }

@@ -13,13 +13,14 @@ import org.junit.runner.RunWith;
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
-import com.clinkworks.neptical.data.api.NepticalProperty;
-import com.clinkworks.neptical.data.domain.FileData;
+import com.clinkworks.neptical.data.api.NepticalData;
+import com.clinkworks.neptical.data.datatype.FileData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.modules.NepticalDataModule;
 import com.clinkworks.neptical.modules.NepticalPropertiesModule;
 import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
+import com.clinkworks.neptical.property.FileProperty;
 import com.google.inject.Inject;
 
 @NepticalConfiguration({NepticalDataModule.class, NepticalPropertiesModule.class})
@@ -40,16 +41,16 @@ public class DataApiIntegrationTest {
     @Test
     public void ensureCursorCanFindTheRootNode() {
     	assertNull(data.find("abc"));
-    	assertEquals(dataDirectory, cursor.find("root").get());
-    	assertEquals(dataDirectory, cursor.find("//").get());
-    	assertEquals(dataDirectory, cursor.find("").get());
-    	assertNull(cursor.find("123"));
+    	assertEquals(dataDirectory, data.find("root").get());
+    	assertEquals(dataDirectory, data.find("//").get());
+    	assertEquals(dataDirectory, data.find("").get());
+    	assertNull(data.find("123"));
     }
     
     @Test
     public void ensureFileDataCanLoadNestedResources(){
 
-        FileData accounts = cursor.find("contacts").getAsFileData();
+        FileData accounts = data.find("contacts").getAsFileData();
         
         assertTrue(accounts.isDirectory());
     }

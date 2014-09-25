@@ -3,8 +3,8 @@ package com.clinkworks.neptical.data.domain;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.clinkworks.neptical.data.datatypes.MutableData;
-import com.clinkworks.neptical.data.datatypes.PrimitiveData;
+import com.clinkworks.neptical.data.datatype.MutableData;
+import com.clinkworks.neptical.data.datatype.PrimitiveData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.gson.JsonElement;
 

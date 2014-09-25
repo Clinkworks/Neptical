@@ -3,26 +3,27 @@ package com.clinkworks.neptical;
 import java.io.Serializable;
 import java.util.List;
 
-import com.clinkworks.neptical.data.api.NepticalProperty;
-import com.clinkworks.neptical.data.datatypes.ListableData;
-import com.clinkworks.neptical.data.datatypes.ListableTransformableData;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.datatypes.MutableData;
-import com.clinkworks.neptical.data.datatypes.PrimitiveData;
-import com.clinkworks.neptical.data.datatypes.TransformableData;
-import com.clinkworks.neptical.data.domain.FileData;
+import com.clinkworks.neptical.data.api.Cursor;
+import com.clinkworks.neptical.data.api.NepticalData;
+import com.clinkworks.neptical.data.datatype.FileData;
+import com.clinkworks.neptical.data.datatype.ListableData;
+import com.clinkworks.neptical.data.datatype.ListableTransformableData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
+import com.clinkworks.neptical.data.datatype.MutableData;
+import com.clinkworks.neptical.data.datatype.PrimitiveData;
+import com.clinkworks.neptical.data.datatype.TransformableData;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.DataUtil;
 
-public class Data implements ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
+public class Data implements Cursor, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
 	
-	private NepticalProperty backingData;
+	private NepticalData backingData;
 	
-	public Data(NepticalProperty backingData){
+	public Data(NepticalData backingData){
 		this.backingData = backingData;
 	}	
 	
-	public NepticalProperty getData(){
+	public NepticalData getData(){
 		return backingData;
 	}
 	
@@ -100,11 +101,11 @@ public class Data implements ListableData, ListableTransformableData, Transforma
 		return getAsDataType(MutableData.class);
 	}
 
-	public boolean isDataType(Class<? extends NepticalProperty> dataType){
+	public boolean isDataType(Class<? extends NepticalData> dataType){
 		return DataUtil.isDataType(dataType, getData());
 	}
 	
-	public <T extends NepticalProperty> T getAsDataType(Class<? extends NepticalProperty> dataType){
+	public <T extends NepticalData> T getAsDataType(Class<? extends NepticalData> dataType){
 		return DataUtil.getAsDataType(dataType, getData());
 	}
 	
@@ -159,5 +160,11 @@ public class Data implements ListableData, ListableTransformableData, Transforma
 	@Override
 	public String toString(){
 		return getData().toString();
+	}
+
+	@Override
+	public Data find(String notation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 
 import static com.clinkworks.neptical.util.Common.noOp;
 
-import com.clinkworks.neptical.NepticalData;
-import com.clinkworks.neptical.data.api.DataLoader.TestData;
+//import com.clinkworks.neptical.NepticalData;
+//import com.clinkworks.neptical.data.api.DataLoader.TestData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BindingAnnotationForIntegerConfig;
 import com.clinkworks.neptical.junit.runners.NepticalJUnitTestModules.BoundIntegerModule;
@@ -28,8 +28,8 @@ public class NepticalJUnit4IntegrationTest {
 	
 	boolean beforeMethodWasCalled = false;
 	
-	@TestData("users.random-account.account")
-	private NepticalData testData;
+//	@TestData("users.random-account.account")
+//	private NepticalData testData;
 	
 	@Before
 	public void before(String stringBeforeInjection){
@@ -63,17 +63,17 @@ public class NepticalJUnit4IntegrationTest {
 		assertEquals(NepticalJUnitTestModules.LEET_INTEGER, leetInteger);
 	}
 	
-	@Test
-	public void integrationTestExpectingTestContextToInjectProperTestData(){
-		assertEquals("{{random-email}}", testData.find("email").getAsString());
-	}
-	
-	@Test
-	@Ignore
-	@TestData("contacts.addresses.genericAddress")
-	public void integrationTestExpectingTestContextToInjectProperTestDataInLaterContext(){
-		assertEquals("1234 my place drive", testData.find("AddressLine1"));
-	}
+//	@Test
+//	public void integrationTestExpectingTestContextToInjectProperTestData(){
+//		assertEquals("{{random-email}}", testData.find("email").getAsString());
+//	}
+//	
+//	@Test
+//	@Ignore
+//	@TestData("contacts.addresses.genericAddress")
+//	public void integrationTestExpectingTestContextToInjectProperTestDataInLaterContext(){
+//		assertEquals("1234 my place drive", testData.find("AddressLine1"));
+//	}
 	
 	@Test
 	public void integrationTestExpectingTestLevelInjectionToSucceed(@BindingAnnotationForIntegerConfig Integer boundInteger){

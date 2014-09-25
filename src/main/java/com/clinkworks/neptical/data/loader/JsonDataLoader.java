@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.api.DataLoader;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.common.collect.Sets;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
 
 
 public interface DataLoader {

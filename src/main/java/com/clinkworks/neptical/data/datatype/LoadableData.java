@@ -1,8 +1,8 @@
-package com.clinkworks.neptical.data.datatypes;
+package com.clinkworks.neptical.data.datatype;
 
 import java.io.Serializable;
 
-import com.clinkworks.neptical.data.api.NepticalProperty;
+import com.clinkworks.neptical.data.api.NepticalData;
 
 /**
  * The loadable node interface used for lazy loading purposes.
@@ -12,7 +12,7 @@ import com.clinkworks.neptical.data.api.NepticalProperty;
  * @author ClinkWorks
  *
  */
-public interface LoadableData extends NepticalProperty {
+public interface LoadableData extends NepticalData {
 	/**
 	 * Returned from this method is the type to load. Any identifier listed in the NepticalDataModule
 	 * will suffice
@@ -27,11 +27,12 @@ public interface LoadableData extends NepticalProperty {
 	 * 
 	 * @param typeToLoad
 	 */
-	public abstract Serializable getLoaderCriterian();
+	public Serializable getLoaderCriterian();
 	
-	public abstract boolean isLoaded();
+	public boolean isLoaded();
 	
-	public abstract void toggleLoadedTrue();
+	public void toggleLoadedTrue();
 	
-	public abstract void toggleLoadedFalse();
+	public void toggleLoadedFalse();
+	
 }

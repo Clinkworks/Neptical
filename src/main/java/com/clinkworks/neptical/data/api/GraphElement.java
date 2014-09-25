@@ -2,6 +2,6 @@ package com.clinkworks.neptical.data.api;
 
 import java.io.Serializable;
 
-public interface NepticalProperty {
+public interface GraphElement {
 	public Serializable getNepticalId();
 }

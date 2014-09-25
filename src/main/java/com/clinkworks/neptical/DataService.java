@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.clinkworks.neptical.data.api.Cursor;
 import com.clinkworks.neptical.data.api.DataLoader;
-import com.clinkworks.neptical.data.datatypes.LoadableData;
-import com.clinkworks.neptical.data.domain.FileData;
+import com.clinkworks.neptical.data.datatype.LoadableData;
 import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
+import com.clinkworks.neptical.property.FileProperty;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,7 +29,7 @@ public class DataService implements Cursor{
 	}
 	
 	public Data loadFile(File file){
-		FileData fileData = new FileData(file);
+		FileProperty fileData = new FileProperty(file);
 		return loadData(fileData);
 	}
 

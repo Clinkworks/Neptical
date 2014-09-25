@@ -1,39 +1,36 @@
 package com.clinkworks.neptical.data.graph;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.data.api.NepticalProperty;
-
 
 public class BasicNode implements Node{
+
+	private Data data;
 	
-	private final String identity;
-	private final String conflictIdentifier;
-	private final Data contents;
+	public BasicNode(Data data){
+		this.data = data;
+	}
 	
-	BasicNode(String identity, String conflictIdentifier, Data contents){
-		this.identity = identity;
-		this.conflictIdentifier = conflictIdentifier;
-		this.contents = contents;
+	@Override
+	public Data getData() {
+		return data;
+	}
+	
+	public void setData(Data data){
+		synchronized (this) {
+			this.data = data;	
+		}
 	}
 
+
 	@Override
-	public <T extends NepticalProperty> T getDataAsType(Class<T> dataType){
-		return getContents().getAsDataType(dataType);
+	public String getName() {
+		return data.getName();
 	}
-	
+
+
 	@Override
-	public String getIdentity(){
-		return identity;
+	public Object get() {
+		return data.get();
 	}
-	
-	@Override
-	public String getConflictIdentifier(){
-		return conflictIdentifier;
-	}
-	
-	@Override
-	public Data getContents(){
-		return contents;
-	}
-	
+
 }
