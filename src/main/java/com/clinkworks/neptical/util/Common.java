@@ -11,5 +11,9 @@ public class Common {
 	public static final void noOp(){
 		assertTrue(true);
 	}
+
+	public static void noOp(String string) {
+		
+	}
 	
 }
