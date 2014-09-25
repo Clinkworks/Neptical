@@ -1,11 +1,11 @@
 package com.clinkworks.neptical.data.domain;
 
-import com.clinkworks.neptical.data.datatypes.Data;
+import com.clinkworks.neptical.data.api.NepticalProperty;
 import com.clinkworks.neptical.data.datatypes.MutableData;
 
-public class GenericImmutableData implements Data{
+public class GenericImmutableData implements NepticalProperty{
 
-	private final Data backingData;
+	private final NepticalProperty backingData;
 	
 	public GenericImmutableData(String name, Object data){
 		MutableData mutableData = new GenericMutableData();
@@ -14,7 +14,7 @@ public class GenericImmutableData implements Data{
 		backingData = mutableData;
 	}
 	
-	public GenericImmutableData(Data data){
+	public GenericImmutableData(NepticalProperty data){
 		backingData = data;
 	}
 	

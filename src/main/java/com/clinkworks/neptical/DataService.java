@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.clinkworks.neptical.data.api.Cursor;
-import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.clinkworks.neptical.data.domain.FileData;
@@ -14,7 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DataService{
+public class DataService implements Cursor{
 	
 	private final Map<Serializable, DataLoader> dataLoaderRegistry;	
 	private File dataDirectory;
@@ -25,19 +24,19 @@ public class DataService{
 		this.dataDirectory = dataDirectory;
 	}
 	
-	public DataElement loadData(){
+	public Data loadData(){
 		return loadFile(dataDirectory);
 	}
 	
-	public DataElement loadFile(File file){
+	public Data loadFile(File file){
 		FileData fileData = new FileData(file);
 		return loadData(fileData);
 	}
 
-	public DataElement loadData(LoadableData loadableData) {
+	public Data loadData(LoadableData loadableData) {
 		
 		if(loadableData.isLoaded()){
-			return (DataElement)loadableData;
+			return (Data)loadableData;
 		}
 		
 		Serializable loaderCriterian = loadableData.getLoaderCriterian();
@@ -48,7 +47,7 @@ public class DataService{
 			throw new IllegalStateException("No data loader exists for criterian " + loadableData.getLoaderCriterian());
 		}
 		
-		DataElement data = dataLoader.loadData(loadableData);
+		Data data = dataLoader.loadData(loadableData);
 		
 		//note: I realize this is probably an unsafe thing to do,
 		//TODO: test the shit out of this method and make sure that it cannot cause a stack overflow.	
@@ -57,6 +56,12 @@ public class DataService{
 		}
 		
 		return data;
+	}
+
+	@Override
+	public Data find(String notation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

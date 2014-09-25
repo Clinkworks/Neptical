@@ -2,7 +2,9 @@ package com.clinkworks.neptical.data.datatypes;
 
 import java.util.List;
 
-public interface ListableData extends Data{
+import com.clinkworks.neptical.data.api.NepticalProperty;
+
+public interface ListableData extends NepticalProperty{
 
 	public List<Object> getList();
 

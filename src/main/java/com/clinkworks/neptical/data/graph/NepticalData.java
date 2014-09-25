@@ -1,7 +1,7 @@
 package com.clinkworks.neptical.data.graph;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataService;
-import com.clinkworks.neptical.data.api.DataElement;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
@@ -19,7 +19,7 @@ public class NepticalData{
 	
 	
 	@Inject
-	public NepticalData(@Assisted DataElement rootData, DataService dataService){
+	public NepticalData(@Assisted Data rootData, DataService dataService){
 		
 		rootNode = new BasicNode("", "root", rootData);
 		

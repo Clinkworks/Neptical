@@ -1,21 +1,28 @@
-package com.clinkworks.neptical.data.datatypes;
+package com.clinkworks.neptical;
 
 import java.io.Serializable;
 import java.util.List;
 
+import com.clinkworks.neptical.data.api.NepticalProperty;
+import com.clinkworks.neptical.data.datatypes.ListableData;
+import com.clinkworks.neptical.data.datatypes.ListableTransformableData;
+import com.clinkworks.neptical.data.datatypes.LoadableData;
+import com.clinkworks.neptical.data.datatypes.MutableData;
+import com.clinkworks.neptical.data.datatypes.PrimitiveData;
+import com.clinkworks.neptical.data.datatypes.TransformableData;
 import com.clinkworks.neptical.data.domain.FileData;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.DataUtil;
 
-public abstract class DataElementBase implements ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
+public class Data implements ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
 	
-	private Data backingData;
+	private NepticalProperty backingData;
 	
-	public DataElementBase(Data backingData){
+	public Data(NepticalProperty backingData){
 		this.backingData = backingData;
-	}
+	}	
 	
-	public Data getData(){
+	public NepticalProperty getData(){
 		return backingData;
 	}
 	
@@ -93,11 +100,11 @@ public abstract class DataElementBase implements ListableData, ListableTransform
 		return getAsDataType(MutableData.class);
 	}
 
-	public boolean isDataType(Class<? extends Data> dataType){
+	public boolean isDataType(Class<? extends NepticalProperty> dataType){
 		return DataUtil.isDataType(dataType, getData());
 	}
 	
-	public <T extends Data> T getAsDataType(Class<? extends Data> dataType){
+	public <T extends NepticalProperty> T getAsDataType(Class<? extends NepticalProperty> dataType){
 		return DataUtil.getAsDataType(dataType, getData());
 	}
 	
@@ -153,5 +160,4 @@ public abstract class DataElementBase implements ListableData, ListableTransform
 	public String toString(){
 		return getData().toString();
 	}
-	
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.clinkworks.neptical.data.domain.JsonData;
@@ -17,10 +17,10 @@ import com.google.gson.JsonElement;
 public class JsonDataLoader implements DataLoader{
 
 	@Override
-	public DataElement loadData(LoadableData loadableData) {
+	public Data loadData(LoadableData loadableData) {
 		
 		if(loadableData.isLoaded()){
-			return (DataElement)loadableData;
+			return (Data)loadableData;
 		}
 		
 		JsonElement element = null;
@@ -31,7 +31,7 @@ public class JsonDataLoader implements DataLoader{
 			element = (JsonElement)loadableData.get();
 		}
 		
-		return new DataElement(new JsonData(loadableData.getName(), element));
+		return new Data(new JsonData(loadableData.getName(), element));
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import com.clinkworks.neptical.data.api.DataElement;
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.clinkworks.neptical.data.datatypes.MutableData;
@@ -38,17 +38,17 @@ public class FileDataLoader implements DataLoader{
 	}
 	
 	@Override
-	public DataElement loadData(LoadableData loadableData) {
+	public Data loadData(LoadableData loadableData) {
 		
 		if(loadableData.isLoaded()){
-			return (DataElement)loadableData;
+			return (Data)loadableData;
 		}
 		
 		return handleLoaderCriterian(loadableData);
 
 	}
 	
-	private DataElement handleLoaderCriterian(LoadableData loadableData){
+	private Data handleLoaderCriterian(LoadableData loadableData){
 		
 		Serializable loaderCriterian = loadableData.getLoaderCriterian();
 		
@@ -60,7 +60,7 @@ public class FileDataLoader implements DataLoader{
 				LoadableData loadedData = new FileData(file);
 				loadableData.toggleLoadedTrue();
 				loadedData.toggleLoadedTrue();
-				return new DataElement(loadedData);
+				return new Data(loadedData);
 			}
 			
 			return initNewDataElementForLoadByExtension(file);
@@ -73,13 +73,13 @@ public class FileDataLoader implements DataLoader{
 		throw new UnsupportedOperationException("The file data loader cannot handle loader criterian: " + loaderCriterian);
 	}
 	
-	private DataElement initNewDataElementForLoadByExtension(File file){
+	private Data initNewDataElementForLoadByExtension(File file){
 		GenericLoadableData genericLoadableData = buildGenericLoadableData(getExtension(file), file);
 		
-		return new DataElement(genericLoadableData);
+		return new Data(genericLoadableData);
 	}
 	
-	private DataElement handleRead(LoadableData loadableData){
+	private Data handleRead(LoadableData loadableData){
 		
 		File file = getFile(loadableData);
 		String fileData = Common.readFile(file);
@@ -95,7 +95,7 @@ public class FileDataLoader implements DataLoader{
 		
 		newData.toggleLoadedTrue();
 		
-		return new DataElement(newData);
+		return new Data(newData);
 		
 	}
 	

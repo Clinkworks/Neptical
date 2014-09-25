@@ -1,6 +1,8 @@
 package com.clinkworks.neptical.data.datatypes;
 
-public interface MutableData extends Data{
+import com.clinkworks.neptical.data.api.NepticalProperty;
+
+public interface MutableData extends NepticalProperty{
 
 	public void set(Object object);
 	

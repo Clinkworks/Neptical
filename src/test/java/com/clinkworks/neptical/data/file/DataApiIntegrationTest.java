@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.DataService;
 import com.clinkworks.neptical.data.api.Cursor;
-import com.clinkworks.neptical.data.api.DataElement;
-import com.clinkworks.neptical.data.datatypes.Data;
+import com.clinkworks.neptical.data.api.NepticalProperty;
 import com.clinkworks.neptical.data.domain.FileData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 @RunWith(NepticalJUnit4Runner.class)
 public class DataApiIntegrationTest {
 	
-	private DataElement data;
+	private Data data;
 	
 	@Inject
 	@DataDirectory

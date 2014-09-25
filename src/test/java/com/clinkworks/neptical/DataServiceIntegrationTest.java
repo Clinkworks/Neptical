@@ -12,7 +12,6 @@ import com.clinkworks.neptical.modules.NepticalPropertiesModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
@@ -29,7 +28,7 @@ public class DataServiceIntegrationTest {
 	@Test
 	public void ensureDataServiceCanLoadDirectories(){
 		File file = getFile("");
-		DataElement data = dataService.loadFile(file);
+		Data data = dataService.loadFile(file);
 		assertTrue(data.isFileData());
 		assertTrue(data.isLoaded());
 		assertEquals("data", data.getName());
@@ -40,7 +39,7 @@ public class DataServiceIntegrationTest {
 	public void ensureDataServiceCanLoadFiles() throws IOException{
 
 		File file = getFile("hello neptical.txt");
-		DataElement data = dataService.loadFile(file);
+		Data data = dataService.loadFile(file);
 		
 		assertTrue(data.isLoaded());
 		

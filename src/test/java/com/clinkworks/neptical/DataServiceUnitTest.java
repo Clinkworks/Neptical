@@ -10,7 +10,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clinkworks.neptical.data.api.DataElement;
 import com.clinkworks.neptical.data.api.DataLoader;
 import com.clinkworks.neptical.data.datatypes.LoadableData;
 import com.google.common.collect.Maps;
@@ -42,9 +41,9 @@ public class DataServiceUnitTest {
 	public static class MockDataLoader implements DataLoader{
 		
 		@Override
-		public DataElement loadData(LoadableData loadableNode) {
+		public Data loadData(LoadableData loadableNode) {
 			loadableNode.toggleLoadedTrue();
-			return new DataElement(loadableNode);
+			return new Data(loadableNode);
 		}
 
 		@Override
