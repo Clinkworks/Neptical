@@ -14,13 +14,19 @@ import com.clinkworks.neptical.data.datatype.PrimitiveData;
 import com.clinkworks.neptical.data.datatype.TransformableData;
 import com.clinkworks.neptical.data.domain.JsonData;
 import com.clinkworks.neptical.util.DataUtil;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 public class Data implements Cursor, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
 	
 	private NepticalData backingData;
 	
-	public Data(NepticalData backingData){
+	private final DataService dataService;
+	
+	@Inject
+	public Data(@Assisted NepticalData backingData, DataService dataService){
 		this.backingData = backingData;
+		this.dataService = dataService;
 	}	
 	
 	public NepticalData getData(){

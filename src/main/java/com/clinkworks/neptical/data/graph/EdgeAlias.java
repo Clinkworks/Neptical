@@ -2,9 +2,10 @@ package com.clinkworks.neptical.data.graph;
 
 import java.io.Serializable;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.data.api.NepticalProperty;
 
-public class EdgeAlias implements Edge{
+public class EdgeAlias implements Edge, Node{
 
 	private final Edge aliasedEdge;
 	private final Serializable alias;
@@ -36,6 +37,24 @@ public class EdgeAlias implements Edge{
 	
 	public Edge getEdge(){
 		return aliasedEdge;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object get() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Data getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
