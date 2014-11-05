@@ -166,7 +166,17 @@ public class Data implements Cursor, ListableData, ListableTransformableData, Tr
 
 	@Override
 	public String toString(){
-		return getData().toString();
+		NepticalData data = getData();
+		
+		if(data == null){
+			return super.toString();
+		}
+		
+		if(data.getName() != null){
+			return data.getName();
+		}
+		
+		return data.toString();
 	}
 
 	@Override

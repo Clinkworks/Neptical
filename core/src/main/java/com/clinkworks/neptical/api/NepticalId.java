@@ -1,25 +1,22 @@
 package com.clinkworks.neptical.api;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 public class NepticalId<T extends Serializable> {
 	
 	private final T id;
-	private final String uniqueId;
 	
 	public NepticalId(T id){
 		this.id = id;
-		this.uniqueId = UUID.randomUUID().toString();
 	}
 	
-	public T getId(){
+	public T get(){
 		return id;
 	}
 	
 	@Override
 	public int hashCode(){
-		return getId().hashCode();
+		return get().hashCode();
 	}
 	
 	@Override
@@ -30,14 +27,15 @@ public class NepticalId<T extends Serializable> {
 		}
 		
 		if(object instanceof NepticalId<?>){
-			return getId().equals(((NepticalId<?>)object).getId());
+			return get().equals(((NepticalId<?>)object).get());
 		}
 		
-		return getId().equals(object);
+		return get().equals(object);
 	}
-
-	public String getUniqueId() {
-		return uniqueId;
+	
+	@Override
+	public String toString(){
+		return get().toString();
 	}
 	
 }

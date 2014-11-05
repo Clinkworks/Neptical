@@ -1,8 +1,10 @@
 package com.clinkworks.neptical.graph;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class DataGraphUnitTest {
 	
 	@Before
 	public void init(){
+		edgeLookup = new HashMap<NepticalId<?>, Edge>();
 		dataGraph = new DataGraph(edgeLookup, new GraphTestDataComponentFactoryStub());
 		buildNodesForTestData();
 	}
@@ -45,19 +48,19 @@ public class DataGraphUnitTest {
 		final String id = "EDGE1";
 				
 		new Expectations(){{
-			dataComponentFactoryMocked.createEdge(withSameInstance(id), withSameInstance(start), withSameInstance(end));
+			dataComponentFactoryMocked.createSegment(withSameInstance(id), withSameInstance(start), withSameInstance(end));
 			times = 1;
-			result = new Edge(null, null, null);
+			result = new Segment(id, start, end, new GraphTestDataComponentFactoryStub());
 		}};
 		
-		new DataGraph(new HashMap<NepticalId<?>, Edge>(), dataComponentFactoryMocked).linkNodesBy(id, start, end);
+		new DataGraph(new HashMap<NepticalId<?>, Edge>(), dataComponentFactoryMocked).linkNodesByPublicId(id, start, end);
 	}
 	
 	@Test
 	public void dataGraphStoresCreatedEdges(){
-		assertNull(dataGraph.getEdgeByFullyQualifiedId("EDGE_ID"));
-		dataGraph.linkNodesBy("EDGE_ID", new Node(), new Node());
-		assertNotNull(dataGraph.getEdgeByFullyQualifiedId("EDGE_ID"));
+		assertNull(dataGraph.getEdgeByPublicId("EDGE_ID"));
+		dataGraph.linkNodesByPublicId("EDGE_ID", directory, jsonDataInTextFile);
+		assertNotNull(dataGraph.getEdgeByPublicId("EDGE_ID"));
 	}
 	
 	@Test
@@ -72,6 +75,7 @@ public class DataGraphUnitTest {
 			actualNodes.add(edge.getStart());
 		}
 		
+		//one edge linked together by an internal link, another by the public id
 		assertEquals(2, edges.size());
 		assertTrue(actualNodes.contains(directory));
 		assertEquals(1, actualNodes.size());
@@ -83,31 +87,53 @@ public class DataGraphUnitTest {
 
 	@Test
 	public void theGraphIsCapableOfReturningAPathBetweenIndirectlyConnectedNodes(){
+
 		linkTestNodes();
 		
+		Path path = dataGraph.getPathBetween(directory, jsonDataInTextFile);
 		
+		assertEquals(3, path.getLength());
+		assertFalse(path.hasPrevious());
+		assertEquals(textInFile, path.next());		
+		assertSame(jsonDataInTextFile, path.next());
+		assertFalse(path.hasNext());
+		//found paths should found only once!
+		assertSame(path, dataGraph.getPathBetween(directory, jsonDataInTextFile));
 		
 	}
 	
 	private void linkTestNodes() {
-		dataGraph.linkNodesBy("DIRECTORY_TO_FILE", directory	, textFile);
-		dataGraph.linkNodesBy("DIRECTORY_TO_DATA", directory, textInFile);
-		dataGraph.linkNodesBy("DATA-TO-JSON", textInFile, jsonDataInTextFile);
+		dataGraph.linkNodesByPublicId("DIRECTORY_TO_FILE", directory	, textFile);
+		dataGraph.linkNodesByPublicId("DIRECTORY_TO_DATA", directory, textInFile);
+		dataGraph.linkNodesByPublicId("DATA-TO-JSON", textInFile, jsonDataInTextFile);
 	}
 
 	private void buildNodesForTestData() {
-		directory = new Node();
-		textFile = new Node();
-		textInFile= new Node();
-		jsonDataInTextFile = new Node();
+	    DataComponentFactory dataComponentFactory = new GraphTestDataComponentFactoryStub();
+		directory = dataComponentFactory.createNode("DIRECTORY");
+		textFile = dataComponentFactory.createNode("TEXT_FILE");
+		textInFile = dataComponentFactory.createNode("TEXT_IN_FILE");
+		jsonDataInTextFile = dataComponentFactory.createNode("TEXT_IN_FILE");
 	}
 	
 	public static class GraphTestDataComponentFactoryStub implements DataComponentFactory{
 
 		@Override
-		public Edge createEdge(String identifiedBy, Node start, Node end) {
-			return new Edge(identifiedBy, start, end);
+		public Segment createSegment(String identifiedBy, Node start, Node end) {
+			return new Segment(identifiedBy, start, end, this);
 		}
+
+		@Override
+		public Path createPath(List<Edge> pathMakeup) {
+			return new Path(pathMakeup, this);
+		}
+
+		@Override
+		public Node createNode(String publicId) {
+			return new Node(new NodeId(), publicId);
+		}
+		
+		
 
 	}
 }

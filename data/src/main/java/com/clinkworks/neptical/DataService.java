@@ -9,6 +9,7 @@ import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
+import com.clinkworks.neptical.graph.DataGraph;
 import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -18,15 +19,17 @@ public class DataService implements Cursor{
 	
 	private final Map<Serializable, DataLoader> dataLoaderRegistry;	
 	private final File dataDirectory;
+	private final DataGraph dataGraph;
 	
 	@Inject
-	public DataService(@DataDirectory File dataDirectory, Map<Serializable, DataLoader> dataLoaderRegistry){
+	public DataService(@DataDirectory File dataDirectory, DataGraph dataGraph, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
 		this.dataDirectory = dataDirectory;
+		this.dataGraph = dataGraph;
 	}
 	
 	public Data loadData(){
-		return loadFile(dataDirectory);
+		return loadFile(dataDirectory) ;
 	}
 	
 	public Data loadFile(File file){

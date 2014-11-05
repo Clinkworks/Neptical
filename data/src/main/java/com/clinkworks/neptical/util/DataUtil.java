@@ -25,7 +25,7 @@ public class DataUtil {
 	}
 
 	private static final boolean nepticalDataIsWrapped(NepticalData nepticalData) {
-		return isDataType(Data.class, nepticalData);
+		return ClassUtils.isAssignable(nepticalData.getClass(), Data.class);
 	}
 
 	public static final boolean isDataType(Class<? extends NepticalData> dataType, NepticalData nepticalData) {
@@ -43,10 +43,6 @@ public class DataUtil {
 		if (!isDataType(dataType, nepticalData)) {
 			throw new IllegalStateException("This data is not of type "
 					+ dataType + " (" + nepticalData + ")");
-		}
-
-		if (nepticalData instanceof Data) {
-			return ((Data) nepticalData).getAsDataType(dataType);
 		}
 
 		return (T) nepticalData;

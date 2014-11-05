@@ -1,16 +1,16 @@
 package com.clinkworks.neptical.graph;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.clinkworks.neptical.graph.DataGraph;
-import com.clinkworks.neptical.graph.Edge;
-import com.clinkworks.neptical.graph.Node;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.modules.NepticalDataModule;
+import com.clinkworks.neptical.util.DataComponentFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -24,6 +24,9 @@ public class DataGraphSystemTest {
 	@Inject
 	private Provider<DataGraph> dataGraphProvider;
 	
+	@Inject
+	private DataComponentFactory dataComponentFactory;
+	
 	@Test
 	public void dataGraphIsProperlyInjectableAndSingletonIsRespected(){
 		assertNotNull(dataGraph);
@@ -32,10 +35,10 @@ public class DataGraphSystemTest {
 	
 	@Test
 	public void graphCanLinkNodesToAnEdge(){
-		Edge edge = dataGraph.linkNodesBy("NEW EDGE!", new Node(), new Node());
+		Edge edge = dataGraph.linkNodesByPublicId("NEW EDGE!", dataComponentFactory.createNode("node1"), dataComponentFactory.createNode("node2"));
 		assertNotNull(edge);
-		assertEquals("NEW EDGE!", edge.getIdentifier());
-		assertSame(edge, dataGraph.getEdgeByFullyQualifiedId("NEW EDGE!"));
+		assertEquals("NEW EDGE!", edge.getPublicId().toString());
+		assertSame(edge, dataGraph.getEdgeByPublicId("NEW EDGE!"));
 	}
 	
 }
