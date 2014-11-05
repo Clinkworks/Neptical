@@ -1,9 +1,10 @@
-package com.clinkworks.neptical;
+package com.clinkworks.neptical.service;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.api.Cursor;
 import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
