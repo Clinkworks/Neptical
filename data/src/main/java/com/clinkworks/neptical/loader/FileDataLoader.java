@@ -9,7 +9,6 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.api.DataLoader;
-import com.clinkworks.neptical.api.NepticalData;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
@@ -111,11 +110,6 @@ public class FileDataLoader implements DataLoader{
 		return new Data(fileData);
 		
 	}
-
-	private boolean isFileData(LoadableData loadableData) {
-		return ClassUtils.isAssignable(loadableData.getClass(), FileData.class);
-	}
-
 
 	private boolean loaderCriterianIsFileClass(Serializable loaderCriterian) {
 		return ObjectUtils.equals(loaderCriterian, File.class);

@@ -19,7 +19,7 @@ import com.google.inject.assistedinject.Assisted;
 
 public class Data implements Cursor, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
 	
-	private NepticalData backingData;
+	private volatile NepticalData backingData;
 	
 	@Inject
 	public Data(@Assisted NepticalData backingData){
