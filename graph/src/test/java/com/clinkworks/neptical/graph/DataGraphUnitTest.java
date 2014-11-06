@@ -22,7 +22,6 @@ import org.junit.Test;
 import com.clinkworks.neptical.datatype.NepticalId;
 import com.clinkworks.neptical.domain.PublicId;
 import com.clinkworks.neptical.domain.UniqueId;
-import com.clinkworks.neptical.service.GraphComponentService;
 import com.clinkworks.neptical.spi.GraphComponentFactory;
 
 public class DataGraphUnitTest {
@@ -39,12 +38,12 @@ public class DataGraphUnitTest {
 	@Before
 	public void init(){
 		edgeLookup = new HashMap<NepticalId<?>, Edge>();
-		dataGraph = new DataGraph(edgeLookup, new GraphComponentService(new GraphTestDataComponentFactoryStub()));
+		dataGraph = new DataGraph(edgeLookup, new GraphTestDataComponentFactoryStub());
 		buildNodesForTestData();
 	}
 
 	@Test
-	public void dataGraphProperlyCallsTheGuiceFactoryImplementationWhenLinkingNodesByPublicId(@Injectable final GraphComponentService graphComponentServiceMocked){
+	public void dataGraphProperlyCallsTheGuiceFactoryImplementationWhenLinkingNodesByPublicId(@Injectable final GraphComponentFactory gcfMocked){
 		
 		final Node start = directory;
 		final Node end = textFile;
@@ -52,12 +51,12 @@ public class DataGraphUnitTest {
 		final PublicId publicId = new PublicId(publicIdValue);
 				
 		new Expectations(){{			
-			graphComponentServiceMocked.createEdge(withSameInstance(publicIdValue), withSameInstance(start), withSameInstance(end));
+			gcfMocked.createEdge(withInstanceOf(PublicId.class), withSameInstance(start), withSameInstance(end));
 			times = 1;
 			result = new Segment(publicId, start, end);
 		}};
 		
-		new DataGraph(new HashMap<NepticalId<?>, Edge>(), graphComponentServiceMocked).linkNodesByPublicId(publicIdValue, start, end);
+		new DataGraph(new HashMap<NepticalId<?>, Edge>(), gcfMocked).linkNodesByPublicId(publicIdValue, start, end);
 	}
 	
 	@Test
@@ -135,11 +134,6 @@ public class DataGraphUnitTest {
 		@Override
 		public Node createNode(PublicId publicId) {
 			return new Node(new UniqueId(), publicId);
-		}
-
-		@Override
-		public PublicId createPublicId(String publicId) {
-			return new PublicId(publicId);
 		}
 		
 	}

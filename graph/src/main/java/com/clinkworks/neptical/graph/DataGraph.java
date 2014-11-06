@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.clinkworks.neptical.datatype.NepticalId;
 import com.clinkworks.neptical.domain.PublicId;
-import com.clinkworks.neptical.service.GraphComponentService;
+import com.clinkworks.neptical.spi.GraphComponentFactory;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,20 +18,20 @@ public class DataGraph {
 	
 	private final Map<NepticalId<?>, Edge> edgeLookup;
 	
-	private final GraphComponentService graphComponentService;
+	private final GraphComponentFactory gcf;
 	
 	@Inject
-	DataGraph(Map<NepticalId<?>, Edge> edgeLookup, GraphComponentService graphComponentService){
+	DataGraph(Map<NepticalId<?>, Edge> edgeLookup, GraphComponentFactory gcf){
 		this.edgeLookup = edgeLookup;
-		this.graphComponentService = graphComponentService;
+		this.gcf = gcf;
 	}
-		
+	
 	public Edge linkNodesByPublicId(String publicId, Node start, Node end){
 				
 		Edge edge = getEdgeByPublicId(publicId);
 		
 		if(edge == null){
-			edge =graphComponentService.createEdge(publicId, start, end);
+			edge = createEdge(publicId, start, end);
 			edgeLookup.put(edge.getPublicId(), edge);
 		}
 		
@@ -62,7 +63,7 @@ public class DataGraph {
 	}
 
 	public Edge getEdgeByPublicId(String qualifiedIdentifier) {
-		return edgeLookup.get(getPublicIdForString(qualifiedIdentifier));
+		return edgeLookup.get(createPublicId(qualifiedIdentifier));
 	}
 		
 	public Path getPathBetween(Node start, Node end) {
@@ -73,7 +74,7 @@ public class DataGraph {
 			if(possiblePath instanceof Path){
 				return (Path)possiblePath;
 			}
-			return graphComponentService.createPath(Lists.newArrayList(possiblePath));
+			return createPath(Lists.newArrayList(possiblePath));
 		}
 		
 		List<Edge> edgesAssociatedWithStartNode = findEdgesStartingAt(start);
@@ -86,7 +87,7 @@ public class DataGraph {
 			if(edge.getStart() == start && edge.getEnd() == end){
 				
 				pathMakeUp.add(edge);
-				return graphComponentService.createPath(pathMakeUp);
+				return createPath(pathMakeUp);
 				
 			}
 			
@@ -125,7 +126,7 @@ public class DataGraph {
 			pathMakeUp.add(edge);
 			
 			if(edge.getEnd() == end){
-				path = graphComponentService.createPath(pathMakeUp);
+				path = createPath(pathMakeUp);
 			}
 			
 			if(path != null){
@@ -139,8 +140,20 @@ public class DataGraph {
 		return null;
 	}
 	
-	private PublicId getPublicIdForString(String id){
-		return new PublicId(id);
+	private Edge createEdge(String publicId, Node start, Node end){
+		return gcf.createEdge(createPublicId(publicId), start, end);
+	}
+	
+	private Path createPath(String publicId, List<Edge> pathMakup){
+		return gcf.createPath(createPublicId(publicId), pathMakup);
+	}
+
+	private PublicId createPublicId(String publicId) {
+		return new PublicId(publicId);
+	}
+
+	private Path createPath(List<Edge> pathMakeUp) {
+		return createPath(UUID.randomUUID().toString(), pathMakeUp);
 	}
 	
 }
