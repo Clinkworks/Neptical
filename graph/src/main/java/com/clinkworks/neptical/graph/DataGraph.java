@@ -26,6 +26,21 @@ public class DataGraph {
 		this.gcf = gcf;
 	}
 	
+	public Edge linkNodesByNepticalId(NepticalId<?> nepticalId, Node start, Node end){
+		
+		Edge edge = getEdgeByFullyQualifiedId(nepticalId);
+		
+		if(edge == null){
+			edge = createEdge(start, end);
+			edgeLookup.put(nepticalId, edge);
+		}
+		
+		return edge;
+		
+	}
+	
+	
+
 	public Edge linkNodesByPublicId(String publicId, Node start, Node end){
 				
 		Edge edge = getEdgeByPublicId(publicId);
@@ -33,6 +48,7 @@ public class DataGraph {
 		if(edge == null){
 			edge = createEdge(publicId, start, end);
 			edgeLookup.put(edge.getPublicId(), edge);
+			edgeLookup.put(edge.getId(), edge);
 		}
 		
 		return edge;
@@ -62,8 +78,8 @@ public class DataGraph {
 		return edgeLookup.get(nepticalId);
 	}
 
-	public Edge getEdgeByPublicId(String qualifiedIdentifier) {
-		return edgeLookup.get(createPublicId(qualifiedIdentifier));
+	public Edge getEdgeByPublicId(String publicId) {
+		return edgeLookup.get(createPublicId(publicId));
 	}
 		
 	public Path getPathBetween(Node start, Node end) {
@@ -154,6 +170,10 @@ public class DataGraph {
 
 	private Path createPath(List<Edge> pathMakeUp) {
 		return createPath(UUID.randomUUID().toString(), pathMakeUp);
+	}
+	
+	private Edge createEdge(Node start, Node end) {
+		return createEdge(UUID.randomUUID().toString(), start, end);
 	}
 	
 }

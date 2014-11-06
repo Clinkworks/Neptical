@@ -102,6 +102,7 @@ public class DataGraphUnitTest {
 		assertFalse(path.hasNext());
 		//found paths should found only once!
 		assertSame(path, dataGraph.getPathBetween(directory, jsonDataInTextFile));
+		assertSame(path, dataGraph.getEdgeByFullyQualifiedId(new EdgeId(path.getStart(), path.getEnd())));
 		
 	}
 	
