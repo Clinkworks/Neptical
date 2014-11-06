@@ -53,7 +53,7 @@ public class DataGraphUnitTest {
 		new Expectations(){{			
 			gcfMocked.createEdge(withInstanceOf(PublicId.class), withSameInstance(start), withSameInstance(end));
 			times = 1;
-			result = new Segment(publicId, start, end);
+			result = new Link(publicId, start, end);
 		}};
 		
 		new DataGraph(new HashMap<NepticalId<?>, Edge>(), gcfMocked).linkNodesByPublicId(publicIdValue, start, end);
@@ -79,7 +79,7 @@ public class DataGraphUnitTest {
 		}
 		
 		//one edge linked together by an internal link, another by the public id
-		assertEquals(2, edges.size());
+		assertEquals(4, edges.size());
 		assertTrue(actualNodes.contains(directory));
 		assertEquals(1, actualNodes.size());
 		assertEquals(jsonDataInTextFile, dataGraph.findEdgesStartingAt(textInFile).get(0).getEnd());
@@ -93,7 +93,7 @@ public class DataGraphUnitTest {
 
 		linkTestNodes();
 		
-		Path path = dataGraph.getPathBetween(directory, jsonDataInTextFile);
+		Route path = dataGraph.getRouteBetween(directory, jsonDataInTextFile);
 		
 		assertEquals(3, path.getLength());
 		assertFalse(path.hasPrevious());
@@ -101,7 +101,7 @@ public class DataGraphUnitTest {
 		assertSame(jsonDataInTextFile, path.next());
 		assertFalse(path.hasNext());
 		//found paths should found only once!
-		assertSame(path, dataGraph.getPathBetween(directory, jsonDataInTextFile));
+		assertSame(path, dataGraph.getRouteBetween(directory, jsonDataInTextFile));
 		assertSame(path, dataGraph.getEdgeByFullyQualifiedId(new EdgeId(path.getStart(), path.getEnd())));
 		
 	}
@@ -123,13 +123,13 @@ public class DataGraphUnitTest {
 	public static class GraphTestDataComponentFactoryStub implements GraphComponentFactory{
 
 		@Override
-		public Segment createEdge(PublicId publicId, Node start, Node end) {
-			return new Segment(publicId, start, end);
+		public Link createEdge(PublicId publicId, Node start, Node end) {
+			return new Link(publicId, start, end);
 		}
 
 		@Override
-		public Path createPath(PublicId publicId, List<Edge> pathMakeup) {
-			return new Path(publicId, pathMakeup);
+		public Route createPath(PublicId publicId, List<Edge> pathMakeup) {
+			return new Route(publicId, pathMakeup);
 		}
 
 		@Override

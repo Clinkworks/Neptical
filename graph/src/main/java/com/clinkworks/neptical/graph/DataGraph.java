@@ -82,20 +82,20 @@ public class DataGraph {
 		return edgeLookup.get(createPublicId(publicId));
 	}
 		
-	public Path getPathBetween(Node start, Node end) {
+	public Route getRouteBetween(Node start, Node end) {
 		
-		Edge possiblePath = edgeLookup.get(createId(start, end));
+		Edge possibleRoute = edgeLookup.get(createId(start, end));
 		
-		if(possiblePath != null){
-			if(possiblePath instanceof Path){
-				return (Path)possiblePath;
+		if(possibleRoute != null){
+			if(possibleRoute instanceof Route){
+				return (Route)possibleRoute;
 			}
-			return createPath(Lists.newArrayList(possiblePath));
+			return createRoute(Lists.newArrayList(possibleRoute));
 		}
 		
 		List<Edge> edgesAssociatedWithStartNode = findEdgesStartingAt(start);
 		
-		Path path = null;
+		Route path = null;
 		
 		for(Edge edge : edgesAssociatedWithStartNode){
 			List<Edge> pathMakeUp = new ArrayList<Edge>();
@@ -103,7 +103,7 @@ public class DataGraph {
 			if(edge.getStart() == start && edge.getEnd() == end){
 				
 				pathMakeUp.add(edge);
-				return createPath(pathMakeUp);
+				return createRoute(pathMakeUp);
 				
 			}
 			
@@ -122,7 +122,7 @@ public class DataGraph {
 		return new EdgeId(start, end);
 	}
 
-	private Path discoverLinkedEdges(Node end, Edge currentEdge,  List<Edge> pathMakeUp) {
+	private Route discoverLinkedEdges(Node end, Edge currentEdge,  List<Edge> pathMakeUp) {
 		
 		//if the search cannot find the end, the path is unresovable.
 		if(currentEdge == null){
@@ -135,14 +135,14 @@ public class DataGraph {
 		
 		List<Edge> edgesStartingWithLastLink = findEdgesStartingAt(start);
 		
-		Path path = null;
+		Route path = null;
 		
 		for(Edge edge : edgesStartingWithLastLink){
 
 			pathMakeUp.add(edge);
 			
 			if(edge.getEnd() == end){
-				path = createPath(pathMakeUp);
+				path = createRoute(pathMakeUp);
 			}
 			
 			if(path != null){
@@ -160,7 +160,7 @@ public class DataGraph {
 		return gcf.createEdge(createPublicId(publicId), start, end);
 	}
 	
-	private Path createPath(String publicId, List<Edge> pathMakup){
+	private Route createPath(String publicId, List<Edge> pathMakup){
 		return gcf.createPath(createPublicId(publicId), pathMakup);
 	}
 
@@ -168,7 +168,7 @@ public class DataGraph {
 		return new PublicId(publicId);
 	}
 
-	private Path createPath(List<Edge> pathMakeUp) {
+	private Route createRoute(List<Edge> pathMakeUp) {
 		return createPath(UUID.randomUUID().toString(), pathMakeUp);
 	}
 	

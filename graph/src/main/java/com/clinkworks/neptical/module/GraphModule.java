@@ -16,6 +16,21 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class GraphModule extends ApplicationModuleTemplate{
 
+	@Provides
+	public Map<NepticalId<?>, Edge> edgeIdentificationMap(){
+		return Maps.newConcurrentMap();
+	}
+	
+	@Provides
+	public List<Edge> edgeList(){
+		return Lists.newArrayList();
+	}
+	
+	@Provides
+	public Map<NepticalId<?>, Node> nodeIdentificationMap(){
+		return Maps.newConcurrentMap();
+	}
+	
 	@Override
 	protected void configureFactoryModuleBuilder(FactoryModuleBuilder factoryModuleBuilder) {
 		
@@ -32,18 +47,4 @@ public class GraphModule extends ApplicationModuleTemplate{
 		
 	}
 	
-	@Provides
-	public Map<NepticalId<?>, Edge> edgeIdentificationMap(){
-		return Maps.newConcurrentMap();
-	}
-	
-	@Provides
-	public List<Edge> edgeList(){
-		return Lists.newArrayList();
-	}
-	
-	@Provides
-	public Map<NepticalId<?>, Node> nodeIdentificationMap(){
-		return Maps.newConcurrentMap();
-	}
 }

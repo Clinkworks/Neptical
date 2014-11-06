@@ -5,7 +5,7 @@ import com.clinkworks.neptical.domain.PublicId;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-public class Segment implements Edge{
+public class Link implements Edge{
 	
 	private final EdgeId edgeId;
 	private final PublicId publicId;
@@ -13,7 +13,7 @@ public class Segment implements Edge{
 	private final Node end;
 	
 	@Inject
-	Segment(@Assisted PublicId publicId, @Assisted("start") Node start, @Assisted("end") Node end){
+	Link(@Assisted PublicId publicId, @Assisted("start") Node start, @Assisted("end") Node end){
 		this.publicId = publicId;
 		this.start = start;
 		this.end = end;

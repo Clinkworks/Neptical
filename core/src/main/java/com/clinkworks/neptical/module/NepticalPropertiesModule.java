@@ -6,10 +6,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.google.inject.AbstractModule;
+import com.clinkworks.neptical.spi.GenericModuleTemplate;
 import com.google.inject.BindingAnnotation;
 
-public class NepticalPropertiesModule extends AbstractModule{
+public class NepticalPropertiesModule extends GenericModuleTemplate{
 
 	public static final File DEFAULT_DATA_DIRECTORY = new File("src/test/resources/neptical-data/");
 	

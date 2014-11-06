@@ -1,8 +1,7 @@
 package com.clinkworks.neptical.api;
 
-import com.clinkworks.neptical.Data;
-
+import com.clinkworks.neptical.datatype.NepticalData;
 
 public interface Cursor{
-	public Data find(String notation);
+	public NepticalData find(String notation);
 }

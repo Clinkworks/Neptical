@@ -1,9 +1,8 @@
 package com.clinkworks.neptical.spi;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-public abstract class ApplicationModuleTemplate extends AbstractModule implements NepticalModule{
+public abstract class ApplicationModuleTemplate extends GenericModuleTemplate{
 
 	/**
 	 * if you choose to bind the factory to other implementations you can configure the binder using

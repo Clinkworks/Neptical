@@ -15,8 +15,9 @@ public class PathUtil {
     public static final Pattern SEGMENT_CONTAINS_ARRAY_SYNTAX = Pattern.compile("^\\w+(?:\\[(\\d+)\\])+$");
     public static final Pattern ARRAY_SYNTAX_PATTERN = Pattern.compile("\\[(\\d+)\\]");
 
-    //muhahaha no construction
-    private PathUtil() {}
+    private PathUtil() {
+    	Common.noOp("This class is designed to be a static utility");
+    }
 
     public static final String firstSegment(String segment) {
         segment = clean(segment);

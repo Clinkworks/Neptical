@@ -13,9 +13,9 @@ import com.google.inject.assistedinject.Assisted;
  * NOTE: this class does not support modifications to the graph structure. It reflects only what has been drawn.
  *
  */
-public class Path implements Edge{
+public class Route implements Edge{
  
- 	private final ListIterator<Node> pathMakeup;
+ 	private final ListIterator<Node> routeMakeup;
  	private int length;
  	
  	private final Edge internalEdge;
@@ -23,43 +23,43 @@ public class Path implements Edge{
 	private volatile Node current;
 	
  	@Inject
-	Path(@Assisted PublicId publicId, @Assisted List<Edge> pathEdges) {
+	Route(@Assisted PublicId publicId, @Assisted List<Edge> routeEdges) {
 				
 		List<Node> nodesWithinEdges = new ArrayList<Node>();
 		length = 1; //account for the start node;
 		
-		if(pathEdges.size() == 0){
+		if(routeEdges.size() == 0){
 			throw new RuntimeException("Deatched node detected");			
 		}
 		
-		Node start = pathEdges.get(0).getStart();
-		Node end = pathEdges.get(pathEdges.size() - 1).getEnd();
+		Node start = routeEdges.get(0).getStart();
+		Node end = routeEdges.get(routeEdges.size() - 1).getEnd();
 		
-		internalEdge = new Segment(publicId, start, end);
+		internalEdge = new Link(publicId, start, end);
 		
 		current = start; 
 		
-		for(Edge edge : pathEdges){
+		for(Edge edge : routeEdges){
 			length++;
 			nodesWithinEdges.add(edge.getEnd());
 		}
-		pathMakeup = nodesWithinEdges.listIterator();
+		routeMakeup = nodesWithinEdges.listIterator();
 	}
 
 	public boolean hasNext(){
-		return pathMakeup.hasNext();
+		return routeMakeup.hasNext();
 	}
 	
 	public boolean hasPrevious(){
-		return pathMakeup.hasPrevious() && current != internalEdge.getStart();
+		return routeMakeup.hasPrevious() && current != internalEdge.getStart();
 	}
 	
 	public Node previous(){
 		
 		Node previousNode = null;
 		
-		if(pathMakeup.hasPrevious()){
-			previousNode = pathMakeup.previous();
+		if(routeMakeup.hasPrevious()){
+			previousNode = routeMakeup.previous();
 		}else if(current == internalEdge.getStart()){
 			previousNode = null;
 		}else{
@@ -72,7 +72,7 @@ public class Path implements Edge{
 	}
 	
 	public Node next() {
-		current = pathMakeup.next();
+		current = routeMakeup.next();
 		return current;
 	}
 
