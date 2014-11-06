@@ -10,8 +10,7 @@ import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
-import com.clinkworks.neptical.graph.DataGraph;
-import com.clinkworks.neptical.modules.NepticalPropertiesModule.DataDirectory;
+import com.clinkworks.neptical.module.NepticalPropertiesModule.DataDirectory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -20,17 +19,15 @@ public class DataService implements Cursor{
 	
 	private final Map<Serializable, DataLoader> dataLoaderRegistry;	
 	private final File dataDirectory;
-	private final DataGraph dataGraph;
 	
 	@Inject
-	public DataService(@DataDirectory File dataDirectory, DataGraph dataGraph, Map<Serializable, DataLoader> dataLoaderRegistry){
+	public DataService(@DataDirectory File dataDirectory, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
 		this.dataDirectory = dataDirectory;
-		this.dataGraph = dataGraph;
 	}
 	
 	public Data loadData(){
-		return loadFile(dataDirectory) ;
+		return loadFile(dataDirectory);
 	}
 	
 	public Data loadFile(File file){
@@ -69,58 +66,4 @@ public class DataService implements Cursor{
 		return null;
 	}
 	
-//	private void createAndAddLocations(FileProperty fileProperty) {
-//		File file = fileProperty.getAsFile();
-//		String absolutePath = file.getAbsolutePath();
-//		
-//		String dottedDataDirectory = dataDirectory.getAbsolutePath().replace('\\', '/').replace('/', '.');
-//		
-//		List<Serializable> identifiers = Lists.newArrayList();
-//		
-//		identifiers.add(file);
-//		identifiers.add(absolutePath);
-//		//should take care of both linux and windows absolute paths, should test on linux
-//		String linkedWithDotNotation = absolutePath.replace('\\', '.').replace('/', '.');
-//		String linkedWithDotNotationNoDataDirectory = linkedWithDotNotation.replace(dottedDataDirectory + ".", "");
-//		identifiers.add(linkedWithDotNotation);
-//		identifiers.add(linkedWithDotNotationNoDataDirectory);
-//		
-//		
-//		if(Common.hasExtension(file)){
-//			String linkedWithDotNotationNoExtension = PathUtil.subtractSegment(Common.getExtension(file), linkedWithDotNotation);
-//			identifiers.add(linkedWithDotNotationNoExtension);
-//			String linkedWithoutDataDirectory = linkedWithDotNotationNoExtension.replace(dottedDataDirectory + ".", "");
-//			identifiers.add(linkedWithoutDataDirectory);
-//		}
-//		
-//		Location propertyLocation = new GraphLocation(new GenericLocation(fileProperty.getNepticalId(), fileProperty));
-//		
-//		graph.addLocation(propertyLocation);
-//		
-//		for(Serializable identifier : identifiers){
-//			graph.aliasProperty(identifier, propertyLocation);
-//		}
-//		
-//	}
-//	
-//	public void addFileToNepticalData(FileProperty fileProperty) {
-//		
-//		
-//		
-//		if (data.isFileData()) {
-//			graphNewFileData(edge, data.getAsFileData());
-//		}
-//	}
-//
-//	private Set<Location> graphNewFileData(Edge edge, FileData fileData) {
-//		
-//		File file = fileData.getAsFile();
-//		String absolutePath = file.getAbsolutePath();
-//		String linkedWithForwardSlashes = absolutePath.replace('\\', '/');
-//		String linkedWithBackSlashes = absolutePath.replace('/', '\\');
-//		String linkedWithDotNotation = linkedWithForwardSlashes.replace('/', '.');
-//
-//		
-//	}
-//	
 }

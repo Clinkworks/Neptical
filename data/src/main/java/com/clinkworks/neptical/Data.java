@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.clinkworks.neptical.api.Cursor;
-import com.clinkworks.neptical.api.NepticalData;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.ListableData;
 import com.clinkworks.neptical.datatype.ListableTransformableData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.datatype.MutableData;
+import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.domain.JsonData;

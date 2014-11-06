@@ -9,7 +9,7 @@
 	<modules>
 		<module>data</module>
 		<module>core</module>
-		<module>modules</module>
+		<module>graph</module>
 	</modules>
   
   <description>Test framework to support unit testing from a data perspective</description>

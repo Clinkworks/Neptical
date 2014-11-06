@@ -3,7 +3,7 @@ package com.clinkworks.neptical.util;
 import org.apache.commons.lang3.ClassUtils;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.api.NepticalData;
+import com.clinkworks.neptical.datatype.NepticalData;
 
 public class DataUtil {
 

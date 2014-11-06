@@ -1,33 +1,30 @@
 package com.clinkworks.neptical.domain;
 
-import com.clinkworks.neptical.datatype.MutableData;
 import com.clinkworks.neptical.datatype.NepticalData;
 
 public class GenericImmutableData implements NepticalData{
-
-	private final NepticalData backingData;
+	
+	private final String name;
+	private final Object data;
 	
 	public GenericImmutableData(String name, Object data){
-		MutableData mutableData = new GenericMutableData();
-		mutableData.set(data);
-		mutableData.setName(name);
-		backingData = mutableData;
+		this.name = name;
+		this.data = data;
 	}
 	
 	public GenericImmutableData(NepticalData data){
-		backingData = data;
+		this.name = data.getName();
+		this.data = data.get();
 	}
 	
 	@Override
 	public String getName() {
-		return backingData.getName();
+		return name;
 	}
 
 	@Override
 	public Object get() {
-		return backingData.get();
+		return data;
 	}
-
-	
 
 }

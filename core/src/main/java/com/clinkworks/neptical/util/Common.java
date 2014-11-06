@@ -25,6 +25,10 @@ public class Common {
 		assertTrue(true);
 	}
 	
+	public static final void noOp(String... message){
+		assertTrue(true);
+	}
+	
 	public static final boolean hasExtension(File file){
 		return file.getName().lastIndexOf(PathUtil.DOT) > 0;
 	}

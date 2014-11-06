@@ -2,8 +2,6 @@ package com.clinkworks.neptical.datatype;
 
 import java.io.Serializable;
 
-import com.clinkworks.neptical.api.NepticalData;
-
 /**
  * The loadable node interface used for lazy loading purposes.
  * 

@@ -3,8 +3,6 @@ package com.clinkworks.neptical.datatype;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.clinkworks.neptical.api.NepticalData;
-
 public interface PrimitiveData extends NepticalData{
 	
 	public abstract boolean getAsBoolean();
