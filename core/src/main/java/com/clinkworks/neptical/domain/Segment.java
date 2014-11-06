@@ -2,13 +2,12 @@ package com.clinkworks.neptical.domain;
 
 import java.io.Serializable;
 
-import com.clinkworks.neptical.datatype.DataContainer;
-import com.clinkworks.neptical.datatype.Identifiable;
+import com.clinkworks.neptical.datatype.IdentifiableDataContainer;
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
 import com.clinkworks.neptical.util.PathUtil;
 
-public class Segment implements Identifiable, DataContainer{
+public class Segment implements IdentifiableDataContainer{
 
 	private volatile NepticalData nepticalData;
 	private final String name;
@@ -40,5 +39,13 @@ public class Segment implements Identifiable, DataContainer{
 	public PublicId getPublicId() {
 		return publicId;
 	}
+
+	public String getName() {
+		return name;
+	}
 	
+	@Override
+	public String toString(){
+		return getId().get().toString();
+	}
 }

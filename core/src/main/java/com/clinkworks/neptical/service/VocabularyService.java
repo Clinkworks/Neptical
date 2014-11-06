@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.clinkworks.neptical.datatype.Vocabulary;
-import com.clinkworks.neptical.domain.Segment;
+import com.clinkworks.neptical.domain.Path;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -22,7 +22,7 @@ public class VocabularyService{
 		return pathTypeToVocabMap.get(pathType);
 	}
 
-	public Segment[] parse(Serializable path) {
+	public Path parse(Serializable path) {
 		Vocabulary vocabulary = getVocabFor(path.getClass());
 		
 		if(vocabulary == null){

@@ -2,7 +2,7 @@ package com.clinkworks.neptical.datatype;
 
 import java.io.File;
 
-import com.clinkworks.neptical.api.Cursor;
+import com.clinkworks.neptical.spi.Cursor;
 
 public interface FileData extends Cursor, LoadableData, MutableData{
 	public File getAsFile();

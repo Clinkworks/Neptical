@@ -35,8 +35,8 @@ public class PathUtil {
     
     public static final String lastSegment(String segment) {
         segment = clean(segment);
-        int index = segment.indexOf(DOT);
-        return index > -1 ? segment.substring(index + 1, segment.length()) : "";
+        int index = segment.lastIndexOf(DOT);
+        return index > -1 ? segment.substring(index + 1, segment.length()) : segment;
     }
 
     public static final String chompFirstSegment(String path){

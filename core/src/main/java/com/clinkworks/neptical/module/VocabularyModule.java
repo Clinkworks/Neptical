@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.clinkworks.neptical.datatype.Vocabulary;
-import com.clinkworks.neptical.domain.Notation.DotNotation;
 import com.clinkworks.neptical.spi.GenericModuleTemplate;
+import com.clinkworks.neptical.spi.Notation.DotNotation;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.inject.Provides;
@@ -22,6 +22,4 @@ public class VocabularyModule extends GenericModuleTemplate {
 		return ImmutableMap.copyOf(vocabMap);
 	}
 	
-	
-
 }

@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.api.Cursor;
 import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
 import com.clinkworks.neptical.module.NepticalPropertiesModule.DataDirectory;
+import com.clinkworks.neptical.spi.Cursor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

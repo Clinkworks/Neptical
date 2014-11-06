@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.api.Cursor;
 import com.clinkworks.neptical.datatype.FileData;
+import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.util.DataUtil;
 
 public class GenericDirectoryData implements Cursor, FileData{

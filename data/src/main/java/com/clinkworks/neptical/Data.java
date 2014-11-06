@@ -3,7 +3,6 @@ package com.clinkworks.neptical;
 import java.io.Serializable;
 import java.util.List;
 
-import com.clinkworks.neptical.api.Cursor;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.ListableData;
 import com.clinkworks.neptical.datatype.ListableTransformableData;
@@ -13,6 +12,7 @@ import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.domain.JsonData;
+import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.util.DataUtil;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;

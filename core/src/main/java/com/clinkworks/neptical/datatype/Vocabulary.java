@@ -2,8 +2,8 @@ package com.clinkworks.neptical.datatype;
 
 import java.io.Serializable;
 
-import com.clinkworks.neptical.domain.Segment;
+import com.clinkworks.neptical.domain.Path;
 
 public interface Vocabulary {
-	public Segment[] parse(Serializable notation);
+	public Path parse(Serializable notation);
 }

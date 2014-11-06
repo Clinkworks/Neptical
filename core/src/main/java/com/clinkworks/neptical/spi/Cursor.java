@@ -1,4 +1,4 @@
-package com.clinkworks.neptical.api;
+package com.clinkworks.neptical.spi;
 
 import com.clinkworks.neptical.datatype.NepticalData;
 
