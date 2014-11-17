@@ -70,7 +70,7 @@ public abstract class NepticalId<T extends Serializable> {
 		//Note: 
 		//   the id is hashed with: 
 		//   * the fully qualfied class name of the NepticalId subtype 
-		//   * the hash value of the contained JavaType
+		//   * the hash value of the contained object
 		return ObjectUtils.hashCodeMulti(get(), getClass().getName());
 	}
 	
@@ -80,7 +80,7 @@ public abstract class NepticalId<T extends Serializable> {
 		if(object == null){
 			return false;
 		}
-		
+			
 		if(object instanceof NepticalId<?>){
 			return get().equals(((NepticalId<?>)object).get());
 		}

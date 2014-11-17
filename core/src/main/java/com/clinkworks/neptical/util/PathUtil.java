@@ -115,8 +115,14 @@ public class PathUtil {
 	public static String addSegment(String path, String segment) {
 
 		path = clean(path);
+		
+		if(StringUtils.isEmpty(path)){
+			return clean(segment);
+		}
+		
 		segment = firstSegment(segment);
-		if(segment.indexOf('[') == 0) {
+		
+		if(segment.indexOf(LEFT_BRACKET) == 0) {
 			path = path + segment;
 		}else{
 			path = path + DOT + segment;

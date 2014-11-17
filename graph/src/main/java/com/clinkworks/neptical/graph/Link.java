@@ -1,27 +1,21 @@
 package com.clinkworks.neptical.graph;
 
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.clinkworks.neptical.domain.PublicId;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class Link implements Edge{
 	
 	private final EdgeId edgeId;
-	private final PublicId publicId;
 	private final Node start;
 	private final Node end;
+	private String name;
 	
 	@Inject
-	Link(@Assisted PublicId publicId, @Assisted("start") Node start, @Assisted("end") Node end){
-		this.publicId = publicId;
-		this.start = start;
+	Link(@Assisted("start") Node start, @Assisted("end") Node end){
 		this.end = end;
+		this.start = start;
 		edgeId = new EdgeId(start, end);
-	}
-	
-	public PublicId getPublicId() {
-		return publicId;
 	}
 
 	@Override
@@ -39,8 +33,13 @@ public class Link implements Edge{
 		return edgeId;
 	}
 
+	public String getName(){
+		return name;
+	}
+	
 	@Override
 	public String toString(){
-		return publicId.get();
-	}
+		return getEnd().toString();
+	}	
+	
 }

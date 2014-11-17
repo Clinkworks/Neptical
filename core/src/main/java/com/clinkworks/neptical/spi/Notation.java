@@ -11,7 +11,6 @@ import java.util.Collections;
 import org.apache.commons.lang3.StringUtils;
 
 import com.clinkworks.neptical.datatype.Vocabulary;
-import com.clinkworks.neptical.domain.GenericId;
 import com.clinkworks.neptical.domain.Path;
 import com.clinkworks.neptical.domain.PublicId;
 import com.clinkworks.neptical.domain.Segment;
@@ -47,8 +46,7 @@ public abstract class Notation implements Vocabulary{
 	        processedPath = addSegment(processedPath, currentSegment);
 	        		
 			PublicId publicId = new PublicId(processedPath);
-			GenericId<Serializable> genericId = new GenericId<Serializable>(processedPath);
-			Segment newSegment = new Segment(publicId, genericId);
+			Segment newSegment = new Segment(publicId);
 			
 			createdPath.appendSegment(newSegment);
 			

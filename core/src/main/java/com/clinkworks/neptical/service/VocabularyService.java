@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.clinkworks.neptical.datatype.Vocabulary;
 import com.clinkworks.neptical.domain.Path;
+import com.clinkworks.neptical.domain.PublicId;
+import com.clinkworks.neptical.domain.Segment;
+import com.clinkworks.neptical.util.PathUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,6 +33,22 @@ public class VocabularyService{
 		}
 		
 		return vocabulary.parse(path);
+	}
+
+	  public Path clonePathAsDotNotation(Path path) {
+
+		  Path clonedPath = new Path();
+		  String currentId = "";
+		  
+		  for(Segment segment : path){
+			  currentId = PathUtil.addSegment(currentId, segment.getNepticalData().getName());
+			  PublicId publicId = new PublicId(currentId);
+			  Segment newSegment = new Segment(publicId);
+			  newSegment.setNepticalData(segment.getNepticalData());
+			  clonedPath.appendSegment(newSegment);
+		  }
+		  
+		  return clonedPath;
 	}
 	
 }

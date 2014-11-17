@@ -5,8 +5,10 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.clinkworks.neptical.datatype.ListableTransformableData;
+import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
+import com.clinkworks.neptical.spi.TraversableData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
@@ -14,7 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class JsonData extends GenericMutableData implements TransformableData, ListableTransformableData, PrimitiveData{
+public class JsonData extends GenericMutableData implements TraversableData, TransformableData, ListableTransformableData, PrimitiveData{
 
 	public JsonData(Object object){
 		set(object);
@@ -126,6 +128,11 @@ public class JsonData extends GenericMutableData implements TransformableData, L
 	@Override
 	public short getAsShort() {
 		return getAsJsonElement().getAsShort();
+	}
+
+	@Override
+	public NepticalData find(String notation) {
+		return null;
 	}
 	
 }

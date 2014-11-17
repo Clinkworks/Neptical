@@ -2,7 +2,6 @@ package com.clinkworks.neptical.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -36,8 +35,6 @@ public class PathUnitTest {
 	}
 		
 	private Segment createSegment(String qualifiedName){
-		PublicId publicId = new PublicId(qualifiedName);
-		GenericId<Serializable> genericId = new GenericId<Serializable>(qualifiedName);
-		return new Segment(publicId, genericId);
+		return new Segment(new PublicId(qualifiedName));
 	}
 }

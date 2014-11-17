@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,9 +20,10 @@ import mockit.Injectable;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
+import com.clinkworks.neptical.domain.GenericImmutableData;
 import com.clinkworks.neptical.domain.PublicId;
-import com.clinkworks.neptical.domain.UniqueId;
 import com.clinkworks.neptical.spi.GraphComponentFactory;
 
 public class DataGraphUnitTest {
@@ -29,6 +31,7 @@ public class DataGraphUnitTest {
 	private DataGraph dataGraph;
 	
 	private Map<NepticalId<?>, Edge> edgeLookup;
+	private Map<NepticalId<?>, Node> nodeLookup;
 	
 	private Node directory;
 	private Node textFile;
@@ -38,7 +41,8 @@ public class DataGraphUnitTest {
 	@Before
 	public void init(){
 		edgeLookup = new HashMap<NepticalId<?>, Edge>();
-		dataGraph = new DataGraph(edgeLookup, new GraphTestDataComponentFactoryStub());
+		nodeLookup = new HashMap<NepticalId<?>, Node>();
+		dataGraph = new DataGraph(nodeLookup, edgeLookup, new GraphTestDataComponentFactoryStub());
 		buildNodesForTestData();
 	}
 
@@ -48,15 +52,14 @@ public class DataGraphUnitTest {
 		final Node start = directory;
 		final Node end = textFile;
 		final String publicIdValue = "NODE1";
-		final PublicId publicId = new PublicId(publicIdValue);
 				
 		new Expectations(){{			
-			gcfMocked.createEdge(withInstanceOf(PublicId.class), withSameInstance(start), withSameInstance(end));
+			gcfMocked.createEdge(withSameInstance(start), withSameInstance(end));
 			times = 1;
-			result = new Link(publicId, start, end);
+			result = new Link(start, end);
 		}};
 		
-		new DataGraph(new HashMap<NepticalId<?>, Edge>(), gcfMocked).linkNodesByPublicId(publicIdValue, start, end);
+		new DataGraph(new HashMap<NepticalId<?>, Node>(), new HashMap<NepticalId<?>, Edge>(), gcfMocked).linkNodesByPublicId(publicIdValue, start, end);
 	}
 	
 	@Test
@@ -64,6 +67,15 @@ public class DataGraphUnitTest {
 		assertNull(dataGraph.getEdgeByPublicId("EDGE_ID"));
 		dataGraph.linkNodesByPublicId("EDGE_ID", directory, jsonDataInTextFile);
 		assertNotNull(dataGraph.getEdgeByPublicId("EDGE_ID"));
+	}
+
+	@Test
+	public void dataGraphStoresFreelyCreatedNodes(){
+		dataGraph.createNode("NEW_NODE-FOR CREATE NODE TEST");
+		assertEquals("NEW_NODE-FOR CREATE NODE TEST", dataGraph.getNodeByPublicId("NEW_NODE-FOR CREATE NODE TEST").getId().get());
+		NepticalData nepticalData = new GenericImmutableData("FREE DATA!", new Object());
+		dataGraph.createNode(nepticalData);
+		assertSame(nepticalData, dataGraph.getNodeByPublicId("FREE DATA!").getNepticalData());
 	}
 	
 	@Test
@@ -87,22 +99,25 @@ public class DataGraphUnitTest {
 	}
 	
 
-
+	@Test
+	public void theGraphCanBuildPathIterators(){
+		
+	}
+	
 	@Test
 	public void theGraphIsCapableOfReturningAPathBetweenIndirectlyConnectedNodes(){
-
 		linkTestNodes();
+		Route route = dataGraph.getRouteBetween(directory, jsonDataInTextFile);
+		ListIterator<Node> path = dataGraph.getRouteBetween(directory, jsonDataInTextFile).listIterator();
 		
-		Route path = dataGraph.getRouteBetween(directory, jsonDataInTextFile);
-		
-		assertEquals(3, path.getLength());
+		assertEquals(3, route.getLength());
 		assertFalse(path.hasPrevious());
 		assertEquals(textInFile, path.next());		
 		assertSame(jsonDataInTextFile, path.next());
 		assertFalse(path.hasNext());
-		//found paths should found only once!
-		assertSame(path, dataGraph.getRouteBetween(directory, jsonDataInTextFile));
-		assertSame(path, dataGraph.getEdgeByFullyQualifiedId(new EdgeId(path.getStart(), path.getEnd())));
+		//found paths should stay found! - index discovered paths
+		assertSame(route, dataGraph.getRouteBetween(directory, jsonDataInTextFile));
+		assertSame(route, dataGraph.getEdgeById(new EdgeId(route.getStart(), route.getEnd())));
 		
 	}
 	
@@ -114,28 +129,11 @@ public class DataGraphUnitTest {
 
 	private void buildNodesForTestData() {
 		GraphTestDataComponentFactoryStub gcf = new GraphTestDataComponentFactoryStub();
-		directory = gcf.createNode(new PublicId("DIRECTORY"));
-		textFile = gcf.createNode(new PublicId("TEXT_FILE"));
-		textInFile = gcf.createNode(new PublicId("TEXT_IN_FILE"));
-		jsonDataInTextFile = gcf.createNode(new PublicId("TEXT_IN_FILE"));
+		directory = gcf.createNode(gcf.createGenericDataContainer(new PublicId("DIRECTORY")));
+		textFile = gcf.createNode(gcf.createGenericDataContainer(new PublicId("TEXT_FILE")));
+		textInFile = gcf.createNode(gcf.createGenericDataContainer(new PublicId("TEXT_IN_FILE")));
+		jsonDataInTextFile = gcf.createNode(gcf.createGenericDataContainer(new PublicId("JSON_DATA ")));
 	}
 	
-	public static class GraphTestDataComponentFactoryStub implements GraphComponentFactory{
 
-		@Override
-		public Link createEdge(PublicId publicId, Node start, Node end) {
-			return new Link(publicId, start, end);
-		}
-
-		@Override
-		public Route createPath(PublicId publicId, List<Edge> pathMakeup) {
-			return new Route(publicId, pathMakeup);
-		}
-
-		@Override
-		public Node createNode(PublicId publicId) {
-			return new Node(new UniqueId(), publicId);
-		}
-		
-	}
 }

@@ -10,12 +10,11 @@ import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
 import com.clinkworks.neptical.module.NepticalPropertiesModule.DataDirectory;
-import com.clinkworks.neptical.spi.Cursor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DataService implements Cursor{
+public class DataService{
 	
 	private final Map<Serializable, DataLoader> dataLoaderRegistry;	
 	private final File dataDirectory;
@@ -24,6 +23,7 @@ public class DataService implements Cursor{
 	public DataService(@DataDirectory File dataDirectory, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
 		this.dataDirectory = dataDirectory;
+		initNepticalData();
 	}
 	
 	public Data loadData(){
@@ -61,9 +61,7 @@ public class DataService implements Cursor{
 		return data;
 	}
 
-	@Override
-	public Data find(String notation) {
-		return null;
+	private void initNepticalData(){
 	}
 	
 }

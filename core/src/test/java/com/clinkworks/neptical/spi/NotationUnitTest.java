@@ -15,8 +15,8 @@ public class NotationUnitTest {
 				
 		Path parsedPath = new DotNotation().parse(userInput);
 		assertEquals(4, parsedPath.length());
-		assertEquals(userInput, parsedPath.getSegment(3).getPublicId().get());
-		assertEquals("path.to", parsedPath.getSegment(1).getPublicId().get());
+		assertEquals(userInput, parsedPath.getSegment(3).getId().toString());
+		assertEquals("path.to", parsedPath.getSegment(1).getId().toString());
 		assertEquals("my", parsedPath.getSegment(2).getName());
 	}
 	

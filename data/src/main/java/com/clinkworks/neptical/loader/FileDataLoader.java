@@ -1,17 +1,17 @@
 package com.clinkworks.neptical.loader;
 
+import static com.clinkworks.neptical.util.DataUtil.wrap;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
-import com.clinkworks.neptical.domain.GenericFileData;
 import com.clinkworks.neptical.util.Common;
 import com.clinkworks.neptical.util.DataUtil;
 import com.clinkworks.neptical.util.PathUtil;
@@ -63,7 +63,7 @@ public class FileDataLoader implements DataLoader{
 		}
 		
 		if(shouldReadFile(loaderCriterian)){
-			return handleRead(getLoadableDataAsWrappedData(loadableData));
+			return handleRead(wrap(loadableData));
 		}
 		
 		throw new UnsupportedOperationException("The file data loader cannot handle loader criterian: " + loaderCriterian);
@@ -79,36 +79,13 @@ public class FileDataLoader implements DataLoader{
 			loadableData.toggleLoadedTrue();
 		}else{
 			if(Common.hasExtension(file)){
-				fileData.setLoaderCriterian(PathUtil.chompLastSegment(file.getName()));
+				fileData.setLoaderCriterian(PathUtil.lastSegment(file.getName()));
 			}else{
-				fileData.setLoaderCriterian(file.getName());
+				fileData.setLoaderCriterian(FileDataLoaderCriterian.READ_AS_TEXT);
 			}
 		}
 		
 		return DataUtil.wrap(loadableData);
-	}
-	
-
-	private Data getLoadableDataAsWrappedData(LoadableData loadableData) {
-		
-		File file = getFile(loadableData);
-		
-		if(file == null){
-			throw new RuntimeException("Loadable data cannot be handled by the file data loader");
-		}
-		
-		if(isAlreadyDataWrapped(loadableData)){
-			return DataUtil.getAsDataType(Data.class, loadableData);
-		}
-		
-		if(DataUtil.isDataType(FileData.class, loadableData)){
-			return new Data(loadableData);
-		}
-		
-		FileData fileData = new GenericFileData(file);
-		
-		return new Data(fileData);
-		
 	}
 
 	private boolean loaderCriterianIsFileClass(Serializable loaderCriterian) {
@@ -124,7 +101,7 @@ public class FileDataLoader implements DataLoader{
 		}else{
 			String fileData = Common.readFile(file);
 			data.set(fileData);
-			data.setName(Common.hasExtension(file) ? PathUtil.chompLastSegment(file.getName()) : file.getName());
+			data.setName(file.getName());
 		}
 		
 		data.toggleLoadedTrue();
@@ -133,7 +110,7 @@ public class FileDataLoader implements DataLoader{
 	}
 
 	private boolean isAlreadyDataWrapped(LoadableData loadableData) {
-		return ClassUtils.isAssignable(loadableData.getClass(), Data.class);
+		return Data.class.equals(loadableData.getClass());
 	}
 
 	private boolean shouldReadFile(Serializable loaderCriterian){

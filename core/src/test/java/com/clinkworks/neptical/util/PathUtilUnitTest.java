@@ -9,6 +9,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Test;
 
 public class PathUtilUnitTest {
@@ -24,9 +28,33 @@ public class PathUtilUnitTest {
         assertEquals("", subtractSegment(null, null));
         assertEquals("", subtractSegment("", null));
         assertEquals("", subtractSegment("", ""));
+        assertEquals("", addSegment("", null));
+        assertEquals("", addSegment(null, ""));
     }
     
+    
     @Test
+    public void reverseTest(){
+        Integer[] ints = {1, 2, 3, 4};
+        Integer[] reversedInts = reverse(ints);
+        assertEquals(Integer.valueOf(1), reversedInts[3]);
+        assertEquals(Integer.valueOf(4), reversedInts[0]);
+        
+        String[] strings = {"Hello", "World", "This", "Last", "is", "First"};
+        
+        strings = reverse(strings);
+        
+        assertEquals("First", strings[0]);
+    }
+
+    public static <T> T[] reverse(T[] arrayToReverse){
+       List<T> listOfType = Arrays.asList(arrayToReverse);
+       Collections.reverse(listOfType);
+       return (T[])listOfType.toArray();
+    }
+    
+
+	@Test
     public void dotsAtTheBeginingAndEndAreRemoved(){
     	String path = ".account.";
     	assertEquals("account", firstSegment(path));

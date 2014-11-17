@@ -1,6 +1,7 @@
 package com.clinkworks.neptical.domain;
 
 import com.clinkworks.neptical.datatype.MutableData;
+import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.util.Common;
 
 
@@ -31,6 +32,11 @@ public class GenericMutableData implements MutableData{
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public Class<? extends NepticalData> getNepticalDataType() {
+		return getClass();
 	}
 
 }

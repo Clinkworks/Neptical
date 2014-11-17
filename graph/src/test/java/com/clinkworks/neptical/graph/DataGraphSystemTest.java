@@ -24,7 +24,7 @@ public class DataGraphSystemTest {
 	
 	@Inject
 	private Provider<DataGraph> dataGraphProvider;
-	
+	 
 	@Inject
 	private GraphComponentFactory gcf; 
 	
@@ -36,10 +36,18 @@ public class DataGraphSystemTest {
 	
 	@Test
 	public void graphCanLinkNodesToAnEdge(){
-		Edge edge = dataGraph.linkNodesByPublicId("NEW EDGE!", gcf.createNode(new PublicId("node1")), gcf.createNode(new PublicId("node2")));
+		Node nodeA = gcf.createNode(gcf.createGenericDataContainer(new PublicId("Node-A")));
+		Node nodeB = gcf.createNode(gcf.createGenericDataContainer(new PublicId("Node-B")));
+		
+		Edge edge = dataGraph.linkNodesByPublicId("NEW EDGE!", nodeA, nodeB);
+		
+		EdgeId edgeId = new EdgeId(nodeA, nodeB);
+		
 		assertNotNull(edge);
-		assertEquals("NEW EDGE!", edge.getPublicId().toString());
 		assertSame(edge, dataGraph.getEdgeByPublicId("NEW EDGE!"));
+		assertEquals(edge.getId(), edgeId);
+		assertSame(edge, dataGraph.getEdgeById(new PublicId("NEW EDGE!")));
+		assertSame(edge, dataGraph.getEdgeById(edgeId));
 	}
 	
 }

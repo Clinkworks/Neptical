@@ -1,8 +1,10 @@
 package com.clinkworks.neptical;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import com.clinkworks.neptical.datatype.DataContainer;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.ListableData;
 import com.clinkworks.neptical.datatype.ListableTransformableData;
@@ -12,31 +14,33 @@ import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.domain.JsonData;
-import com.clinkworks.neptical.spi.Cursor;
+import com.clinkworks.neptical.spi.TraversableData;
 import com.clinkworks.neptical.util.DataUtil;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-public class Data implements Cursor, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData{
+public class Data implements DataContainer, TraversableData, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData, FileData{
 	
 	private volatile NepticalData backingData;
 	
 	@Inject
 	public Data(@Assisted NepticalData backingData){
 		this.backingData = backingData;
-	}	
-	
-	public NepticalData getData(){
+	}
+		
+	@Override
+	public NepticalData getNepticalData(){
 		return backingData;
 	}
 	
-	public void setData(NepticalData nepticalData){
+	@Override
+	public void setNepticalData(NepticalData nepticalData){
 		this.backingData = nepticalData;
 	}
 	
 	@Override
 	public Object get() {
-		return getData().get();
+		return getNepticalData().get();
 	}
 
 	@Override
@@ -109,11 +113,11 @@ public class Data implements Cursor, ListableData, ListableTransformableData, Tr
 	}
 
 	public boolean isDataType(Class<? extends NepticalData> dataType){
-		return DataUtil.isDataType(dataType, getData());
+		return DataUtil.isDataType(dataType, getNepticalData());
 	}
 	
 	public <T extends NepticalData> T getAsDataType(Class<? extends NepticalData> dataType){
-		return DataUtil.getAsDataType(dataType, getData());
+		return DataUtil.getAsDataType(dataType, getNepticalData());
 	}
 	
 	@Override
@@ -123,7 +127,7 @@ public class Data implements Cursor, ListableData, ListableTransformableData, Tr
 
 	@Override
 	public String getName() {
-		return getData().getName();
+		return getNepticalData().getName();
 	}
 
 	public boolean isJsonData(){
@@ -166,7 +170,7 @@ public class Data implements Cursor, ListableData, ListableTransformableData, Tr
 
 	@Override
 	public String toString(){
-		NepticalData data = getData();
+		NepticalData data = getNepticalData();
 		
 		if(data == null){
 			return super.toString();
@@ -179,14 +183,52 @@ public class Data implements Cursor, ListableData, ListableTransformableData, Tr
 		return data.toString();
 	}
 
+	public boolean isTraversableData(){
+		return isDataType(TraversableData.class);
+	}
+	
+	public TraversableData getAsTraversableData(){
+		return getAsDataType(TraversableData.class);
+	}
+	
 	@Override
 	public Data find(String notation) {
-		return null;
+		//note: this is a change in the typical illegal state exception to allow implementations of cursor
+		// to call data wrapped neptical data and just get a not found instead of the illegal state
+		if(!isTraversableData()){
+			return null;
+		}
+		
+		return DataUtil.wrap(getAsTraversableData().find(notation));
 	}
 
 	@Override
 	public void setLoaderCriterian(Serializable loaderCriterian) {
 		getAsLoadableData().setLoaderCriterian(loaderCriterian);
 	}
+	
+	@Override
+	public File getAsFile() {
+		return getAsFileData().getAsFile();
+	}
 
+	@Override
+	public boolean isDirectory() {
+		return getAsFile().isDirectory();
+	}
+
+	@Override
+	public boolean isFile() {
+		return getAsFile().isFile();
+	}
+
+	@Override
+	public Class<? extends NepticalData> getNepticalDataType() {
+		return getNepticalData() == null ? getClass() :  getNepticalData().getNepticalDataType();
+	}
+	
+	@Override
+	public boolean containsData() {
+		return getNepticalData() != null;
+	}
 }

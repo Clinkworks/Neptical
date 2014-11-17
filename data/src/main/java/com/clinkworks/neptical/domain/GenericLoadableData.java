@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.datatype.MutableData;
+import com.clinkworks.neptical.datatype.NepticalData;
 
 public class GenericLoadableData implements LoadableData, MutableData{
 	
@@ -61,6 +62,11 @@ public class GenericLoadableData implements LoadableData, MutableData{
 	@Override
 	public void setLoaderCriterian(Serializable loaderCriterian) {
 		this.loaderCriterian = loaderCriterian;
+	}
+
+	@Override
+	public Class<? extends NepticalData> getNepticalDataType() {
+		return getClass();
 	}
 
 }

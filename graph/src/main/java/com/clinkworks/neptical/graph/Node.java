@@ -1,34 +1,23 @@
 package com.clinkworks.neptical.graph;
 
-import com.clinkworks.neptical.datatype.DataContainer;
-import com.clinkworks.neptical.datatype.Identifiable;
+import com.clinkworks.neptical.datatype.IdentifiableDataContainer;
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.clinkworks.neptical.domain.PublicId;
-import com.clinkworks.neptical.domain.UniqueId;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-public class Node implements Identifiable, DataContainer{
-
-	private final UniqueId nodeId;
-	private final PublicId publicId;
-	private volatile NepticalData nepticalData;
+public class Node implements IdentifiableDataContainer{
 	
+	private final IdentifiableDataContainer identifiableDataContainer;
+
 	@Inject
-	Node(UniqueId nodeId, @Assisted PublicId publicId){
-		this.nodeId = nodeId;
-		this.publicId = publicId;
+	Node(@Assisted IdentifiableDataContainer identifiableDataContainer){
+		this.identifiableDataContainer = identifiableDataContainer;
 	}
 	
 	@Override
 	public NepticalId<?> getId() {
-		return nodeId;
-	}
-	
-	@Override
-	public PublicId getPublicId() {
-		return publicId;
+		return identifiableDataContainer.getId();
 	}
 	
 	@Override
@@ -38,13 +27,17 @@ public class Node implements Identifiable, DataContainer{
 
 	@Override
 	public void setNepticalData(NepticalData nepticalData) {
-		this.nepticalData = nepticalData;
+		identifiableDataContainer.setNepticalData(nepticalData);
 	}
 
 	@Override
 	public NepticalData getNepticalData() {
-		return nepticalData;
+		return identifiableDataContainer.getNepticalData();
 	}
 
+	@Override
+	public boolean containsData() {
+		return getNepticalData() != null;
+	}
 
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.clinkworks.neptical.datatype.MutableData;
+import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.google.gson.JsonElement;
@@ -108,6 +109,11 @@ public final class GenericPrimitiveData implements PrimitiveData, MutableData{
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public Class<? extends NepticalData> getNepticalDataType() {
+		return getClass();
 	}
 
 }

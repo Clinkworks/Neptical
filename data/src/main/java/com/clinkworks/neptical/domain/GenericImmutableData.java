@@ -28,6 +28,11 @@ public class GenericImmutableData implements NepticalData{
 		return backingData.get();
 	}
 
+	@Override
+	public Class<? extends NepticalData> getNepticalDataType() {
+		return getClass();
+	}
+
 	
 
 }
