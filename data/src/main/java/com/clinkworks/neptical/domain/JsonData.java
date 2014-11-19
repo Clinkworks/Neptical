@@ -1,15 +1,20 @@
 package com.clinkworks.neptical.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.clinkworks.neptical.datatype.ListableTransformableData;
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.spi.TraversableData;
+import com.clinkworks.neptical.util.DataUtil;
 import com.clinkworks.neptical.util.JsonUtil;
+import com.clinkworks.neptical.util.PathUtil;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,6 +32,19 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 		set(object);
 	}
 
+	public boolean isJsonArray(){
+		return getAsJsonElement().isJsonArray();
+	}
+		
+	public boolean isJsonPrimitive(){
+		return getAsJsonElement().isJsonPrimitive();
+	}
+	
+	public boolean isJsonObject(){
+		return getAsJsonElement().isJsonObject();
+	}
+
+	
 	public JsonElement getAsJsonElement(){
 		return (JsonElement)get();
 	}
@@ -131,8 +149,67 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 	}
 
 	@Override
-	public NepticalData find(String notation) {
-		return null;
+	public NepticalData find(Serializable notation) {
+
+		String path = notation.toString(); 
+		//chances are this is dot notation - again.. need to refactor Cursor::find
+			
+		if(StringUtils.equals(getName(), path)){
+			return this;
+		}
+		
+		String currentSegment = PathUtil.firstSegment(path);
+		String remainingPath = PathUtil.chompFirstSegment(path);
+		
+		JsonElement jsonElement = find(getAsJsonElement(), currentSegment, remainingPath);
+		
+		return jsonElement == null ? null : DataUtil.wrap(new JsonData(jsonElement));
 	}
 	
+	private JsonElement find(JsonElement currentElement, String currentSegment, String remainingPath){
+		
+		if(currentElement == null){
+			return null;
+		}
+				
+		
+		JsonElement foundElement = getNestedElement(getAsJsonElement(), null, currentSegment);
+		
+		if(foundElement == null){
+			return null;
+		}
+
+		currentSegment = PathUtil.firstSegment(remainingPath);
+		remainingPath = PathUtil.chompFirstSegment(remainingPath);
+
+		if(StringUtils.isBlank(currentSegment)){
+			if(StringUtils.isBlank(remainingPath)){
+				return currentElement; //we found it!
+			}
+		}
+
+		
+		return find(foundElement, currentSegment, remainingPath);
+	}
+
+	private JsonElement getNestedElement(JsonElement currentElement, String parentName, String propertyName) {
+				
+		//this should take care of the primitive cases... nothing to search in those, this may change in the case of validators
+		// but this method will not handle that use case
+		if(StringUtils.equals(parentName, propertyName)){
+			return currentElement;
+		}
+		
+		if(currentElement.isJsonObject()){
+			propertyName = String.copyValueOf(propertyName.toCharArray());
+			return currentElement.getAsJsonObject().get(propertyName);
+		}
+		
+		if(currentElement.isJsonArray()){
+			int index = PathUtil.getIndex(propertyName);
+			return currentElement.getAsJsonArray().get(index);
+		}
+		
+		return null;
+	}
 }

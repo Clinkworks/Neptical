@@ -52,7 +52,9 @@ import org.apache.commons.lang3.ObjectUtils;
  *  idLookup.get(new 
  *  
  */
-public abstract class NepticalId<T extends Serializable> {
+public abstract class NepticalId<T extends Serializable> implements Serializable{
+	
+	private static final long serialVersionUID = -4452747069772620153L;
 	
 	private final T id;
 	

@@ -1,9 +1,9 @@
 package com.clinkworks.neptical.util;
 
 import static com.clinkworks.neptical.util.PathUtil.addSegment;
+import static com.clinkworks.neptical.util.PathUtil.containsArraySyntax;
 import static com.clinkworks.neptical.util.PathUtil.firstSegment;
 import static com.clinkworks.neptical.util.PathUtil.lastSegment;
-import static com.clinkworks.neptical.util.PathUtil.segmentContainsArraySyntax;
 import static com.clinkworks.neptical.util.PathUtil.subtractSegment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -82,8 +82,8 @@ public class PathUtilUnitTest {
     	String segmentWithArray = "bills[0]";
     	
     	//only segment that will be processed here is the first one.
-    	assertFalse(segmentContainsArraySyntax(segmentWithoutArray));
-    	assertTrue(segmentContainsArraySyntax(segmentWithArray));
+    	assertFalse(containsArraySyntax(segmentWithoutArray));
+    	assertTrue(containsArraySyntax(segmentWithArray));
     	
     }
     

@@ -3,7 +3,6 @@ package com.clinkworks.neptical.domain;
 import java.io.File;
 import java.io.Serializable;
 
-import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.datatype.FileData;
 
 public class GenericFileData extends GenericLoadableData implements FileData{
@@ -42,11 +41,6 @@ public class GenericFileData extends GenericLoadableData implements FileData{
 	@Override
 	public boolean isFile() {
 		return file.isFile();
-	}
-
-	@Override
-	public Data find(String notation) {
-		return null;
 	}
 
 }

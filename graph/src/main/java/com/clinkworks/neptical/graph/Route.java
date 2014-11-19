@@ -16,11 +16,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class Route implements Edge, Iterable<Node>{
  
+	private final RouteId routeId;
  	private final List<Node> routeMakeup;
  	private int length;
+	private Link internalEdge;
  	
- 	private final Edge internalEdge;
-	
  	@Inject
 	Route(@Assisted List<Edge> routeEdges) {
 				
@@ -35,7 +35,8 @@ public class Route implements Edge, Iterable<Node>{
 		Node end = routeEdges.get(routeEdges.size() - 1).getEnd();
 		
 		internalEdge = new Link(start, end);
-
+		routeId = new RouteId(internalEdge);
+		
 		for(Edge edge : routeEdges){
 			length++;
 			nodesWithinEdges.add(edge.getEnd());
@@ -54,7 +55,7 @@ public class Route implements Edge, Iterable<Node>{
 
 	@Override
 	public NepticalId<?> getId() {
-		return internalEdge.getId();
+		return routeId;
 	}
 
 	@Override

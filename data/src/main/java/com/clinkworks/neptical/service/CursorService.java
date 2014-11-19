@@ -1,9 +1,9 @@
 package com.clinkworks.neptical.service;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.datatype.FileData;
@@ -17,7 +17,6 @@ import com.clinkworks.neptical.graph.Edge;
 import com.clinkworks.neptical.graph.Node;
 import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.util.DataUtil;
-import com.clinkworks.neptical.util.PathUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,7 +36,7 @@ public class CursorService implements Cursor{
     }
 	
 	@Override
-	public Data find(String notation) {
+	public Data find(Serializable notation) {
 		Path path = vocabularyService.parse(notation);	
 
 		Node node = dataGraph.getNodeById(path.end().getId());
@@ -60,65 +59,42 @@ public class CursorService implements Cursor{
 	private Data find(Edge lastFoundEdge, PathIterator currentPath) {
 		
 		Node node = dataGraph.getNodeById(currentPath.current().getId());
-				
-		if(!currentPath.hasNext() && node != null){
-			return DataUtil.wrap(node.getNepticalData());
+		Data discoveredData = null;
+		
+		if(node == null){
+			node = lastFoundEdge.getEnd();
+			discoveredData = DataUtil.wrap(node.getNepticalData());
+		}else{
+			discoveredData = DataUtil.wrap(node.getNepticalData());
 		}
 		
-		Edge edge = dataGraph.getEdgeByPublicId(pathToSearchFor);
-		
-		if(edge != null){
-			//TODO: we should check for aliasses here
-			return DataUtil.wrap(edge.getEnd().getNepticalData());
+		if(!currentPath.hasNext()){
+			return discoveredData;
 		}
 		
-		Data data = DataUtil.wrap(lastFoundEdge.getEnd().getNepticalData());
-		
-		Data nestedData = data.find(pathToSearchFor);
+		Data nestedData = discoveredData.find(currentPath.next().getName());
 		
 		if(nestedData != null){
-			dataGraph.linkNodesByPublicId(pathToSearchFor, dataGraph.createNode(data), dataGraph.createNode(nestedData));
-			return nestedData;
+			currentPath.current().setNepticalData(nestedData);
+			lastFoundEdge = dataGraph.linkNodesById(currentPath.current().getId(), node, dataGraph.createNode(currentPath.current()));
 		}
-		
-		//maybe just the next segment can be found
-		nestedData = data.find(pa);
-		
-		if(nestedData == null){
-			return null;
-		}
-		//the next segment of the path has been found,
-		currentPath.next();
-		lastFoundEdge = dataGraph.linkNodesByPublicId(pathToSearchFor, dataGraph.createNode(data), dataGraph.createNode(nestedData));
-		
-		return find(PathUtil.chompFirstSegment(pathToSearchFor), lastFoundEdge, currentPath.next());
+				
+		return find(lastFoundEdge, currentPath);
 	}
 
 	void startCursorService(){
+		
 		Data dataDirectory = dataService.loadData();
-		Path startingPath = convertToDotNotation(dataDirectory.getAsFile());
-		startingPath.end().setNepticalData(dataDirectory);
-		
-		ListIterator<Segment> iterAtEnd = startingPath.listIteratorAtEnd();
-		
-		File dataFile = dataDirectory.getAsFile();
-		
-		while(iterAtEnd.hasPrevious()){
-			Segment prevousSegment = iterAtEnd.previous();
-			if(!prevousSegment.containsData()){
-				prevousSegment.setNepticalData(dataService.loadFile(dataFile));
-			}
-			dataFile = dataFile.getParentFile();
-		}
-		
-		Edge edge = dataGraph.graphPath(startingPath);
-		dataGraph.alias(edge, startingPath.end().getName());		
 		
 		List<Path> paths = createFilePaths(dataDirectory);
 		
 		for(Path path : paths){
+			path = vocabularyService.clonePathAsDotNotation(path);
 			dataGraph.graphPath(path);
 		}
+		
+		NepticalData nepticalData = dataGraph.getEdgeByPublicId("neptical-data").getEnd().getNepticalData();
+		System.out.println(nepticalData.get());
 		
 		dataGraph.dumpGraph();
 	}
@@ -196,13 +172,11 @@ public class CursorService implements Cursor{
 		return vocabularyService.parse(fileAsDotNotation);
 	}
 	
-	private Segment createSegment(File file){
-		return createSegment(dataService.loadFile(file));
-	}
-	
 	private Segment createSegment(NepticalData nepticalData) {
 		Segment segment =  new Segment(new PublicId(nepticalData.getName()));
 		segment.setNepticalData(nepticalData);
 		return segment;
 	}
+
+	
 }

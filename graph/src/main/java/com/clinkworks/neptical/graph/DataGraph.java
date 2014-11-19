@@ -22,7 +22,7 @@ public class DataGraph {
 	private final Map<NepticalId<?>, Edge> edgeLookup;
 	
  	private final Map<NepticalId<?>, Node> nodeLookup;
-
+ 	
 	private final GraphComponentFactory gcf;
 	
 	@Inject
@@ -46,7 +46,7 @@ public class DataGraph {
 			return findEdgeClosestToEndOfPath(iterAtEnd);
 		}
 		
-		return null;
+		return edge;
 		
 	}
 
@@ -62,7 +62,7 @@ public class DataGraph {
 		}
 	
 		Edge startingEdge = findEdgeClosestToEndOfPath(segmentIter);
-		Node startingNode = startingEdge == null ? null : startingEdge.getEnd();
+		Node startingNode = startingEdge == null ? createNode(segmentIter.next()) : startingEdge.getEnd();
 		
 		List<Edge> createdEdges = new ArrayList<Edge>();
 		
@@ -108,6 +108,7 @@ public class DataGraph {
 		
 		for(Node node : nodeLookup.values()){
 			System.out.println("Node: ");
+			System.out.println("   Id Type: " + node.getId().getClass());
 			System.out.println("   Id: " + node.getId());
 			System.out.println("   Name: " + node.getNepticalData().getName());
 			System.out.println("   Neptical Type: " + node.getNepticalData().getNepticalDataType());
@@ -120,8 +121,10 @@ public class DataGraph {
 		for(Map.Entry<NepticalId<?>, Edge> entry : edgeLookup.entrySet()){
 			System.out.println("Edge: ");
 			System.out.println("    Link: " + entry.getKey());
+			System.out.println("    Link Type: " + entry.getKey().getClass());
 			System.out.println("    Name:  " + entry.getValue().getEnd().getId());
 			System.out.println("    Id: " + entry.getValue().getId());
+			System.out.println("   Id Type: " + entry.getValue().getId().getClass());
 		}
 	}
 	
@@ -129,38 +132,31 @@ public class DataGraph {
 		
 		Segment segment = segmentIter.next();
 		Node nextNode = createNode(segment);
-		
-		if(lastNode == null){
-			lastNode = nextNode; //probably a starting node or a vertex, link em together for indexing purposes.
-		}
-		
-		Edge edge = linkNodesByNepticalId(lastNode.getId(), lastNode, nextNode);
+				
+		Edge edge = linkNodesById(lastNode.getId(), lastNode, nextNode);
 		
 		if(lastNode != nextNode){ //this may be a vertex, if so we don't want to add it to the path
 			createdEdges.add(edge);
 		}
 		
 		if(!segmentIter.hasNext()){
-			//create the vertex
-			linkNodesByNepticalId(lastNode.getId(), lastNode, lastNode);
 			//create the route between nodes
 			Route route = createRoute(createdEdges);
-			createdEdges.add(route);
 			edgeLookup.put(route.getId(), route);
-			edgeLookup.put(nextNode.getId(), route);
+		
 			return nextNode;
 		}
 		
 		return graphPath(nextNode, segmentIter, createdEdges);
 	}
 	
-	private Node createNode(Segment segment) {
+	public Node createNode(Segment segment) {
 		Node node = gcf.createNode(segment);
 		nodeLookup.put(node.getId(), node);
 		return node;
 	}
 
-	public Edge linkNodesByNepticalId(NepticalId<?> nepticalId, Node start, Node end){
+	public Edge linkNodesById(NepticalId<?> nepticalId, Node start, Node end){
 		
 		Edge edge = getEdgeById(nepticalId);
 		
@@ -213,15 +209,24 @@ public class DataGraph {
 	}
 	
 	public Edge getEdgeById(NepticalId<?> nepticalId){
-		return edgeLookup.get(nepticalId);
+
+			//look in aliases first
+			Edge edge = getEdgeByAlias(nepticalId);
+			
+			//then look for the edge
+			if(edge == null){
+				edge = edgeLookup.get(nepticalId);
+			}
+			
+			return edge;
 	}
 
 	public Edge getEdgeByPublicId(String publicId) {
-		return edgeLookup.get(createPublicId(publicId));
+		return getEdgeById(createPublicId(publicId));
 	}
 	
 	public Edge getEdgeByPublicId(PublicId publicId) {
-		return edgeLookup.get(publicId);
+		return getEdgeById(publicId);
 	}
 		
 	public Route getRouteBetween(Node start, Node end) {
@@ -339,9 +344,16 @@ public class DataGraph {
 	}
 
 	public void alias(Edge edge, String name) {
-		EdgeAlias edgeAlias = new EdgeAlias(name, edge);
+		Alias edgeAlias = new Alias(createPublicId(name));
 		edgeLookup.put(edgeAlias, edge);
-		edgeLookup.put(edgeAlias.getPublicId()	, edge);
 	}
 
+	private Edge getEdgeByAlias(NepticalId<?> nepticalId){
+		return edgeLookup.get(new Alias(nepticalId));
+	}
+	
+	public void alias(Edge edge, NepticalId<?> aliasedId) {
+		Alias edgeAlias = new Alias(aliasedId);
+		edgeLookup.put(edgeAlias, edge);
+	}
 }

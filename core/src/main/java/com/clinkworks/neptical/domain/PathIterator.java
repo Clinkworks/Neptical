@@ -25,9 +25,9 @@ public class PathIterator implements ListIterator<Segment>{
 	@Override
 	public Segment next() {
 		synchronized (mutex) {
-			current = backingIterator.next();
-			return current;	
+			current = backingIterator.next();	
 		}
+		return current;
 	}
 
 	@Override

@@ -65,7 +65,12 @@ public class PathUtil {
         return clean(path);
     }
 
-    public static final boolean segmentContainsArraySyntax(String segment) {
+    public static final boolean isArraySegment(String segment){
+    	boolean containsArraySyntax = containsArraySyntax(segment);
+    	return containsArraySyntax && ARRAY_SYNTAX_PATTERN.matcher(segment).find();
+    }
+    
+    public static final boolean containsArraySyntax(String segment) {
         segment = clean(segment);
         
         if (segment.indexOf(DOT) != -1) {
@@ -82,7 +87,7 @@ public class PathUtil {
     }
     
     public static final int getIndex(String segment) {
-        if (segmentContainsArraySyntax(segment)) {
+        if (isArraySegment(segment)) {
             return Integer.valueOf(ARRAY_SYNTAX_PATTERN.matcher(segment).group(1));
         }
         return -1;

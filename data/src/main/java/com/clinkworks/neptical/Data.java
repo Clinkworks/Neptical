@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.clinkworks.neptical.datatype.DataContainer;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.ListableData;
@@ -192,10 +194,12 @@ public class Data implements DataContainer, TraversableData, ListableData, Lista
 	}
 	
 	@Override
-	public Data find(String notation) {
-		//note: this is a change in the typical illegal state exception to allow implementations of cursor
-		// to call data wrapped neptical data and just get a not found instead of the illegal state
+	public Data find(Serializable notation) {
+		
 		if(!isTraversableData()){
+			if(StringUtils.equals(getName(), notation.toString())){
+				return this;
+			}
 			return null;
 		}
 		
