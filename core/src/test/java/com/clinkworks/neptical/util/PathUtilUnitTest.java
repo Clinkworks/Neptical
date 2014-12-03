@@ -1,6 +1,8 @@
 package com.clinkworks.neptical.util;
 
 import static com.clinkworks.neptical.util.PathUtil.addSegment;
+import static com.clinkworks.neptical.util.PathUtil.chompFirstSegment;
+import static com.clinkworks.neptical.util.PathUtil.chompLastSegment;
 import static com.clinkworks.neptical.util.PathUtil.containsArraySyntax;
 import static com.clinkworks.neptical.util.PathUtil.firstSegment;
 import static com.clinkworks.neptical.util.PathUtil.lastSegment;
@@ -9,13 +11,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Test;
 
 public class PathUtilUnitTest {
+	
     @Test
     public void allPathMethodsCanHandleAnEmptyAndNullString() {
         String path = "";
@@ -30,30 +29,10 @@ public class PathUtilUnitTest {
         assertEquals("", subtractSegment("", ""));
         assertEquals("", addSegment("", null));
         assertEquals("", addSegment(null, ""));
+        assertEquals("", chompFirstSegment(null));
+        assertEquals("", chompLastSegment(null));
     }
     
-    
-    @Test
-    public void reverseTest(){
-        Integer[] ints = {1, 2, 3, 4};
-        Integer[] reversedInts = reverse(ints);
-        assertEquals(Integer.valueOf(1), reversedInts[3]);
-        assertEquals(Integer.valueOf(4), reversedInts[0]);
-        
-        String[] strings = {"Hello", "World", "This", "Last", "is", "First"};
-        
-        strings = reverse(strings);
-        
-        assertEquals("First", strings[0]);
-    }
-
-    public static <T> T[] reverse(T[] arrayToReverse){
-       List<T> listOfType = Arrays.asList(arrayToReverse);
-       Collections.reverse(listOfType);
-       return (T[])listOfType.toArray();
-    }
-    
-
 	@Test
     public void dotsAtTheBeginingAndEndAreRemoved(){
     	String path = ".account.";
@@ -71,9 +50,20 @@ public class PathUtilUnitTest {
     }
     
     @Test
+    public void canProperlyRetrieveTheFirstSegmentWhenArraySyntaxIsPresent(){
+    	String path = ".account[0].firstName.";
+    	assertEquals("account", firstSegment(path));
+    	assertEquals("[0].firstName", chompFirstSegment(path));
+    }
+    
+    
+    @Test
     public void canProperlyRetrieveTheLastSegment(){
-    	String path = ".account.firstName.";
-    	assertEquals("firstName", lastSegment(path));    
+    	String lastIsArray = "account.firstName[0]";
+    	String regularPath = "account.firstName";
+    	
+    	assertEquals("firstName", lastSegment(regularPath));
+    	assertEquals("[0]", lastSegment(lastIsArray));
     }
     
     @Test
@@ -103,6 +93,29 @@ public class PathUtilUnitTest {
     	
     	assertEquals("[0]", subtractSegment(segment1, segment2));
     	assertEquals("", subtractSegment(segment1, segment1));
+    }
+    
+    @Test
+    public void canChompAtTheEnd(){
+    	String fullPath = "account.transactions[0][1].value";
+    	String toLastArraySegment = "account.transactions[0][1]";
+    	String toFirstArraySegment = "account.transactions[0]";
+    	String withoutArray = "account.transactions";
+    	assertEquals(toLastArraySegment, chompLastSegment(fullPath));
+    	assertEquals(toFirstArraySegment, chompLastSegment(toLastArraySegment));
+    	assertEquals(withoutArray, chompLastSegment(toFirstArraySegment));
+    }
+    
+    @Test
+    public void canChompAtTheStart(){
+    	String fullPath = "transactions[0][1].value";
+    	String withoutTransactions = "[0][1].value";
+    	String withoutZero = "[1].value";
+    	String withoutOne = "value";
+    	assertEquals(withoutTransactions, chompFirstSegment(fullPath));
+    	assertEquals(withoutZero, chompFirstSegment(withoutTransactions));
+        assertEquals(withoutOne, chompFirstSegment(withoutZero));
+    	
     }
     
     @Test

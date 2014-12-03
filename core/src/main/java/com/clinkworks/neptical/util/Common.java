@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Common {
 	
 	private Common(){
-		Common.noOp("This class is designed to be used as a static utility");
+		noOp("This class is designed to be used as a static utility");
 	}
 	
 	public static final void noOp(){
@@ -35,7 +35,7 @@ public class Common {
 	
 	public static final String getExtension(File file){
 		if(!hasExtension(file)){
-			return "";
+			return PathUtil.EMPTY_STRING;
 		}
 		return PathUtil.lastSegment(file.getName()).toLowerCase();
 	}
@@ -58,11 +58,9 @@ public class Common {
     				reader.close();
     			}
 			} catch (IOException e) {
-				System.out.println("Problem closing file... eating exception");
 				e.printStackTrace();
 			}
     	}
-    	
     	return sb.toString();
     }	
 	
