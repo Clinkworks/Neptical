@@ -162,12 +162,6 @@ public class CursorService implements Cursor{
 		
 	}
 	
-	private Path convertToDotNotation(File file) {
-		String fileAsDotNotation = file.toString().replace('\\', '.');
-		fileAsDotNotation = fileAsDotNotation.replace('/', '.'); //theres probably a utility for this, ill look it up later
-		return vocabularyService.parse(fileAsDotNotation);
-	}
-	
 	private Segment createSegment(NepticalData nepticalData) {
 		Segment segment =  new Segment(new PublicId(nepticalData.getName()));
 		segment.setNepticalData(nepticalData);
