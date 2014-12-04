@@ -1,27 +1,90 @@
 package com.clinkworks.neptical.module;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URL;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.clinkworks.neptical.spi.GenericModuleTemplate;
+import com.clinkworks.neptical.util.Common;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ResourceInfo;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.name.Names;
 
 public class NepticalPropertiesModule extends GenericModuleTemplate{
-
-	public static final File DEFAULT_DATA_DIRECTORY = new File("src/test/resources/neptical-data/");
 	
-	@BindingAnnotation
-	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-    @Retention(RetentionPolicy.RUNTIME)
-	public static @interface DataDirectory{}
+	private static final Pattern PROPERTY_FILE_PATTERN = Pattern.compile("(.*\\.properties$)");
+	
+	private final Properties nepticalProperties;
+		
+	public NepticalPropertiesModule() {
+		nepticalProperties = loadProperties();
+	}
 	
 	@Override
 	protected void configure() {
-		bind(File.class).
-			annotatedWith(DataDirectory.class).
-				toInstance(DEFAULT_DATA_DIRECTORY);
+		String defaultDataDirectory = nepticalProperties.getProperty("neptical-data");
+		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
+		Names.bindProperties(binder(), nepticalProperties);
 	}
+	
+	private Properties loadProperties(){
+		final Properties defaultProperties = new Properties();
+		loadPropertyFiles(defaultProperties);
+		defaultProperties.putAll(System.getProperties());
+		defaultProperties.putAll(System.getenv());
+		return new Properties(defaultProperties);
+	}
+	
+	private void loadPropertyFiles(Properties properties){
+		try {
+			ClassPath classPath = ClassPath.from(this.getClass().getClassLoader());
+			
+			for(ResourceInfo resourceInfo : classPath.getResources()){
+				Matcher matcher = PROPERTY_FILE_PATTERN.matcher(resourceInfo.getResourceName());
+				if(matcher.matches()){
+					URL url = resourceInfo.url();
+					loadProperties(properties, url);
+				}
+			}
+			
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void loadProperties(Properties properties, URL propertiesFile) {
+		InputStream inputStream = null;
+		
+		try {
+			inputStream = propertiesFile.openStream();
+			properties.load(inputStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}finally{
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				Common.noOp("Eating exception");
+			}
+		}
+		
+	}
+	
+	@BindingAnnotation
+	@Target({ElementType.FIELD, ElementType.PARAMETER})
+    @Retention(RetentionPolicy.RUNTIME)
+	public static @interface DataDirectory{
+		String value() default "NEPTICAL-DATA";
+	}
+	
+	
 }

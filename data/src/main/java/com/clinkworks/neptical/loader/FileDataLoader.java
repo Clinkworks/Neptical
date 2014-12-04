@@ -77,11 +77,13 @@ public class FileDataLoader implements DataLoader{
 		
 		if(fileData.isDirectory()){			
 			loadableData.toggleLoadedTrue();
-		}else{
+		}else if(fileData.isFile()){
 			if(Common.hasExtension(file)){
 				fileData.setLoaderCriterian(PathUtil.lastSegment(file.getName()));
 				fileData.setName(PathUtil.chompLastSegment(file.getName()));
 			}
+		}else{
+			throw new RuntimeException("File: " + file + " was not found.");
 		}
 		
 		return DataUtil.wrap(loadableData);
@@ -94,6 +96,10 @@ public class FileDataLoader implements DataLoader{
 	private Data handleRead(Data data){
 		
 		File file = getFile(data);
+		
+		if(!file.canRead()){
+			return null;
+		}
 		
 		if(file.isDirectory()){
 			data.set(file);

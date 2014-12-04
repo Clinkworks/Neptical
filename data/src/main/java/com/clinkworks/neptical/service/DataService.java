@@ -23,10 +23,9 @@ public class DataService{
 	public DataService(@DataDirectory File dataDirectory, Map<Serializable, DataLoader> dataLoaderRegistry){
 		this.dataLoaderRegistry = dataLoaderRegistry;
 		this.dataDirectory = dataDirectory;
-		initNepticalData();
 	}
 	
-	public Data loadData(){
+	protected Data loadData(){
 		return loadFile(dataDirectory);
 	}
 	
@@ -59,9 +58,6 @@ public class DataService{
 		}
 		
 		return data;
-	}
-
-	private void initNepticalData(){
 	}
 	
 }

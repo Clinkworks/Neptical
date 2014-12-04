@@ -22,7 +22,6 @@ public class DataServiceUnitTest {
 	@Injectable
 	private FileDataLoader fileDataLoader;
 	
-	private DataService dataService;
 		
 	@Before
 	public void setup(){

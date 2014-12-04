@@ -235,4 +235,8 @@ public class Data implements DataContainer, TraversableData, ListableData, Lista
 	public boolean containsData() {
 		return getNepticalData() != null;
 	}
+	
+	public static @interface DataGet{
+		
+	}
 }

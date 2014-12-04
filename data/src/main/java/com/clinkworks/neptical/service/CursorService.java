@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class CursorService implements Cursor{
-
+	
 	private final VocabularyService vocabularyService;
 	private final DataGraph dataGraph;
 	private final DataService dataService;
@@ -50,9 +50,6 @@ public class CursorService implements Cursor{
 		
 		if(closestEdgeToEndOfPath == null){
 			return null; // no edges were in the area of this path
-		}else{
-			//we found the edge, need to advance the iterator
-//			iterAtEnd.next();
 		}
 		
 		return find(closestEdgeToEndOfPath, iterAtEnd);		
@@ -92,7 +89,7 @@ public class CursorService implements Cursor{
 			path = vocabularyService.clonePathAsDotNotation(path);
 			dataGraph.graphPath(path);
 		}
-				
+		
 	}
 
 	private List<Path> createFilePaths(FileData directory) {
@@ -168,5 +165,4 @@ public class CursorService implements Cursor{
 		return segment;
 	}
 
-	
 }

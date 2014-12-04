@@ -1,4 +1,4 @@
-package com.clinkworks.neptical.data.file;
+package com.clinkworks.neptical.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -28,4 +28,5 @@ public class CursorServiceIntegrationTest {
 		assertEquals("1234 my place drive", data.getAsJsonData().getAsString());
 		dataGraph.dumpGraph();
 	}
+	
 }

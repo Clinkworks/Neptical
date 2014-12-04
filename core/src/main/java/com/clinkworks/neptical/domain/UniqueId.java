@@ -11,6 +11,11 @@ import java.util.UUID;
  */
 public class UniqueId extends GenericId<Serializable>{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1985002768649338965L;
+
 	public UniqueId() {
 		super(UUID.randomUUID());
 	}

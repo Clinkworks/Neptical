@@ -4,8 +4,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
 
 public class Common {
 	
@@ -41,27 +45,41 @@ public class Common {
 	}
 	
     public static final String readFile(File file){
+    	try {
+			return read(new FileReader(file));
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+    }
+    
+	public static String readUrl(URL url) {
+		try {
+			return read(new InputStreamReader(url.openStream()));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+    
+    private static final String read(Reader reader){
+    	BufferedReader bufferedReader = new BufferedReader(reader);
+    	StringBuffer stringBuffer = new StringBuffer();
     	
-    	BufferedReader reader = null;
-    	StringBuffer sb = new StringBuffer();
-    	
-    	try{	
-    		reader = new BufferedReader(new FileReader(file));
-    	    for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-    	    	sb.append(line);
-    	    }
-    	}catch(Exception e){
-    	    throw new RuntimeException("Could not read file: " + e.getMessage(), e);
+    	try{
+		    for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+		    	stringBuffer.append(line);
+		    }
+    	}catch(IOException e){
+    		throw new RuntimeException(e);
     	}finally{
     		try {
-    			if(reader != null){
-    				reader.close();
-    			}
+				bufferedReader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				noOp("Eating the exception");
 			}
     	}
-    	return sb.toString();
-    }	
-	
+    	return stringBuffer.toString();
+    }
+
+
 }
