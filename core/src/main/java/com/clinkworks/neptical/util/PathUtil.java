@@ -55,7 +55,7 @@ public class PathUtil {
         
         int nextSegmentIndex = segment.indexOf(DOT);
         
-        return nextSegmentIndex > NOT_FOUND ? copy(segment.substring(0, nextSegmentIndex)) : segment;
+        return nextSegmentIndex > NOT_FOUND ? clean(segment.substring(0, nextSegmentIndex)) : segment;
     }
     
     public static final String lastSegment(String segment) {
@@ -129,7 +129,9 @@ public class PathUtil {
     
     public static final int getIndex(String segment) {
         if (isArraySegment(segment)) {
-            return Integer.parseInt(ARRAY_SYNTAX_PATTERN.matcher(segment).group(2));
+        	Matcher matcher = ARRAY_SYNTAX_PATTERN.matcher(segment);
+        	matcher.find();
+            return Integer.parseInt(matcher.group(2));
         }
         return -1;
     }

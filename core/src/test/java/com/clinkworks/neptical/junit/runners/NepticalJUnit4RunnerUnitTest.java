@@ -9,11 +9,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -151,21 +148,6 @@ public class NepticalJUnit4RunnerUnitTest {
         runTestMethod(runner, test, BEFORE_METHOD_TEST_METHOD);
 
         assertTrue(NepticalJUnitTestModules.ASSERTION_DEPENDENCY.wasCalled());
-    }
-
-
-    @Test
-    public void reverseTest() {
-        Integer[] ints = { 1, 2, 3, 4 };
-        Integer[] reversedInts = reverse(ints);
-        assertEquals(Integer.valueOf(1), reversedInts[3]);
-        assertEquals(Integer.valueOf(4), reversedInts[0]);
-    }
-
-    public static <T> T[] reverse(T[] arrayToReverse) {
-        List<T> listOfType = Arrays.asList(arrayToReverse);
-        Collections.reverse(listOfType);
-        return ArrayUtils.toArray(arrayToReverse);
     }
 
     @Test

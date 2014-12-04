@@ -44,6 +44,9 @@ public class DataGraph {
 		
 		if(edge == null){
 			return findEdgeClosestToEndOfPath(iterAtEnd);
+		}else{
+			//we found the edge so advance the cursor up one
+			iterAtEnd.next();
 		}
 		
 		return edge;
@@ -231,7 +234,7 @@ public class DataGraph {
 		
 	public Route getRouteBetween(Node start, Node end) {
 		
-		Edge possibleRoute = edgeLookup.get(createId(start, end));
+		Edge possibleRoute = edgeLookup.get(createRouteId(start, end));
 		
 		if(possibleRoute != null){
 			if(possibleRoute instanceof Route){
@@ -265,10 +268,16 @@ public class DataGraph {
 		return path;
 	}
 
+
 	private EdgeId createId(Node start, Node end) {
 		return new EdgeId(start, end);
 	}
 
+	private Object createRouteId(Node start, Node end) {
+		return new RouteId(start, end);
+	}
+
+	
 	private Route discoverLinkedEdges(Node end, Edge currentEdge,  List<Edge> pathMakeUp) {
 		
 		//if the search cannot find the end, the path is unresovable.
@@ -294,6 +303,7 @@ public class DataGraph {
 			
 			if(path != null){
 				edgeLookup.put(path.getId(), path);
+				alias(path, new EdgeId(path.getStart(), path.getEnd()));
 				return path;
 			}
 			

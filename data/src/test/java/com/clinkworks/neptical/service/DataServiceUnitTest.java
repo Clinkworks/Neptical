@@ -9,9 +9,9 @@ import mockit.Injectable;
 
 import org.junit.Before;
 
-import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.graph.DataGraph;
 import com.clinkworks.neptical.loader.FileDataLoader;
+import com.clinkworks.neptical.spi.DataLoader;
 
 
 public class DataServiceUnitTest {

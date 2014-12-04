@@ -9,10 +9,9 @@ import java.util.Set;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.clinkworks.neptical.Data;
-import com.clinkworks.neptical.api.DataLoader;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
-import com.clinkworks.neptical.domain.JsonData;
+import com.clinkworks.neptical.spi.DataLoader;
 import com.clinkworks.neptical.util.Common;
 import com.clinkworks.neptical.util.DataUtil;
 import com.clinkworks.neptical.util.PathUtil;
@@ -82,10 +81,6 @@ public class FileDataLoader implements DataLoader{
 			if(Common.hasExtension(file)){
 				fileData.setLoaderCriterian(PathUtil.lastSegment(file.getName()));
 				fileData.setName(PathUtil.chompLastSegment(file.getName()));
-			}else{
-				JsonData jsonData = new JsonData(null);
-				jsonData.setName(fileData.getName());
-				return new Data(jsonData);
 			}
 		}
 		

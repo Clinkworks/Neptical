@@ -15,7 +15,7 @@ import com.google.gson.JsonElement;
 
 public class JsonDataUnitTest {
 	
-	private static final String JSON = "{\"hello\":\"Neptical\",\"list\":[\"ITEM1\",\"ITEM2\"]}";
+	private static final String JSON = "{\"hello\":\"Neptical\",\"list\":[\"ITEM1\",\"ITEM2\",2,{\"nestedObjectProperty\":\"OBJECT_PROP_VALUE\"}]}";
 	private static final JsonElement JSON_ELEMENT = JsonUtil.parse(JSON);
 	
 	@Test
@@ -41,9 +41,16 @@ public class JsonDataUnitTest {
 		
 		List<String> strings = itemList.getListAs(String.class);
 		
-		assertEquals(2, strings.size());
+		assertEquals(4, strings.size());
 		assertEquals("ITEM1", item1.getAs(String.class));
 		assertSame(strings.get(0), item1.getAs(String.class));
-		
+	}
+	
+	@Test
+	public void ensureJsonDataSupportsDotNotation(){
+		JsonData jsonData = new JsonData(JSON_ELEMENT);
+		assertEquals("ITEM1", jsonData.find("list[0]").getAsString());
+		assertEquals(2, jsonData.find("list[2]").getAsInt());
+		assertEquals("OBJECT_PROP_VALUE", jsonData.find("list[3].nestedObjectProperty").getAsString());
 	}
 }

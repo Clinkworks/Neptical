@@ -50,36 +50,36 @@ public class CursorService implements Cursor{
 		
 		if(closestEdgeToEndOfPath == null){
 			return null; // no edges were in the area of this path
+		}else{
+			//we found the edge, need to advance the iterator
+//			iterAtEnd.next();
 		}
-
 		
 		return find(closestEdgeToEndOfPath, iterAtEnd);		
 	}
 
 	private Data find(Edge lastFoundEdge, PathIterator currentPath) {
 		
-		Node node = dataGraph.getNodeById(currentPath.current().getId());
-		Data discoveredData = null;
-		
-		if(node == null){
-			node = lastFoundEdge.getEnd();
-			discoveredData = DataUtil.wrap(node.getNepticalData());
-		}else{
-			discoveredData = DataUtil.wrap(node.getNepticalData());
+		if(lastFoundEdge == null){
+			//TODO: search for links from last discoverd node, there may be a path
+			return null;
 		}
 		
-		if(!currentPath.hasNext()){
-			return discoveredData;
-		}
-		
-		Data nestedData = discoveredData.find(currentPath.next().getName());
-		
-		if(nestedData != null){
-			currentPath.current().setNepticalData(nestedData);
-			lastFoundEdge = dataGraph.linkNodesById(currentPath.current().getId(), node, dataGraph.createNode(currentPath.current()));
-		}
+		Segment next = currentPath.hasNext() ? currentPath.next() : null;
+		Node lastFoundNode = lastFoundEdge.getEnd();
 				
-		return find(lastFoundEdge, currentPath);
+		Data discoveredData = DataUtil.wrap(lastFoundNode.getNepticalData());
+		
+		//going to go one segment at a time, just to ensure at least parent to child nodes are mapped.
+		Data nestedData = discoveredData.find(next.getName());
+		
+		lastFoundEdge = dataGraph.linkNodesById(next.getId(), lastFoundNode, dataGraph.createNode(nestedData));
+		
+		if(currentPath.hasNext()){
+			return find(lastFoundEdge, currentPath);
+		}else{
+			return nestedData;
+		}
 	}
 
 	void startCursorService(){
@@ -92,11 +92,7 @@ public class CursorService implements Cursor{
 			path = vocabularyService.clonePathAsDotNotation(path);
 			dataGraph.graphPath(path);
 		}
-		
-		NepticalData nepticalData = dataGraph.getEdgeByPublicId("neptical-data").getEnd().getNepticalData();
-		System.out.println(nepticalData.get());
-		
-		dataGraph.dumpGraph();
+				
 	}
 
 	private List<Path> createFilePaths(FileData directory) {

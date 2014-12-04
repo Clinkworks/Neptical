@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.util.Common;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.name.Named;
@@ -197,6 +198,7 @@ public class NepticalJUnitTestModules {
     public static class MockTestWithClassLevelGuiceConfig {
         @Test
         public void emptyTestMethod() {
+        	Common.noOp();
         };
     }
 
@@ -204,6 +206,7 @@ public class NepticalJUnitTestModules {
         @NepticalConfiguration(MockTestModuleTwo.class)
         @Test
         public void annotatedTestMethod() {
+        	Common.noOp();
         };
     }
 

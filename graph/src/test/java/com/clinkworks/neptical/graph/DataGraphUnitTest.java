@@ -112,7 +112,8 @@ public class DataGraphUnitTest {
 		
 		assertEquals(3, route.getLength());
 		assertFalse(path.hasPrevious());
-		assertEquals(textInFile, path.next());		
+		assertEquals(directory, path.next());		
+		assertSame(textInFile, path.next());
 		assertSame(jsonDataInTextFile, path.next());
 		assertFalse(path.hasNext());
 		//found paths should stay found! - index discovered paths

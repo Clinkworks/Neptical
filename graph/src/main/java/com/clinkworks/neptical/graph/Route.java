@@ -25,7 +25,7 @@ public class Route implements Edge, Iterable<Node>{
 	Route(@Assisted List<Edge> routeEdges) {
 				
 		List<Node> nodesWithinEdges = new ArrayList<Node>();
-		length = 1; //account for the start node;
+		length = 0; 
 		
 		if(routeEdges.size() == 0){
 			throw new RuntimeException("Deatched node detected");			
@@ -34,12 +34,16 @@ public class Route implements Edge, Iterable<Node>{
 		Node start = routeEdges.get(0).getStart();
 		Node end = routeEdges.get(routeEdges.size() - 1).getEnd();
 		
+		//account for the root node
+		length++;
+		nodesWithinEdges.add(start);
+		
 		internalEdge = new Link(start, end);
 		routeId = new RouteId(internalEdge);
 		
 		for(Edge edge : routeEdges){
-			length++;
 			nodesWithinEdges.add(edge.getEnd());
+			length++;
 		}
 		routeMakeup = ImmutableList.copyOf(nodesWithinEdges);
 	}

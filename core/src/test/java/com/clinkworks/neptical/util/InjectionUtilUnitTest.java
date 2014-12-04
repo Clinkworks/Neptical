@@ -1,9 +1,10 @@
 package com.clinkworks.neptical.util;
 
+import static com.clinkworks.neptical.util.Common.noOp;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.createInjector;
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.createModule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import static com.clinkworks.neptical.util.GuiceInjectionUtil.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class InjectionUtilUnitTest {
 	public static class TestConfigTwo extends AbstractModule{
 		@Override
 		protected void configure() {
-			
+			noOp();
 		}
 		
 		@Named("EvilString")

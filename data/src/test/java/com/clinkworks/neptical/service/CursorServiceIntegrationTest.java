@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.clinkworks.neptical.Data;
+import com.clinkworks.neptical.graph.DataGraph;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.module.NepticalDataModule;
@@ -18,9 +19,13 @@ public class CursorServiceIntegrationTest {
 	@Inject
 	private CursorService cursorService;
 	
+	@Inject
+	private DataGraph dataGraph;
+	
 	@Test
 	public void cursorServiceCorrectlyFindsTheAddressNodeWithinTheDefaultTestData(){
 		Data data = cursorService.find("neptical-data.contacts.addresses.genericAddress.addressLine1");
-		assertEquals("1234 my place drive", data.get());
+		assertEquals("1234 my place drive", data.getAsJsonData().getAsString());
+		dataGraph.dumpGraph();
 	}
 }

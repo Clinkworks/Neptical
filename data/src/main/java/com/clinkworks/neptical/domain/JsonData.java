@@ -8,11 +8,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.clinkworks.neptical.datatype.ListableTransformableData;
-import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.PrimitiveData;
 import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.spi.TraversableData;
-import com.clinkworks.neptical.util.DataUtil;
 import com.clinkworks.neptical.util.JsonUtil;
 import com.clinkworks.neptical.util.PathUtil;
 import com.google.common.collect.Lists;
@@ -149,21 +147,26 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 	}
 
 	@Override
-	public NepticalData find(Serializable notation) {
+	public JsonData find(Serializable notation) {
 
-		String path = notation.toString(); 
-		//chances are this is dot notation - again.. need to refactor Cursor::find
+		//note: json data can only handle dot noation at this point.
+		String path = notation.toString();
 			
 		if(StringUtils.equals(getName(), path)){
 			return this;
 		}
 		
 		String currentSegment = PathUtil.firstSegment(path);
+		
 		String remainingPath = PathUtil.chompFirstSegment(path);
 		
 		JsonElement jsonElement = find(getAsJsonElement(), currentSegment, remainingPath);
 		
-		return jsonElement == null ? null : DataUtil.wrap(new JsonData(jsonElement));
+		if(jsonElement == null){
+			return null;
+		}
+		
+		return jsonElement == null ? null : new JsonData(PathUtil.lastSegment(path), jsonElement);
 	}
 	
 	private JsonElement find(JsonElement currentElement, String currentSegment, String remainingPath){
@@ -171,20 +174,19 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 		if(currentElement == null){
 			return null;
 		}
-				
 		
-		JsonElement foundElement = getNestedElement(getAsJsonElement(), null, currentSegment);
+		JsonElement foundElement = getNestedElement(currentElement, null, currentSegment);
 		
 		if(foundElement == null){
 			return null;
+		}else{
+			currentSegment = PathUtil.firstSegment(remainingPath);
+			remainingPath = PathUtil.chompFirstSegment(remainingPath);
 		}
-
-		currentSegment = PathUtil.firstSegment(remainingPath);
-		remainingPath = PathUtil.chompFirstSegment(remainingPath);
 
 		if(StringUtils.isBlank(currentSegment)){
 			if(StringUtils.isBlank(remainingPath)){
-				return currentElement; //we found it!
+				return foundElement; //we found it!
 			}
 		}
 
@@ -201,7 +203,6 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 		}
 		
 		if(currentElement.isJsonObject()){
-			propertyName = String.copyValueOf(propertyName.toCharArray());
 			return currentElement.getAsJsonObject().get(propertyName);
 		}
 		
