@@ -9,12 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.TestClass;
 
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
-
+import com.clinkworks.neptical.api.NepticalContext;
 import com.google.common.collect.Lists;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.ConfigurationException;
@@ -36,10 +32,10 @@ public class GuiceInjectionUtil {
 	private static final String FINISHED_CONSTRUCTING_INJECTOR = " ---- Guice injector created, enjoy! ---- ";
 
 	private GuiceInjectionUtil(){
-		Common.noOp("This class is designed to be used as a static utility");
+		Common.noOp("This class is designed to be used as a utility");
 	}
 	
-    public static List<Object> getParameterValuesToInject(FrameworkMethod method, Injector injector){
+    static List<Object> getParameterValuesToInject(Method method, Injector injector){
     	
 		List<Object> params = new ArrayList<Object>();
     	
@@ -47,13 +43,11 @@ public class GuiceInjectionUtil {
     		return params;
     	}
     	
-    	Method javaMethod = method.getMethod();
-    	
-		Class<?>[] parameterTypes = javaMethod.getParameterTypes();
+		Class<?>[] parameterTypes = method.getParameterTypes();
 		
 		for(int i = 0; i < parameterTypes.length; i++){
 			try{
-				Object dependency = createInstance(injector, javaMethod, i);
+				Object dependency = createInstance(injector, method, i);
 				params.add(dependency);
 			}catch(ProvisionException e){
 				params.add(null);
@@ -62,15 +56,6 @@ public class GuiceInjectionUtil {
 		
 		return params;
     }    
-    
-    public static Injector createInjector(TestClass junitTestClass, FrameworkMethod method){
-    	LOGGER.debug(" ---- Initalizing Guice Injector ---- ");
-    	try {
-			return createInjectorWithConfiguredModules(junitTestClass, method);
-		} catch (InitializationError e) {
-			throw new RuntimeException(e);
-		}
-    }
     
     private static Object createInstance(Injector injector, Method method, int parameterIndex){
     	Annotation boundAnnotation = getBoundAnnotation(method.getParameterAnnotations()[parameterIndex]);
@@ -94,7 +79,7 @@ public class GuiceInjectionUtil {
     	return injector.getInstance(Key.get(parameterType, boundAnnotation));
     }
     
-    private static Injector createInjectorWithConfiguredModules(TestClass junitTestClass, FrameworkMethod method) throws InitializationError {
+    static Injector createInjectorWithConfiguredModules(Class<?> junitTestClass, Method method){
     	
     	LOGGER.debug(" ---- Gathering test modules ---- ");
     	Class<? extends Module>[] classModules = getConfiguredContextModules(junitTestClass);
@@ -114,25 +99,26 @@ public class GuiceInjectionUtil {
     	
     }
  
-    public static Class<? extends Module>[] getConfiguredContextModules(TestClass junitTestClass){
+    public static Class<? extends Module>[] getConfiguredContextModules(Class<?> context){
     	LOGGER.debug(" ---- Discovering context level guice configuration ---- ");
-    	NepticalConfiguration classConfig = junitTestClass.getJavaClass().getAnnotation(NepticalConfiguration.class);
+    	NepticalContext classConfig = context.getAnnotation(NepticalContext.class);
     	return classConfig == null ? getNewEmptyModuleArray() : classConfig.value();
     }
     
-    public static Class<? extends Module>[] getConfiguredTestModules(FrameworkMethod frameworkMethod) throws InitializationError {
+    public static Class<? extends Module>[] getConfiguredTestModules(Method frameworkMethod){
     	
     	LOGGER.debug(" ---- Discovering test level guice configuration ---- ");
     	
-    	NepticalConfiguration annotation = null;
+    	NepticalContext annotation = null;
     	
     	if(frameworkMethod != null){
-    		annotation = frameworkMethod.getAnnotation(NepticalConfiguration.class);
+    		annotation = frameworkMethod.getAnnotation(NepticalContext.class);
     	}
         
         return annotation == null ? getNewEmptyModuleArray() : annotation.value();
     }
     
+	@SuppressWarnings("unchecked")
 	public static Injector createInjector(Class<? extends Module>... modules){
 		
 		LOGGER.debug(CREATING_GUICE_INJECTOR);
@@ -148,7 +134,7 @@ public class GuiceInjectionUtil {
 		return injector;
 	}
 	
-	public static Module[] createModules(Class<? extends Module>... modules){
+	public static Module[] createModules(Class<? extends Module>[] modules){
 		List<Module> moduleList = Lists.newArrayList();
 		
 		for(Class<? extends Module> module : modules){
@@ -275,6 +261,7 @@ public class GuiceInjectionUtil {
     private static final Class<? extends Module>[] getNewClassArrayWithLength(int length){
     	return new Class[length];
     }
+    
     @SuppressWarnings("unchecked")
 	private static final Class<? extends Module>[] getNewEmptyModuleArray(){
 		return new Class[0];

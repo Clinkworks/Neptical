@@ -10,6 +10,7 @@
 		<module>neptical-data</module>
 		<module>neptical-core</module>
 		<module>neptical-graph</module>
+		<module>neptical-junit</module>
 	</modules>
   
   <description>Test framework to support unit testing from a data perspective</description>
@@ -107,14 +108,14 @@
 			<groupId>com.googlecode.jmockit</groupId>
 			<artifactId>jmockit</artifactId>
 			<version>${jmockit.version}</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<scope>compiled</scope>
+			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>

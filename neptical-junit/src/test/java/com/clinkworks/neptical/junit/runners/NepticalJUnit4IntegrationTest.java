@@ -15,7 +15,7 @@ import static com.clinkworks.neptical.util.Common.noOp;
 
 //import com.clinkworks.neptical.NepticalData;
 //import com.clinkworks.neptical.data.api.DataLoader.TestData;
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.api.NepticalContext;
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules;
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.BindingAnnotationForIntegerConfig;
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.BoundIntegerModule;
@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 @RunWith(NepticalJUnit4Runner.class)
-@NepticalConfiguration({StringModule.class, NamedModule.class, BoundIntegerModule.class})
+@NepticalContext({StringModule.class, NamedModule.class, BoundIntegerModule.class})
 public class NepticalJUnit4IntegrationTest {
 	
 	boolean beforeMethodWasCalled = false;
@@ -95,7 +95,7 @@ public class NepticalJUnit4IntegrationTest {
 	}
 	
 	@Test
-	@NepticalConfiguration(IntegerModule.class)
+	@NepticalContext(IntegerModule.class)
 	public void integeationConfigTestForTestLevelConfiguration(Integer integer){
 		assertEquals(NepticalJUnitTestModules.DEFAULT_INTEGER, integer);
 	}

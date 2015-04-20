@@ -1,9 +1,8 @@
 package com.clinkworks.neptical.junit.runners;
 
-import static com.clinkworks.neptical.util.GuiceInjectionUtil.createInjector;
-import static com.clinkworks.neptical.util.GuiceInjectionUtil.getConfiguredContextModules;
-import static com.clinkworks.neptical.util.GuiceInjectionUtil.getConfiguredTestModules;
-import static com.clinkworks.neptical.util.GuiceInjectionUtil.getParameterValuesToInject;
+import static com.clinkworks.neptical.util.JUnitIntegrationUtil.createInjector;
+import static com.clinkworks.neptical.util.JUnitIntegrationUtil.getConfiguredContextModules;
+import static com.clinkworks.neptical.util.JUnitIntegrationUtil.getParameterValuesToInject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -70,7 +69,7 @@ public class NepticalJUnit4RunnerUnitTest {
 
         FrameworkMethod frameworkMethod = getFrameworkMethod(test, ANNOTATED_TEST_METHOD);
 
-        Class<?>[] modules = getConfiguredTestModules(frameworkMethod);
+        Class<?>[] modules = getConfiguredContextModules(frameworkMethod);
 
         assertEquals(1, modules.length);
         assertEquals(MockTestModuleTwo.class, modules[0]);

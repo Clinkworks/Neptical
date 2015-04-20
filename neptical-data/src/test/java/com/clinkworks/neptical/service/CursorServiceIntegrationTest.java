@@ -8,12 +8,12 @@ import org.junit.runner.RunWith;
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.graph.DataGraph;
 import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.api.NepticalContext;
 import com.clinkworks.neptical.module.NepticalDataModule;
 import com.google.inject.Inject;
 
 @RunWith(NepticalJUnit4Runner.class)
-@NepticalConfiguration(NepticalDataModule.class)
+@NepticalContext(NepticalDataModule.class)
 public class CursorServiceIntegrationTest {
 
 	@Inject

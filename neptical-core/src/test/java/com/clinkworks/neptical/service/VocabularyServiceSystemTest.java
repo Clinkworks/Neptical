@@ -6,17 +6,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.clinkworks.neptical.domain.Path;
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
 import com.clinkworks.neptical.module.VocabularyModule;
+import com.clinkworks.neptical.util.GuiceInjectionUtil;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-@RunWith(NepticalJUnit4Runner.class)
-@NepticalConfiguration(VocabularyModule.class)
 public class VocabularyServiceSystemTest {
 	
 	@Test
-	public void ensureVocabServiceCanParseDotNotation(VocabularyService vocabularyService){
-		Path path = vocabularyService.parse("path.to.data");
+	public void ensureVocabServiceCanParseDotNotation(){
+		
+		Injector injector = GuiceInjectionUtil.createInjector(VocabularyModule.class);
+		Path path = injector.getInstance(VocabularyService.class).parse("path.to.data");
 		assertEquals(3, path.length());
 	}
 

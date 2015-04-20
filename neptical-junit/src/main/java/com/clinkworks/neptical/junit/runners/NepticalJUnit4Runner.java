@@ -1,10 +1,6 @@
 package com.clinkworks.neptical.junit.runners;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,18 +18,11 @@ import org.junit.runners.model.Statement;
 
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
-import com.clinkworks.neptical.util.GuiceInjectionUtil;
+import com.clinkworks.neptical.util.JUnitIntegrationUtil;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 
 public class NepticalJUnit4Runner extends BlockJUnit4ClassRunner {
 	private static final Logger LOGGER = Logger.getLogger(NepticalJUnit4Runner.class);
-
-    @Target({ElementType.TYPE, ElementType.METHOD})
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface NepticalConfiguration {
-        Class<? extends Module>[] value();
-    }
     
 
     public NepticalJUnit4Runner(Class<?> klass) throws InitializationError {
@@ -125,7 +114,7 @@ public class NepticalJUnit4Runner extends BlockJUnit4ClassRunner {
     	String testName = method.getMethod().getName();
     	String fullName = testContextName + "." + testName;
     	LOGGER.debug(" ---- Building test: " + fullName + " ---- ");
-    	return GuiceInjectionUtil.createInjector(getTestClass(), method);
+    	return JUnitIntegrationUtil.createInjector(getTestClass(), method);
     }
 
 }

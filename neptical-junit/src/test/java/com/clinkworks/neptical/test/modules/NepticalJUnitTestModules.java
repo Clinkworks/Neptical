@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner.NepticalConfiguration;
+import com.clinkworks.neptical.api.NepticalContext;
 import com.clinkworks.neptical.util.Common;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
@@ -109,7 +109,7 @@ public class NepticalJUnitTestModules {
     public static class MockTestThatNeedsSupportForNamedAnnotation {
 
         @Test
-        @NepticalConfiguration({ NamedModule.class, AssertionModule.class })
+        @NepticalContext({ NamedModule.class, AssertionModule.class })
         public void testNamedConfiguration(@Named("String1") String string1, @Named("String2") String string2,
                 AssertionDependency assertionDependency) {
             assertTrue(StringUtils.isNotBlank(string1));
@@ -124,7 +124,7 @@ public class NepticalJUnitTestModules {
         private AssertionDependency assertionDependency;
 
         @Test
-        @NepticalConfiguration(AssertionModule.class)
+        @NepticalContext(AssertionModule.class)
         public void testMethodToTestInjectedDependencies(AssertionDependency assertionDependency) {
             this.assertionDependency = assertionDependency;
             assertionDependency.assertEquals("", "");
@@ -135,10 +135,10 @@ public class NepticalJUnitTestModules {
         }
     }
 
-    @NepticalConfiguration({ AssertionModule.class, StringModule.class })
+    @NepticalContext({ AssertionModule.class, StringModule.class })
     public static class MockTestFullIntegrationMethodLevelClassLevelConfigurations {
         @Test
-        @NepticalConfiguration(IntegerModule.class)
+        @NepticalContext(IntegerModule.class)
         public void testMethodWithStringAndIntegerDependencys(String stringToInject, Integer integerToInject,
                 AssertionDependency assertionDependency) {
             assertNotNull(integerToInject);
@@ -148,7 +148,7 @@ public class NepticalJUnitTestModules {
         }
     }
 
-    @NepticalConfiguration(StringModule.class)
+    @NepticalContext(StringModule.class)
     public static class MockTestWithStringDependency {
         @Test
         public void testMethodWithStringDependency(String stringToInject) {
@@ -161,7 +161,7 @@ public class NepticalJUnitTestModules {
         }
     }
 
-    @NepticalConfiguration({ StringModule.class, AssertionModule.class })
+    @NepticalContext({ StringModule.class, AssertionModule.class })
     public static class MockTestWithBeforeMethod {
         @Before
         public void setup(String defaultString, AssertionDependency assertionDependency) {
@@ -173,7 +173,7 @@ public class NepticalJUnitTestModules {
         }
     }
 
-    @NepticalConfiguration(AssertionModule.class)
+    @NepticalContext(AssertionModule.class)
     public static class MockTestRequiresUnConfiguredDependency {
         @Test
         public void testMethodWithStringDependency(String stringToInject, AssertionDependency assertionDependency) {
@@ -182,7 +182,7 @@ public class NepticalJUnitTestModules {
         }
     }
 
-    @NepticalConfiguration({ AssertionModule.class, BoundIntegerModule.class })
+    @NepticalContext({ AssertionModule.class, BoundIntegerModule.class })
     public static class MockTestWithBoundAnnotationDependency {
 
         @Test
@@ -194,7 +194,7 @@ public class NepticalJUnitTestModules {
         }
     }
     
-    @NepticalConfiguration(MockTestModuleOne.class)
+    @NepticalContext(MockTestModuleOne.class)
     public static class MockTestWithClassLevelGuiceConfig {
         @Test
         public void emptyTestMethod() {
@@ -203,7 +203,7 @@ public class NepticalJUnitTestModules {
     }
 
     public static class MockTestWithMethodLevelGuiceConfig {
-        @NepticalConfiguration(MockTestModuleTwo.class)
+        @NepticalContext(MockTestModuleTwo.class)
         @Test
         public void annotatedTestMethod() {
         	Common.noOp();

@@ -60,7 +60,6 @@ public class Common {
 		}
 	}
 	
-    
     private static final String read(Reader reader){
     	BufferedReader bufferedReader = new BufferedReader(reader);
     	StringBuffer stringBuffer = new StringBuffer();
