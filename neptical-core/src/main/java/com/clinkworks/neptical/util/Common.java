@@ -1,7 +1,5 @@
 package com.clinkworks.neptical.util;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +16,7 @@ public class Common {
 	}
 	
 	public static final void noOp(){
-		assertTrue(true);
+		assert true;
 	}
 	
 	/**
@@ -26,11 +24,11 @@ public class Common {
 	 * @param message
 	 */
 	public static final void noOp(String message){
-		assertTrue(true);
+		assert true;
 	}
 	
 	public static final void noOp(String... message){
-		assertTrue(true);
+		assert true;
 	}
 	
 	public static final boolean hasExtension(File file){

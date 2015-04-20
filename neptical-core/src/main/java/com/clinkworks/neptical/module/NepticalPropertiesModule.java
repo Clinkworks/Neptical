@@ -12,12 +12,17 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.configuration.AbstractConfiguration;
+
 import com.clinkworks.neptical.spi.GenericModuleTemplate;
 import com.clinkworks.neptical.util.Common;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ResourceInfo;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import com.netflix.config.ConfigurationManager;
 
 public class NepticalPropertiesModule extends GenericModuleTemplate{
 	
@@ -28,6 +33,17 @@ public class NepticalPropertiesModule extends GenericModuleTemplate{
 	public NepticalPropertiesModule() {
 		nepticalProperties = loadProperties();
 	}
+	
+	
+	@Provides
+	@Singleton
+	public AbstractConfiguration archaiusConfiguration() throws IOException{
+		System.setProperty("archaius.deployment.environment", "test");
+		String project = System.getProperty("neptical.sprocket", "neptical");
+		ConfigurationManager.loadCascadedPropertiesFromResources(project);
+		return ConfigurationManager.getConfigInstance();
+	}
+	
 	
 	@Override
 	protected void configure() {
