@@ -2,89 +2,89 @@ package com.clinkworks.neptical.module;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.clinkworks.neptical.spi.GenericModuleTemplate;
-import com.clinkworks.neptical.util.Common;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ResourceInfo;
+import org.apache.commons.configuration.AbstractConfiguration;
+
+import com.google.common.collect.Maps;
+import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.netflix.config.ConfigurationManager;
 
-public class NepticalPropertiesModule extends GenericModuleTemplate{
+public class NepticalPropertiesModule extends AbstractModule{
 	
-	private static final Pattern PROPERTY_FILE_PATTERN = Pattern.compile("(.*\\.properties$)");
-	
-	private final Properties nepticalProperties;
-		
-	public NepticalPropertiesModule() {
-		nepticalProperties = loadProperties();
-	}
+	private static final String DEFAULT_DATA_PROPERTY = "neptical.data.default";
+	private static final String DEFAULT_DATA_DIRECTORY = "src/main/resources/neptical";
 	
 	@Override
 	protected void configure() {
-		String defaultDataDirectory = nepticalProperties.getProperty("neptical-data");
+		
+		AbstractConfiguration archaius = configureArchaius();
+		String defaultDataDirectory = archaius.getString(DEFAULT_DATA_PROPERTY, DEFAULT_DATA_DIRECTORY);
 		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
-		Names.bindProperties(binder(), nepticalProperties);
-	}
-	
-	private Properties loadProperties(){
-		final Properties defaultProperties = new Properties();
-		loadPropertyFiles(defaultProperties);
-		defaultProperties.putAll(System.getProperties());
-		defaultProperties.putAll(System.getenv());
-		return new Properties(defaultProperties);
-	}
-	
-	private void loadPropertyFiles(Properties properties){
-		try {
-			ClassPath classPath = ClassPath.from(this.getClass().getClassLoader());
-			
-			for(ResourceInfo resourceInfo : classPath.getResources()){
-				Matcher matcher = PROPERTY_FILE_PATTERN.matcher(resourceInfo.getResourceName());
-				if(matcher.matches()){
-					URL url = resourceInfo.url();
-					loadProperties(properties, url);
+		
+		final Properties properties = new Properties();
+		final Map<String, Object> propertiesMap = Maps.newConcurrentMap();
+		
+		archaius.getKeys().forEachRemaining(
+			(key) -> {
+				
+				Object value = archaius.getProperty(key);
+				if(value == null){
+					System.out.println("null property: " + key);
+				}else{
+					properties.put(key, value.toString());
+					propertiesMap.put(key, value);
 				}
 			}
-			
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		);
+		
+		Names.bindProperties(binder(), properties);
+		
+		bind(Properties.class).
+			annotatedWith(NepticalProperties.class).
+				toInstance(properties);
+		
+		bind(new TypeLiteral<Map<String, Object>>(){}).
+			annotatedWith(NepticalProperties.class).
+				toInstance(propertiesMap);
+		
+		bind(AbstractConfiguration.class).toInstance(archaius);
 	}
 	
-	private void loadProperties(Properties properties, URL propertiesFile) {
-		InputStream inputStream = null;
+	private AbstractConfiguration configureArchaius() {
+		
+		System.setProperty("archaius.deployment.environment", "test");
+		String project = System.getProperty("neptical.project", "neptical");
 		
 		try {
-			inputStream = propertiesFile.openStream();
-			properties.load(inputStream);
+			ConfigurationManager.loadCascadedPropertiesFromResources(project);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		}finally{
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				Common.noOp("Eating exception");
-			}
 		}
 		
+		return ConfigurationManager.getConfigInstance();
 	}
-	
+		
 	@BindingAnnotation
 	@Target({ElementType.FIELD, ElementType.PARAMETER})
     @Retention(RetentionPolicy.RUNTIME)
 	public static @interface DataDirectory{
-		String value() default "NEPTICAL-DATA";
+		String value() default DEFAULT_DATA_DIRECTORY;
 	}
 	
+
+	@BindingAnnotation
+	@Target({ElementType.FIELD, ElementType.PARAMETER})
+    @Retention(RetentionPolicy.RUNTIME)
+	public static @interface NepticalProperties{}
+
 	
 }

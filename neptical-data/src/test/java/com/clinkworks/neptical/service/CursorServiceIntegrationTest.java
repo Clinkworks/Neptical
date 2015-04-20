@@ -24,7 +24,7 @@ public class CursorServiceIntegrationTest {
 	
 	@Test
 	public void cursorServiceCorrectlyFindsTheAddressNodeWithinTheDefaultTestData(){
-		Data data = cursorService.find("neptical-data.contacts.addresses.genericAddress.addressLine1");
+		Data data = cursorService.find("neptical.contacts.addresses.genericAddress.addressLine1");
 		assertEquals("1234 my place drive", data.getAsJsonData().getAsString());
 		dataGraph.dumpGraph();
 	}
