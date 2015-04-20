@@ -7,9 +7,10 @@
   <packaging>pom</packaging>
 
 	<modules>
-		<module>data</module>
-		<module>core</module>
-		<module>graph</module>
+		<module>neptical-data</module>
+		<module>neptical-core</module>
+		<module>neptical-graph</module>
+		<module>neptical-junit</module>
 	</modules>
   
   <description>Test framework to support unit testing from a data perspective</description>
@@ -107,7 +108,7 @@
 			<groupId>com.googlecode.jmockit</groupId>
 			<artifactId>jmockit</artifactId>
 			<version>${jmockit.version}</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -210,8 +211,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 				<executions>
 					<execution>
