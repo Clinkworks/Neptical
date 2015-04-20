@@ -6,12 +6,15 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 
+import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.netflix.config.ConfigurationManager;
 
@@ -28,19 +31,32 @@ public class NepticalPropertiesModule extends AbstractModule{
 		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
 		
 		final Properties properties = new Properties();
+		final Map<String, Object> propertiesMap = Maps.newConcurrentMap();
 		
 		archaius.getKeys().forEachRemaining(
 			(key) -> {
+				
 				Object value = archaius.getProperty(key);
 				if(value == null){
 					System.out.println("null property: " + key);
 				}else{
 					properties.put(key, value.toString());
+					propertiesMap.put(key, value);
 				}
 			}
 		);
 		
 		Names.bindProperties(binder(), properties);
+		
+		bind(Properties.class).
+			annotatedWith(NepticalProperties.class).
+				toInstance(properties);
+		
+		bind(new TypeLiteral<Map<String, Object>>(){}).
+			annotatedWith(NepticalProperties.class).
+				toInstance(propertiesMap);
+		
+		bind(AbstractConfiguration.class).toInstance(archaius);
 	}
 	
 	private AbstractConfiguration configureArchaius() {
@@ -64,5 +80,11 @@ public class NepticalPropertiesModule extends AbstractModule{
 		String value() default DEFAULT_DATA_DIRECTORY;
 	}
 	
+
+	@BindingAnnotation
+	@Target({ElementType.FIELD, ElementType.PARAMETER})
+    @Retention(RetentionPolicy.RUNTIME)
+	public static @interface NepticalProperties{}
+
 	
 }

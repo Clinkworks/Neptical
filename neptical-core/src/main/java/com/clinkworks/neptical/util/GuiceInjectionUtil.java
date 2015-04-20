@@ -118,7 +118,7 @@ public class GuiceInjectionUtil {
         return annotation == null ? getNewEmptyModuleArray() : annotation.value();
     }
     
-	@SuppressWarnings("unchecked")
+	@SafeVarargs
 	public static Injector createInjector(Class<? extends Module>... modules){
 		
 		LOGGER.debug(CREATING_GUICE_INJECTOR);
