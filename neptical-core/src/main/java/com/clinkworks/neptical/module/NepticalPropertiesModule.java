@@ -17,13 +17,14 @@ import com.netflix.config.ConfigurationManager;
 
 public class NepticalPropertiesModule extends AbstractModule{
 	
+	private static final String DEFAULT_DATA_PROPERTY = "neptical.data.default";
+	private static final String DEFAULT_DATA_DIRECTORY = "src/main/resources/neptical";
+	
 	@Override
 	protected void configure() {
 		
 		AbstractConfiguration archaius = configureArchaius();
-		String defaultDataDirectory = archaius.getString("neptical.data.default", "src/main/resources/neptical");
-		System.out.println(new File(".").getAbsolutePath());
-		System.out.println(new File(defaultDataDirectory).exists());
+		String defaultDataDirectory = archaius.getString(DEFAULT_DATA_PROPERTY, DEFAULT_DATA_DIRECTORY);
 		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
 		
 		final Properties properties = new Properties();
@@ -60,7 +61,7 @@ public class NepticalPropertiesModule extends AbstractModule{
 	@Target({ElementType.FIELD, ElementType.PARAMETER})
     @Retention(RetentionPolicy.RUNTIME)
 	public static @interface DataDirectory{
-		String value() default "src/test/resources";
+		String value() default DEFAULT_DATA_DIRECTORY;
 	}
 	
 	
