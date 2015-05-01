@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
-import com.clinkworks.neptical.util.GuiceInjectionUtil;
 import com.clinkworks.neptical.util.JUnitIntegrationUtil;
 import com.google.inject.Injector;
 

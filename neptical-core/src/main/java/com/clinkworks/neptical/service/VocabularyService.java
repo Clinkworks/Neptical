@@ -3,12 +3,13 @@ package com.clinkworks.neptical.service;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.Vocabulary;
 import com.clinkworks.neptical.domain.Path;
 import com.clinkworks.neptical.domain.PublicId;
 import com.clinkworks.neptical.domain.Segment;
 import com.clinkworks.neptical.util.PathUtil;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton

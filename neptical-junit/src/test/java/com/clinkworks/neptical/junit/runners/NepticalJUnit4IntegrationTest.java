@@ -2,6 +2,8 @@ package com.clinkworks.neptical.junit.runners;
 
 import static org.junit.Assert.*;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -9,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.clinkworks.neptical.util.Common.noOp;
+
 
 
 
@@ -22,7 +25,6 @@ import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.BoundIntege
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.IntegerModule;
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.NamedModule;
 import com.clinkworks.neptical.test.modules.NepticalJUnitTestModules.StringModule;
-import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 @RunWith(NepticalJUnit4Runner.class)

@@ -1,9 +1,10 @@
 package com.clinkworks.neptical.graph;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.IdentifiableDataContainer;
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class Node implements IdentifiableDataContainer{

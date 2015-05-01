@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
 import com.clinkworks.neptical.domain.Path;
@@ -13,8 +16,6 @@ import com.clinkworks.neptical.domain.PublicId;
 import com.clinkworks.neptical.domain.Segment;
 import com.clinkworks.neptical.spi.GraphComponentFactory;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class DataGraph {

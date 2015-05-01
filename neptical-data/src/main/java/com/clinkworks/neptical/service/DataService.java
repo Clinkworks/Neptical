@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.LoadableData;
 import com.clinkworks.neptical.domain.GenericFileData;
 import com.clinkworks.neptical.module.NepticalPropertiesModule.DataDirectory;
 import com.clinkworks.neptical.spi.DataLoader;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class DataService{

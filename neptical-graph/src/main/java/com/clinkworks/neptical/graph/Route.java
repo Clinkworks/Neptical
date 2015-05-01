@@ -5,9 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.NepticalId;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 /**

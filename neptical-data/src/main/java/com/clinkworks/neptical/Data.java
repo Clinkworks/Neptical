@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.clinkworks.neptical.datatype.DataContainer;
@@ -18,7 +20,6 @@ import com.clinkworks.neptical.datatype.TransformableData;
 import com.clinkworks.neptical.domain.JsonData;
 import com.clinkworks.neptical.spi.TraversableData;
 import com.clinkworks.neptical.util.DataUtil;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class Data implements DataContainer, TraversableData, ListableData, ListableTransformableData, TransformableData, MutableData, LoadableData, FileData{

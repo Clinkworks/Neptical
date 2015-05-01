@@ -4,19 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.clinkworks.neptical.domain.PublicId;
-import com.clinkworks.neptical.junit.runners.NepticalJUnit4Runner;
-import com.clinkworks.neptical.api.NepticalContext;
 import com.clinkworks.neptical.module.GraphModule;
 import com.clinkworks.neptical.spi.GraphComponentFactory;
-import com.google.inject.Inject;
+import com.clinkworks.neptical.util.GuiceInjectionUtil;
+import com.google.inject.Injector;
 import com.google.inject.Provider;
 
-@RunWith(NepticalJUnit4Runner.class)
-@NepticalContext(GraphModule.class)
 public class DataGraphSystemTest {
 
 	@Inject
@@ -27,6 +26,12 @@ public class DataGraphSystemTest {
 	 
 	@Inject
 	private GraphComponentFactory gcf; 
+
+	@Before
+	public void setup(){
+		Injector injector = GuiceInjectionUtil.createInjector(GraphModule.class);
+		injector.injectMembers(this);
+	}
 	
 	@Test
 	public void dataGraphIsProperlyInjectableAndSingletonIsRespected(){

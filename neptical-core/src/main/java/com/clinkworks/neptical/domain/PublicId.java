@@ -1,7 +1,8 @@
 package com.clinkworks.neptical.domain;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class PublicId extends NepticalId<String>{
