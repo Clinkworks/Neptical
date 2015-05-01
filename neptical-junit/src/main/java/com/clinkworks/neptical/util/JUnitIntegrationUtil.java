@@ -2,6 +2,8 @@ package com.clinkworks.neptical.util;
 
 import java.util.List;
 
+import static com.clinkworks.neptical.util.Common.noOp;
+
 import org.apache.log4j.Logger;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -13,6 +15,10 @@ import com.google.inject.Module;
 public class JUnitIntegrationUtil {
 	
 	private static final Logger LOGGER = Logger.getLogger(GuiceInjectionUtil.class);
+	
+	private JUnitIntegrationUtil(){
+		noOp("This class is designed to be a static utility class");
+	}
 	
     public static Injector createInjector(TestClass junitTestClass, FrameworkMethod method){
     	return createInjectorWithConfiguredModules(junitTestClass, method);

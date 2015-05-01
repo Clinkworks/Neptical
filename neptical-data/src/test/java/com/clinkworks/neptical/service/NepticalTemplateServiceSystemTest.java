@@ -38,14 +38,15 @@ public class NepticalTemplateServiceSystemTest {
 		Assert.assertEquals(TEST_VALUE, resolvedValue);
 	}
 	
-	@Test
-	public void ensureTemplateIntegrationWithAarchaiusWorksWithClassDefinitions(){
-		DataTemplate dataTemplate = new DataTemplate();
-		DataTemplate resolvedTemplate = nepticalTemplateService.resolve(dataTemplate);
-		assertEquals(TEST_VALUE, resolvedTemplate.myTemplate);
+	public static class TemplatedData{
+		private String myData = "{{[" + TEST_PROPERTY + "]}}";
 	}
 	
-	public static class DataTemplate{
-		private String myTemplate = "{{[" + TEST_PROPERTY + "]}}";
+	@Test
+	public void ensureTemplateIntegrationWithAarchaiusWorksWithClassDefinitions(){
+		TemplatedData templatedData = new TemplatedData();
+		TemplatedData resolvedTemplate = nepticalTemplateService.resolve(templatedData);
+		assertEquals(TEST_VALUE, resolvedTemplate.myData);
 	}
+	
 }
