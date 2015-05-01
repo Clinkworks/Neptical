@@ -53,4 +53,10 @@ public class JsonDataUnitTest {
 		assertEquals(2, jsonData.find("list[2]").getAsInt());
 		assertEquals("OBJECT_PROP_VALUE", jsonData.find("list[3].nestedObjectProperty").getAsString());
 	}
+	
+	@Test
+	public void ensureJsonDataConstructorSupportsStringsAsJsonObjects(){
+		JsonData jsonData = new JsonData(JSON);
+		assertEquals("ITEM1", jsonData.find("list[0]").getAsString());
+	}
 }

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.Configuration;
 
 import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
@@ -26,12 +26,12 @@ public class NepticalPropertiesModule extends AbstractModule{
 	@Override
 	protected void configure() {
 		
-		AbstractConfiguration archaius = configureArchaius();
+		Configuration archaius = configureArchaius();
 		String defaultDataDirectory = archaius.getString(DEFAULT_DATA_PROPERTY, DEFAULT_DATA_DIRECTORY);
 		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
 		
 		final Properties properties = new Properties();
-		final Map<String, Object> propertiesMap = Maps.newConcurrentMap();
+		final Map<String, Object> propertiesMap = Maps.newHashMap();
 		
 		archaius.getKeys().forEachRemaining(
 			(key) -> {
@@ -56,10 +56,10 @@ public class NepticalPropertiesModule extends AbstractModule{
 			annotatedWith(NepticalProperties.class).
 				toInstance(propertiesMap);
 		
-		bind(AbstractConfiguration.class).toInstance(archaius);
+		bind(Configuration.class).toInstance(archaius);
 	}
 	
-	private AbstractConfiguration configureArchaius() {
+	private Configuration configureArchaius() {
 		
 		System.setProperty("archaius.deployment.environment", "test");
 		String project = System.getProperty("neptical.project", "neptical");

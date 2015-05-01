@@ -10,19 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<freemarker.version>2.3.20</freemarker.version>
-		<archaius.version>0.6.5</archaius.version>
-		<handlebars.version>2.0.0</handlebars.version>
-	</properties>
-
 	<dependencies>
-
-		<dependency>
-			<groupId>com.github.jknack</groupId>
-			<artifactId>handlebars</artifactId>
-			<version>${handlebars.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.netflix.archaius</groupId>
