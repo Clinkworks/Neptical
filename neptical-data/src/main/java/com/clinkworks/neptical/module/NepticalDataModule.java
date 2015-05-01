@@ -6,7 +6,6 @@ import java.util.Map;
 import com.clinkworks.neptical.loader.FileDataLoader;
 import com.clinkworks.neptical.loader.JsonDataLoader;
 import com.clinkworks.neptical.service.CursorService;
-import com.clinkworks.neptical.service.NepticalTemplateService;
 import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.spi.DataLoader;
 import com.clinkworks.neptical.spi.GenericModuleTemplate;
