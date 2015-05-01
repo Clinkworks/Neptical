@@ -41,7 +41,7 @@ public class NepticalDataModule extends GenericModuleTemplate{
 	
 	@Provides
 	public Map<Serializable, DataLoader> dataLoaderRegistry(){
-		//need to come up with a chainable loader
+		//need to utilize a chainable loader
 		Map<Serializable, DataLoader> dataLoaders = Maps.newHashMap();
 		loadDataLoader(dataLoaders, fileDataLoader);		
 		loadDataLoader(dataLoaders, jsonDataLoader);
