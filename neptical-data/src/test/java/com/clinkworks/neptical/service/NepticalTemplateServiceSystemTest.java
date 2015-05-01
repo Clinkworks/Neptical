@@ -43,7 +43,7 @@ public class NepticalTemplateServiceSystemTest {
 	}
 	
 	@Test
-	public void ensureTemplateIntegrationWithAarchaiusWorksWithClassDefinitions(){
+	public void ensureTemplateIntegrationWithAarchaiusWorksWithhRawJavaObjects(){
 		TemplatedData templatedData = new TemplatedData();
 		TemplatedData resolvedTemplate = nepticalTemplateService.resolve(templatedData);
 		assertEquals(TEST_VALUE, resolvedTemplate.myData);
