@@ -1,10 +1,11 @@
 package com.clinkworks.neptical.domain;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.DataContainer;
 import com.clinkworks.neptical.datatype.IdentifiableDataContainer;
 import com.clinkworks.neptical.datatype.NepticalData;
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class GenericIdentifiableDataContainer implements IdentifiableDataContainer{

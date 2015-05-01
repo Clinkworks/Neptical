@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.clinkworks.neptical.Data;
 import com.clinkworks.neptical.datatype.FileData;
 import com.clinkworks.neptical.datatype.NepticalData;
@@ -17,8 +20,6 @@ import com.clinkworks.neptical.graph.Edge;
 import com.clinkworks.neptical.graph.Node;
 import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.util.DataUtil;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class CursorService implements Cursor{

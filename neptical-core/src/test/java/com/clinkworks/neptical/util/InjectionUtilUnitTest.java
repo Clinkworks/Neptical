@@ -40,7 +40,6 @@ public class InjectionUtilUnitTest {
 	@Test
 	public void canCreateInjectorWithModule(){
 		
-		@SuppressWarnings("unchecked")
 		Injector injector = createInjector(TestConfigOne.class);
 		String helloWorld = injector.getInstance(String.class);
 		
@@ -50,7 +49,6 @@ public class InjectionUtilUnitTest {
 	@Test
 	public void canCreateInjectorWithMultipleModules(){
 		
-		@SuppressWarnings("unchecked")
 		Injector injector = createInjector(TestConfigOne.class, TestConfigTwo.class);
 		
 		String worldString = injector.getInstance(String.class);
