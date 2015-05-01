@@ -51,6 +51,9 @@
 		<log4j.version>1.2.17</log4j.version>
 		<jmockit.version>1.7</jmockit.version>
 		<junit.version>4.11</junit.version>
+		<freemarker.version>2.3.20</freemarker.version>
+		<archaius.version>0.6.5</archaius.version>
+		<handlebars.version>2.0.0</handlebars.version>
 	</properties>
 
 	<dependencies>

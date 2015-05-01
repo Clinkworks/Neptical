@@ -36,6 +36,9 @@ public class JsonUtil {
 	}
 	
 	public static final JsonElement toJson(Object object){
+		if(object instanceof String){
+			return parse((String)object);
+		}
 		return GSON.toJsonTree(object);
 	}
 	

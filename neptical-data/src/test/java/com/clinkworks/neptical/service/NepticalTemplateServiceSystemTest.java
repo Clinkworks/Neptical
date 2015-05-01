@@ -1,8 +1,10 @@
 package com.clinkworks.neptical.service;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.clinkworks.neptical.module.NepticalHandlebarsModule;
@@ -36,12 +38,15 @@ public class NepticalTemplateServiceSystemTest {
 		Assert.assertEquals(TEST_VALUE, resolvedValue);
 	}
 	
-	@Test
-	public void ensureTemplateIntegrationWithAarchaiusWorksWithClassDefinitions(){
-		DataTemplate dataTemplate = new DataTemplate();
+	public static class TemplatedData{
+		private String myData = "{{[" + TEST_PROPERTY + "]}}";
 	}
 	
-	public static class DataTemplate{
-		private String myTemplate = "{{[" + TEST_PROPERTY + "]}}";
+	@Test
+	public void ensureTemplateIntegrationWithAarchaiusWorksWithClassDefinitions(){
+		TemplatedData templatedData = new TemplatedData();
+		TemplatedData resolvedTemplate = nepticalTemplateService.resolve(templatedData);
+		assertEquals(TEST_VALUE, resolvedTemplate.myData);
 	}
+	
 }

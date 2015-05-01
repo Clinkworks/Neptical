@@ -29,7 +29,7 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 		setName(name);
 		set(object);
 	}
-
+	
 	public boolean isJsonArray(){
 		return getAsJsonElement().isJsonArray();
 	}
@@ -63,8 +63,9 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 	public void set(Object object){
 		if(!(object instanceof JsonElement)){
 			super.set(JsonUtil.toJson(object));
+		}else{
+			super.set(object);
 		}
-		super.set(object);
 	}
 	
 	@SuppressWarnings("unchecked")

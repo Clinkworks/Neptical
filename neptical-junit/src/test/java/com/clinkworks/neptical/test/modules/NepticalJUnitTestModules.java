@@ -177,7 +177,7 @@ public class NepticalJUnitTestModules {
     public static class MockTestRequiresUnConfiguredDependency {
         @Test
         public void testMethodWithStringDependency(String stringToInject, AssertionDependency assertionDependency) {
-            assertionDependency.assertEquals("", "");
+            assertionDependency.assertEquals("", stringToInject);
             assertTrue(StringUtils.isBlank(stringToInject));
         }
     }
@@ -209,5 +209,4 @@ public class NepticalJUnitTestModules {
         	Common.noOp();
         };
     }
-
 }
