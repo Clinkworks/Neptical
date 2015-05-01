@@ -3,11 +3,12 @@ package com.clinkworks.neptical.service;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.domain.JsonData;
 import com.clinkworks.neptical.module.NepticalPropertiesModule.NepticalProperties;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton

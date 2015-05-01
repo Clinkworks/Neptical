@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.clinkworks.neptical</groupId>
-			<artifactId>neptical-junit</artifactId>
+			<artifactId>neptical-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

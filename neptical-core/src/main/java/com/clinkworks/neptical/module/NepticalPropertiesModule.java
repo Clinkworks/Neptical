@@ -25,7 +25,6 @@ public class NepticalPropertiesModule extends AbstractModule{
 	
 	@Override
 	protected void configure() {
-		
 		Configuration archaius = configureArchaius();
 		String defaultDataDirectory = archaius.getString(DEFAULT_DATA_PROPERTY, DEFAULT_DATA_DIRECTORY);
 		bind(File.class).annotatedWith(DataDirectory.class).toInstance(new File(defaultDataDirectory));
@@ -60,7 +59,7 @@ public class NepticalPropertiesModule extends AbstractModule{
 	}
 	
 	private Configuration configureArchaius() {
-		
+				
 		System.setProperty("archaius.deployment.environment", "test");
 		String project = System.getProperty("neptical.project", "neptical");
 		

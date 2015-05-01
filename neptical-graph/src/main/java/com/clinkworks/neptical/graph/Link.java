@@ -1,7 +1,8 @@
 package com.clinkworks.neptical.graph;
 
+import javax.inject.Inject;
+
 import com.clinkworks.neptical.datatype.NepticalId;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 public class Link implements Edge{
