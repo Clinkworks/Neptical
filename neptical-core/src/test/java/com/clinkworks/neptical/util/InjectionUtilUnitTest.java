@@ -59,9 +59,10 @@ public class InjectionUtilUnitTest {
 	}
 	
 	public static class TestConfigOne extends AbstractModule{
+		
 		@Override
 		protected void configure() {
-			
+			noOp();
 		}
 		
 		@Provides
