@@ -65,7 +65,7 @@ public class NepticalTemplateServiceSystemTest {
 		assertEquals(TEST_VALUE, resolvedTemplate.myData);
 	}
 
-	private void reinitArchiaus(){
+	public void reinitArchiaus(){
 		
 		//clear static state in archaius - NOTE... this is only nessessary since this is using the actual apis instead of mocks AKA... SystemTest
 		Deencapsulation.setField(ConfigurationManager.class, "context", null);
