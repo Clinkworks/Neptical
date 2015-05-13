@@ -67,11 +67,13 @@ public class JsonData extends GenericMutableData implements TraversableData, Tra
 			super.set(object);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> List<T> getListAs(Class<T> type) {
 		List<T> listOfT = Lists.newArrayList();
+		/*  note this isn't very type safe,
+		  but unless your data is just wickedly odd... you shouldn't encounter many type issues */
 		return JsonUtil.toObject(listOfT.getClass(), getAsJsonElement());
 	}
 

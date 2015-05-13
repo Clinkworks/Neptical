@@ -6,7 +6,6 @@ import java.util.Map;
 import com.clinkworks.neptical.loader.FileDataLoader;
 import com.clinkworks.neptical.loader.JsonDataLoader;
 import com.clinkworks.neptical.service.CursorService;
-import com.clinkworks.neptical.service.NepticalTemplateService;
 import com.clinkworks.neptical.spi.Cursor;
 import com.clinkworks.neptical.spi.DataLoader;
 import com.clinkworks.neptical.spi.GenericModuleTemplate;
@@ -42,7 +41,7 @@ public class NepticalDataModule extends GenericModuleTemplate{
 	
 	@Provides
 	public Map<Serializable, DataLoader> dataLoaderRegistry(){
-		//need to come up with a chainable loader
+		//need to utilize a chainable loader
 		Map<Serializable, DataLoader> dataLoaders = Maps.newHashMap();
 		loadDataLoader(dataLoaders, fileDataLoader);		
 		loadDataLoader(dataLoaders, jsonDataLoader);

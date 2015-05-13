@@ -1,12 +1,11 @@
 package com.clinkworks.neptical.service;
 
+import static com.clinkworks.neptical.util.GuiceInjectionUtil.createInjector;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Method;
 
 import mockit.Deencapsulation;
-import mockit.Mock;
-import mockit.MockUp;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.junit.Assert;
@@ -14,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.clinkworks.neptical.module.NepticalDataModule;
-import com.clinkworks.neptical.util.GuiceInjectionUtil;
 import com.google.inject.Injector;
 import com.netflix.config.ConfigurationBasedDeploymentContext;
 import com.netflix.config.ConfigurationManager;
@@ -33,10 +31,8 @@ public class NepticalTemplateServiceSystemTest {
 		System.setProperty(TEST_PROPERTY, TEST_VALUE);
 		reinitArchiaus();
 
-		Injector injector = GuiceInjectionUtil
-				.createInjector(NepticalDataModule.class);
-		nepticalTemplateService = injector
-				.getInstance(NepticalTemplateService.class);
+		Injector injector = createInjector(NepticalDataModule.class);
+		nepticalTemplateService = injector.getInstance(NepticalTemplateService.class);
 		injector = null;
 	}
 
@@ -65,7 +61,7 @@ public class NepticalTemplateServiceSystemTest {
 		assertEquals(TEST_VALUE, resolvedTemplate.myData);
 	}
 
-	private void reinitArchiaus(){
+	public void reinitArchiaus(){
 		
 		//clear static state in archaius - NOTE... this is only nessessary since this is using the actual apis instead of mocks AKA... SystemTest
 		Deencapsulation.setField(ConfigurationManager.class, "context", null);
