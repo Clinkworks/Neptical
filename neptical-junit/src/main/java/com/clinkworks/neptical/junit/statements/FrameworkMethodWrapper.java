@@ -2,16 +2,17 @@ package com.clinkworks.neptical.junit.statements;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.clinkworks.neptical.util.JUnitIntegrationUtil;
 import com.google.inject.Injector;
 
 public class FrameworkMethodWrapper extends Statement{
 
-	private static final Logger LOGGER = Logger.getLogger(FrameworkMethodWrapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FrameworkMethodWrapper.class);
 	
     private final FrameworkMethod fTestMethod;
     private final Object fTarget;

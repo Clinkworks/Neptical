@@ -4,17 +4,18 @@ import java.util.List;
 
 import static com.clinkworks.neptical.util.Common.noOp;
 
-import org.apache.log4j.Logger;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
 public class JUnitIntegrationUtil {
 	
-	private static final Logger LOGGER = Logger.getLogger(GuiceInjectionUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GuiceInjectionUtil.class);
 	
 	private JUnitIntegrationUtil(){
 		noOp("This class is designed to be a static utility class");

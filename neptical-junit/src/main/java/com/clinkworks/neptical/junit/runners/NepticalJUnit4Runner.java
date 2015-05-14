@@ -3,7 +3,6 @@ package com.clinkworks.neptical.junit.runners;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,6 +14,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.clinkworks.neptical.junit.statements.FrameworkMethodWrapper;
 import com.clinkworks.neptical.junit.statements.FrameworkMethodsWrapper;
@@ -22,7 +23,7 @@ import com.clinkworks.neptical.util.JUnitIntegrationUtil;
 import com.google.inject.Injector;
 
 public class NepticalJUnit4Runner extends BlockJUnit4ClassRunner {
-	private static final Logger LOGGER = Logger.getLogger(NepticalJUnit4Runner.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NepticalJUnit4Runner.class);
     
 
     public NepticalJUnit4Runner(Class<?> klass) throws InitializationError {

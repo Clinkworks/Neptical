@@ -11,13 +11,7 @@
 	</parent>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>com.github.jknack</groupId>
-			<artifactId>handlebars</artifactId>
-			<version>${handlebars.version}</version>
-		</dependency>
-
+	
 		<dependency>
 			<groupId>com.clinkworks.neptical</groupId>
 			<artifactId>neptical-graph</artifactId>

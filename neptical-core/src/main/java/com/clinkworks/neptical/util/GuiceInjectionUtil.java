@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.clinkworks.neptical.api.NepticalContext;
 import com.google.common.collect.Lists;
@@ -24,7 +25,7 @@ import com.google.inject.name.Names;
 
 public class GuiceInjectionUtil {
 	
-	private static final Logger LOGGER = Logger.getLogger(GuiceInjectionUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GuiceInjectionUtil.class);
 	
 	private static final String CREATING_GUICE_INJECTOR = " ---- Creating Guice Injector ---- ";
 	private static final String CREATING_CLASS_DEBUG_MESSAGE = " ---- Creating Guice Module: %s ---- ";
