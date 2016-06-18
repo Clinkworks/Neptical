@@ -1,9 +1,0 @@
-{
-	"genericAddress" : {
-		"addressLine1" : "1234 my place drive",
-		"addressLine2" : null,
-		"city" : "home town",
-		"state" : "Clinkworks Kingdom",
-		"zip" : "01337"
-	}
-}
