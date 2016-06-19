@@ -1,16 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
   <groupId>com.clinkworks</groupId>
   <artifactId>neptical</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Neptical</name>
-  <packaging>pom</packaging>
 
 
   <description>Test framework to support unit testing from a data perspective</description>
   
         <issueManagement>
-                <url>https://github.com/AnthonyClink/Neptical/issues</url>
+                <url>https://github.com/Clinkworls/Neptical/issues</url>
                 <system>GitHub Issues</system>
         </issueManagement>
 
@@ -24,7 +24,7 @@
 
         <scm>
            <url>https://github.com/AnthonyClink/Neptical</url>
-           <connection>scm:git:git://github.com/AnthonyClink/Neptical.git</connection>
+           <connection>scm:git:git://github.com/Clinkworks/Neptical.git</connection>
            <developerConnection>scm:git:git@github.com:AnthonyClink/Neptical.git</developerConnection>
         </scm>
 
@@ -38,8 +38,10 @@
         </developers>
   
 	<properties>
-
-	
+		<neptical.java.version>1.8</neptical.java.version>
+		<maven.plugins.version.compiler>3.5.1</maven.plugins.version.compiler>
+		<maven.plugins.version.war>2.6</maven.plugins.version.war>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -47,7 +49,21 @@
 	</dependencies>
 
 	<build>
-	
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.plugins.version.compiler}</version>
+					<configuration>
+						<source>${neptical.java.version}</source>
+						<target>${neptical.java.version}</target>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>
