@@ -1,0 +1,55 @@
+package clinkworks.neptical;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import clinkworks.neptical.Data.Origin;
+import clinkworks.neptical.datatype.DataDefinitionException;
+import clinkworks.neptical.datatype.Location;
+import clinkworks.neptical.domain.NSpace;
+import mockit.Deencapsulation;
+
+public class OriginCursorUnitTest {
+
+	private NSpace originSpace;
+	private Origin originCursor;
+	
+	private Object object1InModule1;
+	private Object objectInModule2;
+	private Object objectInModule3;
+	
+	@Before
+	public void setup() throws DataDefinitionException{
+		originCursor = (Origin)Data.getCursor();
+		originSpace = Deencapsulation.getField(originCursor, "rootLocation");
+		originSpace.defineModules("module1", "module2", "module3");
+		
+		object1InModule1 = new Object();
+		objectInModule2 = new Object();
+		objectInModule3 = new Object();
+		
+		
+		originSpace.addData("module1", "data", object1InModule1);
+		originSpace.addData("module2", "data", objectInModule2);
+		originSpace.addData("module3", "data", objectInModule3);
+		
+	}
+	
+	@Test
+	public void cursorCanMoveToALocationWithinSpace() throws DataDefinitionException{
+		Object object2InModule3 = new Object();
+		originSpace.addData("module3", "data", object2InModule3);
+		
+		Location module3RowTwoLocation = originCursor.find("data");
+		
+		assertEquals("module3", module3RowTwoLocation.parentModule().getName());
+		assertEquals(object2InModule3, module3RowTwoLocation.get().get());
+		
+		Location up = originCursor.moveUp();
+		assertEquals(objectInModule3, up.get().get());
+	}
+	
+	
+}

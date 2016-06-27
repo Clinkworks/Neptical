@@ -1,51 +1,112 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-  <groupId>com.clinkworks</groupId>
-  <artifactId>neptical</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Neptical</name>
+	<groupId>com.clinkworks</groupId>
+	<artifactId>neptical</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Neptical</name>
 
 
-  <description>Test framework to support unit testing from a data perspective</description>
-  
-        <issueManagement>
-                <url>https://github.com/Clinkworls/Neptical/issues</url>
-                <system>GitHub Issues</system>
-        </issueManagement>
+	<description>Test framework to support unit testing from a data perspective</description>
 
-	  <licenses>
-	    <license>
-	      <name>The Apache Software License, Version 2.0</name>
-	      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	      <distribution>repo</distribution>
-	    </license>
-	  </licenses>
+	<issueManagement>
+		<url>https://github.com/Clinkworls/Neptical/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
 
-        <scm>
-           <url>https://github.com/AnthonyClink/Neptical</url>
-           <connection>scm:git:git://github.com/Clinkworks/Neptical.git</connection>
-           <developerConnection>scm:git:git@github.com:AnthonyClink/Neptical.git</developerConnection>
-        </scm>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-        <developers>
-                <developer>
-                        <email>AnthonyJClink@gmail.com</email>
-                        <name>Anthony J Clink</name>
-                        <url>https://github.com/anthonyjclink</url>
-                        <id>anthonyjclink</id>
-                </developer>
-        </developers>
-  
+	<scm>
+		<url>https://github.com/AnthonyClink/Neptical</url>
+		<connection>scm:git:git://github.com/Clinkworks/Neptical.git</connection>
+		<developerConnection>scm:git:git@github.com/Clinworks/Neptical.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<email>AnthonyJClink@gmail.com</email>
+			<name>Anthony J Clink</name>
+			<url>https://github.com/anthonyjclink</url>
+			<id>anthonyjclink</id>
+		</developer>
+	</developers>
+
 	<properties>
+
+		<junit.version>4.12</junit.version>
+		<jmockit.version>1.24</jmockit.version>
+		<apache.commons.version>3.4</apache.commons.version>
+		<gson.version>2.7</gson.version>
+		<guava.version>19.0</guava.version>
+		<archaius.version>0.7.4</archaius.version>
+		<slf4j.version>1.7.21</slf4j.version>
+
 		<neptical.java.version>1.8</neptical.java.version>
 		<maven.plugins.version.compiler>3.5.1</maven.plugins.version.compiler>
 		<maven.plugins.version.war>2.6</maven.plugins.version.war>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 	</properties>
 
 	<dependencies>
-	
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.archaius</groupId>
+			<artifactId>archaius-core</artifactId>
+			<version>${archaius.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${apache.commons.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmockit</groupId>
+			<artifactId>jmockit</artifactId>
+			<version>${jmockit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
