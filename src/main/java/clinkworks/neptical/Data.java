@@ -8,30 +8,39 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Provider;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.datatype.Cursor;
+import clinkworks.neptical.datatype.CursorContext;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
 import clinkworks.neptical.datatype.NepticalData;
-import clinkworks.neptical.domain.CursorContext;
+import clinkworks.neptical.domain.GenericCursorContext;
 import clinkworks.neptical.domain.NSpace;
 import clinkworks.neptical.util.PathUtil;
 
 public abstract class Data {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(Data.class);
+	
 	public static final NepticalData BLANK = new BlankData();
 	
-	private static final CursorContext DEFAULT_CONTEXT = new CursorContext(new CursorWrapper());
+	private static final CursorContext DEFAULT_CONTEXT = new GenericCursorContext(NSpace.DEFAULT_NSPACE, new CursorWrapper());
+
+	public static final Location DEFAULT_SPACE = null
+			;
 	private static volatile Cursor CURRENT_CURSOR;
 
 	public static final Cursor getCursor() {
 
 		if (CURRENT_CURSOR == null) {
-			CURRENT_CURSOR = new Origin(new NSpace("default"));
+			CURRENT_CURSOR = new Origin(NSpace.DEFAULT_NSPACE);
 		}
 
 		return CURRENT_CURSOR;
@@ -46,7 +55,7 @@ public abstract class Data {
 		if(location == null){
 			return null;
 		}
-		return location.get();
+		return location.getData();
 	}
 	
 	public static Provider<Cursor> getCursorContext() {
@@ -118,29 +127,31 @@ public abstract class Data {
 				parentModule = currentSpace.getDataModule(segment);
 			}
 			
-			List<NepticalData> dataList = parentModule.getData(segment);
-			NepticalData data = dataList.isEmpty() ? NepticalData.NULL_DATA : dataList.get(dataList.size() - 1);
-			CursorLocation newLocation = new CursorLocation(currentSpace.getName(), parentModule, segment, dataList.size() - 1);
+			List<NepticalData> dataList = parentModule.getDataAt(segment);
+			CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, String.valueOf(dataList.size() - 1));
 			locationCache.put(newLocation.getResourceIdentity(), newLocation);
-			newLocation.setNepticalData(data);
 			
 			currentLocation = newLocation;
 			
 			return newLocation;
 		}
 
-		public Location moveUp() {
-			List<NepticalData> data = currentLocation.parentModule().getData(currentLocation.name());
-			int currentIndex = currentLocation.rowId();
-
-			if(currentIndex < 0){
-				//move to next module and find last index of segment
+		@Override
+		public NepticalData getData() {
+			Location location = getLocation();
+			
+			DataModule moduleContext = NSpaceManager.getSpace(location.context());
+			List<NepticalData> data = moduleContext.getDataAt(location.fragment());
+			
+			if(data.isEmpty()){
+				return NepticalData.NULL_DATA;
 			}
 			
-			CursorLocation cursorLocation = new CursorLocation(rootLocation.getName(), currentLocation.parentModule(), currentLocation.name(), currentLocation.rowId() - 1);
-			cursorLocation.setNepticalData(data.get(cursorLocation.rowId()));
-			currentLocation = cursorLocation;
-			return currentLocation;
+			if(location instanceof CursorLocation){
+				return data.get(Integer.valueOf(location.name()));
+			}
+			
+			return null;
 		}
 
 		
@@ -149,65 +160,65 @@ public abstract class Data {
 
 	private static class CursorLocation implements Location{
 
-		private final DataModule parent;
-		private final String nspace;
-		private final String column;
-		private final int row;
-		private volatile NepticalData nepticalData;
+		private final String context;
+		private final String fragment;
+		private final String name;
 		
-		private CursorLocation(String nspace, DataModule module, String fragment, int row) {
-			parent = module;
-			column = fragment;
-			this.nspace = nspace;
-			this.row = row;
+		private CursorLocation(String context, String fragment, String name) {
+			this.context = context;
+			this.fragment = fragment;
+			this.name = name;
 		}
 		
+		@Override
+		public String context() {
+			return context;
+		}
+
+		@Override
+		public String fragment() {
+			return fragment;
+		}
+
+		@Override
+		public String name() {
+			return name;
+		}
+
+		@Override
+		public URI getResourceIdentity() {
+			try {
+				return new URI(context + "/" + fragment + "." + "name");
+			} catch (URISyntaxException e) {
+				LOGGER.debug("Something bad happened creating uri for Location " + this + "(" + e.getMessage() + ")", e);
+				throw new RuntimeException(e);
+			}
+		}
+
 		@Override
 		public Cursor moveCursorHere() {
 			return getCursor().moveToLocation(this);
 		}
 
 		@Override
-		public NepticalData get() {
-			return nepticalData == null ? NepticalData.NULL_DATA : nepticalData;
+		public NepticalData getData() {
+			Location previousLocation = getCursor().getLocation();
+			getCursor().moveToLocation(this);
+			
+			NepticalData nepticalData = getCursor().getData();
+			
+			getCursor().moveToLocation(previousLocation);
+			
+			return nepticalData;
 		}
 
-		@Override
-		public DataModule parentModule() {
-			return parent;
-		}
-
-		@Override
-		public String name() {
-			return column;
-		}
-		
-		
-
-		@Override
-		public URI getResourceIdentity() {
-			try {
-				return new URI("neptical://" + nspace + "." + parent.getName() + "." + column + "?row=" + row);
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		
-		private void setNepticalData(NepticalData nepticalData){
-			this.nepticalData = nepticalData;
-		}
-
-		@Override
-		public int rowId() {
-			return row;
-		}
 	}
 	
 	static final class CursorWrapper implements Provider<Cursor>, Cursor{
 		
 		@Override
 		public Cursor moveToLocation(Location location) {
+			LOGGER.warn("Could not move to " + location + " Cursor is not initalized.");
 			return get() == null ? this : get().moveToLocation(location);
 		}
 
@@ -224,6 +235,11 @@ public abstract class Data {
 		@Override
 		public Cursor get() {
 			return CURRENT_CURSOR;
+		}
+
+		@Override
+		public NepticalData getData() {
+			return get() == null ? NepticalData.NULL_DATA : get().getData();
 		}
 
 		

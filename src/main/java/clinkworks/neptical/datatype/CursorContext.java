@@ -1,5 +1,7 @@
 package clinkworks.neptical.datatype;
 
-public interface CursorContext {
+import javax.inject.Provider;
+
+public interface CursorContext extends Provider<Cursor>{
 
 }

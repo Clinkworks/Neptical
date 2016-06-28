@@ -45,18 +45,18 @@ public class GenericDataModule implements DataModule{
 	}
 
 	@Override
-	public List<NepticalData> getData() {
+	public List<NepticalData> getAllData() {
 		return new ArrayList<>(data.values());
 	}
 
 	@Override
-	public List<NepticalData> getData(String segment) {
+	public List<NepticalData> getDataAt(String segment) {
 		List<NepticalData> dataList = data.get(segment);
 		return dataList == null ? EMPTY_LIST : new ArrayList<>(dataList);
 	}
 
 	@Override
-	public NepticalData getData(String segment, int index) {
+	public NepticalData getDataAt(String segment, int index) {
 		
 		List<NepticalData> dataList = data.get(segment);
 		

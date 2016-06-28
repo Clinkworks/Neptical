@@ -44,11 +44,8 @@ public class OriginCursorUnitTest {
 		
 		Location module3RowTwoLocation = originCursor.find("data");
 		
-		assertEquals("module3", module3RowTwoLocation.parentModule().getName());
-		assertEquals(object2InModule3, module3RowTwoLocation.get().get());
+		assertEquals(object2InModule3, module3RowTwoLocation.getData().get());
 		
-		Location up = originCursor.moveUp();
-		assertEquals(objectInModule3, up.get().get());
 	}
 	
 	

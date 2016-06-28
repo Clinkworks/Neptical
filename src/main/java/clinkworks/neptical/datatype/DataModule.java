@@ -10,10 +10,10 @@ public interface DataModule {
 	
 	void addData(String segment, NepticalData data) throws DataDefinitionException;
 	
-	List<NepticalData> getData();
+	List<NepticalData> getAllData();
 	
-	List<NepticalData> getData(String segment);
+	List<NepticalData> getDataAt(String segment);
 	
-	NepticalData getData(String segment, int index);
+	NepticalData getDataAt(String segment, int index);
 
 }

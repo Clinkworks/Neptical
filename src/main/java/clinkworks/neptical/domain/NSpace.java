@@ -20,6 +20,8 @@ import clinkworks.neptical.datatype.NepticalData;
 
 public class NSpace implements DataModule, Location {
 
+	public static final NSpace DEFAULT_NSPACE = new NSpace("default");
+	
 	private final Provider<Cursor> cursorProvider;
 	private final String name;
 	private final Map<String, DataModule> dataModules;
@@ -89,12 +91,7 @@ public class NSpace implements DataModule, Location {
 		getDataModule(dataModule).addData(segment, new GenericImmutableData(data));
 	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
+	
 	public String[] segments() {
 		return fragments.toArray(new String[fragments.size()]);
 	}
@@ -110,21 +107,21 @@ public class NSpace implements DataModule, Location {
 	}
 
 	@Override
-	public List<NepticalData> getData(String segment) {
+	public List<NepticalData> getDataAt(String segment) {
 		DataModule dataModule = getCurrentModule();
 
 		if (dataModule == null) {
 			return new ArrayList<>();
 		}
 
-		List<NepticalData> moduleData = dataModule.getData(segment);
+		List<NepticalData> moduleData = dataModule.getDataAt(segment);
 
 		if (!moduleData.isEmpty()) {
 			return moduleData;
 		}
 		
 		for (int i = fragments.size() - 1; i > 0; i--) {
-			moduleData = getDataModule(fragments.get(i - 1)).getData(segment);
+			moduleData = getDataModule(fragments.get(i - 1)).getDataAt(segment);
 			if (moduleData.isEmpty()) {
 				continue;
 			}
@@ -136,22 +133,22 @@ public class NSpace implements DataModule, Location {
 	}
 
 	@Override
-	public NepticalData getData(String segment, int index) {
+	public NepticalData getDataAt(String segment, int index) {
 		DataModule dataModule = getDataModuleContaining(segment);
 		if(dataModule == null){
 			return NepticalData.NULL_DATA;
 		}
-		return dataModule.getData(segment, index);
+		return dataModule.getDataAt(segment, index);
 	}
-
+	
 	@Override
-	public List<NepticalData> getData() {
+	public List<NepticalData> getAllData() {
 
 		if (fragments.isEmpty()) {
 			return new ArrayList<>();
 		}
 
-		return getDataModule(fragments.get(fragments.size() - 1)).getData();
+		return getDataModule(fragments.get(fragments.size() - 1)).getAllData();
 
 	}
 	
@@ -160,7 +157,7 @@ public class NSpace implements DataModule, Location {
 		for(int i = fragments.size(); i > 0; i--){
 			DataModule dataModule = getDataModule(fragments.get(i - 1));
 			
-			if(dataModule.getData(segment).isEmpty()){
+			if(dataModule.getDataAt(segment).isEmpty()){
 				continue;
 			}
 			
@@ -182,8 +179,8 @@ public class NSpace implements DataModule, Location {
 	}
 
 	@Override
-	public DataModule parentModule() {
-		return this;
+	public String context() {
+		return name();
 	}
 
 	@Override
@@ -198,7 +195,7 @@ public class NSpace implements DataModule, Location {
 
 
 	@Override
-	public NepticalData get() {
+	public NepticalData getData() {
 		return NepticalData.NULL_DATA;
 	}
 
@@ -213,10 +210,13 @@ public class NSpace implements DataModule, Location {
 	}
 
 	@Override
-	public int rowId() {
-		return -1;
+	public String fragment() {
+		return name();
 	}
 
-
+	@Override
+	public String getName() {
+		return name();
+	}
 
 }

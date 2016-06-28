@@ -44,21 +44,21 @@ public class NSpaceUnitTest {
 	
 	@Test
 	public void whenAFragmentDoesNotExistANullDataIsReturned(){
-		assertSame(NepticalData.NULL_DATA, nspace.getData("non existant fragment", 0));
+		assertSame(NepticalData.NULL_DATA, nspace.getDataAt("non existant fragment", 0));
 	}
 	
 	@Test
 	public void nSpacesCascadesModulesInReverseOrder() throws DataDefinitionException{
 		
-		assertSame(objectInModule3, nspace.getData("data", 0).get());
+		assertSame(objectInModule3, nspace.getDataAt("data", 0).get());
 		
 		nspace.addModule("module1");
-		assertSame(object1InModule1, nspace.getData("data", 0).get());
+		assertSame(object1InModule1, nspace.getDataAt("data", 0).get());
 		
 		nspace.defineModules("module3", "module1", "module2");
 		
 		nspace.addModule("module2");
-		assertSame(objectInModule2, nspace.getData("data", 0).get());
+		assertSame(objectInModule2, nspace.getDataAt("data", 0).get());
 		
 	}
 
@@ -68,13 +68,13 @@ public class NSpaceUnitTest {
 		nspace.addModule("module4");
 		Object objectInModule4 = new Object();
 		
-		assertSame(objectInModule3, nspace.getData("data", 0).get());
+		assertSame(objectInModule3, nspace.getDataAt("data", 0).get());
 		
 		nspace.addData("data", objectInModule4);
-		assertSame(objectInModule4, nspace.getData("data", 0).get());
+		assertSame(objectInModule4, nspace.getDataAt("data", 0).get());
 		
 		nspace.addModule("module5");
-		assertSame(objectInModule4, nspace.getData("data", 0).get());
+		assertSame(objectInModule4, nspace.getDataAt("data", 0).get());
 		
 	}
 	
@@ -82,10 +82,10 @@ public class NSpaceUnitTest {
 	public void ifAFragmentIsIntentionallyBlankTheNSpaceShouldTreatItAsANull() throws DataDefinitionException{
 		nspace.addModule("BlankTestModule");
 		nspace.addData("data", Data.BLANK);
-		assertNull(nspace.getData("data", 0).get());
+		assertNull(nspace.getDataAt("data", 0).get());
 		
 		nspace.addModule("module2");
-		assertSame(objectInModule2, nspace.getData("data", 0).get());
+		assertSame(objectInModule2, nspace.getDataAt("data", 0).get());
 	}
 	
 }
