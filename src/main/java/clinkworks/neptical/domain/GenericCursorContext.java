@@ -14,10 +14,6 @@ public class GenericCursorContext implements Provider<Cursor>, Location, CursorC
 	private final Location rootLocation;
 	private final Provider<Cursor> cursorProvider;
 	
-	public GenericCursorContext(Provider<Cursor> cursorProvider){
-		this(NSpace.DEFAULT_NSPACE, cursorProvider);
-	}
-	
 	public GenericCursorContext(Location rootLocation, Provider<Cursor> cursorProvider){
 		this.cursorProvider = cursorProvider;
 		this.rootLocation = rootLocation;
@@ -57,5 +53,36 @@ public class GenericCursorContext implements Provider<Cursor>, Location, CursorC
 	public Cursor get() {
 		return cursorProvider.get();
 	}
+
+	@Override
+	public Location getLocation() {
+		return this;
+	}
+
+	@Override
+	public String[] columns() {
+		Cursor cursor = get();
+		
+		Location lastLocation = cursor.getLocation();
+		cursor.moveToLocation(rootLocation);
+		return cursor.getColumns(this);
+	}
+
+	@Override
+	public String[] rows() {
+		return null;
+	}
+
+	@Override
+	public Provider<Cursor> getContextCursorProvider() {
+		return cursorProvider;
+	}
+
+	@Override
+	public CursorContext getCursorContext() {
+		return this;
+	}
+
+
 	
 }

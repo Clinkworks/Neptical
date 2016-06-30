@@ -16,4 +16,6 @@ public interface DataModule {
 	
 	NepticalData getDataAt(String segment, int index);
 
+	CursorContext getCursorContext();
+
 }

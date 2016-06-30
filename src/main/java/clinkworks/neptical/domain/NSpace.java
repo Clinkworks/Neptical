@@ -4,50 +4,57 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
-import clinkworks.neptical.Data;
+import clinkworks.neptical.component.ContextKey;
+import clinkworks.neptical.component.NSpaceManager;
+import clinkworks.neptical.component.Origin;
 import clinkworks.neptical.datatype.Cursor;
+import clinkworks.neptical.datatype.CursorContext;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
+import clinkworks.neptical.datatype.NepticalContext;
 import clinkworks.neptical.datatype.NepticalData;
 
-public class NSpace implements DataModule, Location {
+public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalContext{
 
-	public static final NSpace DEFAULT_NSPACE = new NSpace("default");
+	public static final NSpace NEPTICAL_SYSTEM_SPACE;
+	public static final NSpace DEFAULT_NSPACE;
+	
+	static{
+		 NEPTICAL_SYSTEM_SPACE = new NSpace("system");
+		 DEFAULT_NSPACE = new NSpace("default");
+	}
 	
 	private final Provider<Cursor> cursorProvider;
 	private final String name;
-	private final Map<String, DataModule> dataModules;
 	
 	private List<String> fragments;
+	private ContextKey contextKey;
 
 	public NSpace(String name, String... dataModules){
-		this(Data.getCursorContext(), name, dataModules);
+		this(Origin.getCursorContext(), name, dataModules);
 	}
 	
-	public NSpace(Provider<Cursor> cursorProvider, String name, String... dataModules) {
-		this(cursorProvider, name, Stream.of(dataModules).map((moduleName) -> new GenericDataModule(moduleName))
+	@Inject
+	NSpace(Provider<Cursor> cursorProvider, String name, String... dataModules) {
+		this(cursorProvider, name, Stream.of(dataModules).map((moduleName) -> NSpaceManager.getDataModule(moduleName))
 				.toArray(DataModule[]::new));
 	}
 
 	NSpace(Provider<Cursor> cursorProvider, String name, DataModule... dataModules) {
-		this.dataModules = new ConcurrentHashMap<>(dataModules.length);
 
 		// hold the search order as Nspaces has different semantics than Modules
 		fragments = new CopyOnWriteArrayList<>();
 
 		for (int i = 0; i < dataModules.length; i++) {
-			DataModule dataModule = dataModules[i];
-			String moduleName = dataModule.getName();
-			this.dataModules.put(moduleName, dataModule);
-			fragments.add(moduleName);
+			fragments.add(dataModules[i].getName());
+			
 		}
 		this.cursorProvider = cursorProvider;
 		this.name = name;
@@ -63,9 +70,6 @@ public class NSpace implements DataModule, Location {
 
 		for (String moduleName : moduleNames) {
 			fragments.add(moduleName);
-			if (getDataModule(moduleName) == null) {
-				dataModules.put(moduleName, new GenericDataModule(moduleName));
-			}
 		}
 
 	}
@@ -75,7 +79,6 @@ public class NSpace implements DataModule, Location {
 		
 		if(currentFragmentIndex < 0){
 			fragments.add(moduleName);
-			dataModules.put(moduleName, new GenericDataModule(moduleName));
 			return;
 		}
 		
@@ -175,7 +178,7 @@ public class NSpace implements DataModule, Location {
 	}
 
 	public DataModule getDataModule(String moduleName) {
-		return dataModules.get(moduleName);
+		return NSpaceManager.getDataModule(moduleName);
 	}
 
 	@Override
@@ -217,6 +220,31 @@ public class NSpace implements DataModule, Location {
 	@Override
 	public String getName() {
 		return name();
+	}
+
+	@Override
+	public Cursor get() {
+		return cursorProvider.get();
+	}
+
+	@Override
+	public CursorContext getCursorContext() {
+		return NSpaceManager.getCursorContext((DataModule)this);
+	}
+
+	@Override
+	public ContextKey getContextKey() {
+		return contextKey;
+	}
+
+	@Override
+	public void setContextKey(ContextKey contextKey) {
+		this.contextKey = contextKey;
+	}
+
+	@Override
+	public URI getIdentity() {
+		return getResourceIdentity();
 	}
 
 }

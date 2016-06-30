@@ -8,11 +8,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 
+import clinkworks.neptical.component.NSpaceManager;
+import clinkworks.neptical.datatype.CursorContext;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.NepticalData;
 
-public class GenericDataModule implements DataModule{
+public class GenericDataModule implements DataModule {
 
 	private static final List<NepticalData> EMPTY_LIST = ImmutableList.of();
 	
@@ -66,6 +68,11 @@ public class GenericDataModule implements DataModule{
 		
 		return dataList.get(index);
 		
+	}
+
+	@Override
+	public CursorContext getCursorContext() {
+		return NSpaceManager.getCursorContext(this);
 	}
 	
 	

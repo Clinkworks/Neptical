@@ -7,6 +7,7 @@ public interface Location {
 	String fragment();
 	String name();
 	URI getResourceIdentity();
-	Cursor moveCursorHere();
 	NepticalData getData();
+	Cursor moveCursorHere();
+	CursorContext getCursorContext();
 }
