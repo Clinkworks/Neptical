@@ -3,11 +3,12 @@ package clinkworks.neptical;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.component.Origin;
 import clinkworks.neptical.datatype.DataDefinitionException;
-import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
 import clinkworks.neptical.domain.NSpace;
 import mockit.Deencapsulation;
@@ -20,6 +21,12 @@ public class OriginCursorUnitTest {
 	private Object objectInModule1;
 	private Object objectInModule2;
 	private Object objectInModule3;
+	
+	@BeforeClass
+	public static void clearCacheFromPreviousContexts(){
+		/** REMEMBER TO DELETE THIS CRAP! **/
+		NSpaceManager.clearCache();
+	}
 	
 	@Before
 	public void setup() throws DataDefinitionException{
@@ -51,9 +58,7 @@ public class OriginCursorUnitTest {
 	
 	@Test
 	public void cursorCanSelectColumnsWithinAModule() throws DataDefinitionException{
-		
-		
-		
+
 		String module = "Column Select Test";
 		String[] columns = new String[]{"Column1", "Column2", "Column3"};
 		
@@ -62,9 +67,7 @@ public class OriginCursorUnitTest {
 		originSpace.addData(columns[1], objectInModule2);
 		originSpace.addData(columns[1], objectInModule3);
 		
-		DataModule datatestLocation = originSpace.getDataModule(module);
 		
-		originCursor.moveToLocation(originSpace);
 		
 		
 		

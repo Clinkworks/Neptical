@@ -7,10 +7,12 @@ import static org.junit.Assert.assertSame;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import clinkworks.neptical.Data;
+import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.NepticalData;
 
@@ -23,6 +25,7 @@ public class NSpaceUnitTest {
 	
 	@Before
 	public void setup() throws DataDefinitionException{
+		
 		nspace = new NSpace("default", "module1", "module2", "module3");
 		
 		object1InModule1 = new Object();
@@ -33,6 +36,11 @@ public class NSpaceUnitTest {
 		nspace.addData("module2", "data", objectInModule2);
 		nspace.addData("module3", "data", objectInModule3);
 		
+	}
+	
+	@After
+	public void clearCache(){
+		NSpaceManager.clearCache();
 	}
 	
 	@Test

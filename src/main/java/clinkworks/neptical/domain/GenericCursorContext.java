@@ -41,7 +41,7 @@ public class GenericCursorContext implements Provider<Cursor>, Location, CursorC
 
 	@Override
 	public Cursor moveCursorHere() {
-		return get().moveToLocation(rootLocation);
+		return get().moveTo(rootLocation);
 	}
 
 	@Override
@@ -61,11 +61,7 @@ public class GenericCursorContext implements Provider<Cursor>, Location, CursorC
 
 	@Override
 	public String[] columns() {
-		Cursor cursor = get();
-		
-		Location lastLocation = cursor.getLocation();
-		cursor.moveToLocation(rootLocation);
-		return cursor.getColumns(this);
+		return new String[0];
 	}
 
 	@Override

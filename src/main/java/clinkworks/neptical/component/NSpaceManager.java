@@ -21,7 +21,6 @@ import clinkworks.neptical.domain.NSpace;
 
 public class NSpaceManager implements ContextKeyFactory {
 
-	public static final String DEFAULT_NSPACE_CONTEXT = "default";
 	private static final String DEFAULT_MODULE_CONTEXT = "module";
 	private static final String HOME_CONTEXT = "home";
 
@@ -33,21 +32,31 @@ public class NSpaceManager implements ContextKeyFactory {
 	static final Logger LOGGER = null;
 
 	static {
-		DEFAULT_KEY = new NSpaceKey(DEFAULT_NSPACE_CONTEXT);
 		CONTEXT_CACHE_MODULE = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
 		CONTEXT_CACHE_CURSOR = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
-
-		CONTEXT_CACHE_MODULE.put(DEFAULT_KEY, NSpace.DEFAULT_NSPACE);
-		CONTEXT_CACHE_CURSOR.put(new ContextKey(DEFAULT_KEY.name(), Location.class),
-				NSpace.DEFAULT_NSPACE.getCursorContext());
-
+		DEFAULT_KEY = new NSpaceKey(NSpace.DEFAULT_NSPACE.context());
 		CONTEXT_KEY_FACTORY = new NSpaceManager();
+		
+		clearCache();
 
 	}
 
 	NSpaceManager() {
 	}
 
+	/* TODO: have this clear only specific contexts within cache */
+	public static final void clearCache(){
+		CONTEXT_CACHE_CURSOR.invalidateAll();
+		CONTEXT_CACHE_MODULE.invalidateAll();
+		
+
+		CONTEXT_CACHE_MODULE.put(DEFAULT_KEY, NSpace.DEFAULT_NSPACE);
+		CONTEXT_CACHE_CURSOR.put(new ContextKey(DEFAULT_KEY.name(), Location.class),
+				NSpace.DEFAULT_NSPACE.getCursorContext());
+		
+		((Origin)Origin.getCursor()).clearLocations();
+	}
+	
 	public NSpace createNSpace(String name, String... dataModules) {
 		ContextKey key = new NSpaceKey(name);
 		NSpace newSpace = new NSpace(name, dataModules);

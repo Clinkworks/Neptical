@@ -75,5 +75,9 @@ public class GenericDataModule implements DataModule {
 		return NSpaceManager.getCursorContext(this);
 	}
 	
+	@Override
+	public String toString(){
+		return name + "(" + fragments + ")";
+	}
 	
 }

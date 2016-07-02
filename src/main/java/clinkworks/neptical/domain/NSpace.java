@@ -36,6 +36,7 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	
 	private List<String> fragments;
 	private ContextKey contextKey;
+	
 
 	public NSpace(String name, String... dataModules){
 		this(Origin.getCursorContext(), name, dataModules);
@@ -193,7 +194,7 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 
 	@Override
 	public Cursor moveCursorHere() {
-		return cursorProvider.get().moveToLocation(this);
+		return cursorProvider.get().moveTo(this);
 	}
 
 
@@ -245,6 +246,11 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	@Override
 	public URI getIdentity() {
 		return getResourceIdentity();
+	}
+	
+	@Override
+	public String toString(){
+		return getIdentity().toString();
 	}
 
 }
