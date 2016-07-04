@@ -91,7 +91,7 @@ public final class Origin implements SystemCursor {
 
 			try {
 				currentSpace = (NSpace) locationCache.get(new URI(nepticalProtocol + nspaceToSwitch),
-						() -> new NSpace(nspaceToSwitch));
+						() -> NSpaceManager.getSpace(nspaceToSwitch));
 				currentLocation = currentSpace;
 			} catch (ExecutionException | URISyntaxException e) {
 				throw new DataDefinitionException("Something went wrong when loading a new nspace from the query");

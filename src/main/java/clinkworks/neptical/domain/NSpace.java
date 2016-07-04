@@ -184,7 +184,7 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 
 	@Override
 	public String context() {
-		return name();
+		return "neptical://";
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	@Override
 	public URI getResourceIdentity() {
 			try {
-				return new URI("neptical://" + name());
+				return new URI(context() + name());
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				return null;

@@ -34,7 +34,7 @@ public class NSpaceManager implements ContextKeyFactory {
 	static {
 		CONTEXT_CACHE_MODULE = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
 		CONTEXT_CACHE_CURSOR = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
-		DEFAULT_KEY = new NSpaceKey(NSpace.DEFAULT_NSPACE.context());
+		DEFAULT_KEY = new NSpaceKey(NSpace.DEFAULT_NSPACE.name());
 		CONTEXT_KEY_FACTORY = new NSpaceManager();
 		
 		clearCache();
@@ -69,9 +69,9 @@ public class NSpaceManager implements ContextKeyFactory {
 		return CONTEXT_KEY_FACTORY;
 	}
 
-	public static DataModule getSpace(String context) {
+	public static NSpace getSpace(String context) {
 		try {
-			return CONTEXT_CACHE_MODULE.get(new NSpaceKey(context), () -> new NSpace(context));
+			return (NSpace)CONTEXT_CACHE_MODULE.get(new NSpaceKey(context), () -> new NSpace(context));
 		} catch (ExecutionException e) {
 			throw new RuntimeException(e);
 		}

@@ -48,8 +48,8 @@
 		<slf4j.version>1.7.21</slf4j.version>
 
 		<neptical.java.version>1.8</neptical.java.version>
+		<maven.plugins.version.surefire>2.19.1</maven.plugins.version.surefire>
 		<maven.plugins.version.compiler>3.5.1</maven.plugins.version.compiler>
-		<maven.plugins.version.war>2.6</maven.plugins.version.war>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
@@ -66,7 +66,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -106,12 +105,17 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.plugins.version.surefire}</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
