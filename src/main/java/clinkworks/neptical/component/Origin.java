@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Provider;
 
@@ -49,7 +48,7 @@ public final class Origin implements SystemCursor {
 	private Origin(NSpace definedSpace) {
 		rootLocation = definedSpace;
 		currentLocation = rootLocation;
-		locationCache = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
+		locationCache = CacheBuilder.newBuilder().build();
 		locationCache.put(definedSpace.getResourceIdentity(), definedSpace);
 	}
 
@@ -102,7 +101,7 @@ public final class Origin implements SystemCursor {
 			path = PathUtil.chompFirstSegment(path);
 			
 			if (StringUtils.isEmpty(path)) {
-				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, "");
+				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, "/");
 				locationCache.put(newLocation.getResourceIdentity(), newLocation);
 				currentLocation = newLocation;
 				return newLocation;
@@ -227,11 +226,25 @@ public final class Origin implements SystemCursor {
 	@Override
 	public Cursor moveRight() {
 		Location location = getLocation();
-		URI uri = location.getResourceIdentity();
+		
+		if(location.name().equals("/")){
+			//need to move to the first segment available in the module identified here.
+			NSpace nspace = NSpaceManager.getSpace(location.context());
+			
+			DataModule dataModule = nspace.getDataModule(location.fragment());
+			
+			String[] segments = dataModule.segments();
+			
+			if(segments.length > 0){
+				CursorLocation newLocation = new CursorLocation(location.context(), location.fragment(), segments[0]);
+				currentLocation = newLocation;
+				locationCache.put(newLocation.getResourceIdentity(), newLocation);
+				return this;
+			}	
+		}
 		
 		
-		
-		return null;
+		return this;
 	}
 
 	@Override

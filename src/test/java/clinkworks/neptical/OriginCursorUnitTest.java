@@ -72,7 +72,7 @@ public class OriginCursorUnitTest {
 		
 		Location column1Location = originCursor.moveTo("Column Select Test").moveRight().getLocation();
 		
-		assertEquals(columns[0], column1Location.fragment());
+		assertEquals(columns[0], column1Location.name());
 		
 		
 		

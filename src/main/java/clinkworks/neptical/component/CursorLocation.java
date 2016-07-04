@@ -46,9 +46,13 @@ public class CursorLocation implements Location {
 	@Override
 	public URI getResourceIdentity() {
 
-		String name = StringUtils.isBlank(name()) ? "" : "." + name();
+		String actualName = name();
 
-		String uri = context() + "/" + fragment() + name;
+		if(!StringUtils.isBlank(actualName) && !actualName.equals("/")){
+			actualName = "." + actualName; 
+		}
+		
+		String uri = context() + "/" + fragment() + actualName;
 		return URI.create(uri.replace(" ", "%20"));
 	}
 

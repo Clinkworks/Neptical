@@ -32,7 +32,7 @@ public class NSpaceManager implements ContextKeyFactory {
 
 	static {
 		CONTEXT_CACHE_MODULE = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
-		CONTEXT_CACHE_CURSOR = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
+		CONTEXT_CACHE_CURSOR = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
 		DEFAULT_KEY = new NSpaceKey(NSpace.DEFAULT_NSPACE.name());
 		CONTEXT_KEY_FACTORY = new NSpaceManager();
 		
