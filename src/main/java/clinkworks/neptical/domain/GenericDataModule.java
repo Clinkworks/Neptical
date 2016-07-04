@@ -40,7 +40,7 @@ public class GenericDataModule implements DataModule {
 
 	@Override
 	public void addData(String segment, NepticalData data) throws DataDefinitionException {
-		if(this.data.get(segment) == null){
+		if(!fragments.contains(segment)){
 			fragments.add(segment);
 		}
 		this.data.put(segment, data);

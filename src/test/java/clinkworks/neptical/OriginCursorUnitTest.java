@@ -57,15 +57,22 @@ public class OriginCursorUnitTest {
 	}
 	
 	@Test
-	public void cursorCanSelectColumnsWithinAModule() throws DataDefinitionException{
+	public void movingRightStartingAtASegmentInSpaceWillSelectTheFirstFragmentWithinIt() throws DataDefinitionException{
 
+		Object object2IColumn2 = new Object();
+		
 		String module = "Column Select Test";
 		String[] columns = new String[]{"Column1", "Column2", "Column3"};
 		
 		originSpace.addModule(module);
 		originSpace.addData(columns[0], objectInModule1);
 		originSpace.addData(columns[1], objectInModule2);
-		originSpace.addData(columns[1], objectInModule3);
+		originSpace.addData(columns[2], objectInModule3);
+		originSpace.addData(columns[1], object2IColumn2);
+		
+		Location column1Location = originCursor.moveTo("Column Select Test").moveRight().getLocation();
+		
+		assertEquals(columns[0], column1Location.fragment());
 		
 		
 		

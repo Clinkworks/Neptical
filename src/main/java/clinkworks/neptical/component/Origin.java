@@ -9,20 +9,16 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Provider;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import clinkworks.neptical.component.Origin.CursorLocation.CursorWrapper;
 import clinkworks.neptical.datatype.Cursor;
 import clinkworks.neptical.datatype.Cursor.SystemCursor;
 import clinkworks.neptical.datatype.CursorContext;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
-import clinkworks.neptical.datatype.LookupFailureException;
 import clinkworks.neptical.datatype.NepticalData;
 import clinkworks.neptical.domain.NSpace;
 import clinkworks.neptical.util.PathUtil;
@@ -76,6 +72,7 @@ public final class Origin implements SystemCursor {
 	
 	@Override
 	public Location find(String query) throws DataDefinitionException {
+		
 		String path = query;
 		String nepticalProtocol = "neptical://";
 		NSpace currentSpace = rootLocation;
@@ -103,13 +100,22 @@ public final class Origin implements SystemCursor {
 		if (currentSpace.containsModule(segment)) {
 			parentModule = currentSpace.getDataModule(segment);
 			path = PathUtil.chompFirstSegment(path);
+			
+			if (StringUtils.isEmpty(path)) {
+				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, "");
+				locationCache.put(newLocation.getResourceIdentity(), newLocation);
+				currentLocation = newLocation;
+				return newLocation;
+				
+			}
+			
 			segment = PathUtil.firstSegment(path);
 		}
-
-		if (parentModule == null) {
+		
+		if(parentModule == null){
 			parentModule = currentSpace.getDataModuleContaining(segment);
 		}
-
+		
 		if (parentModule == null) {
 			currentSpace.addModule(segment);
 			parentModule = currentSpace.getDataModule(segment);
@@ -130,8 +136,6 @@ public final class Origin implements SystemCursor {
 		Location location = getLocation();
 
 		DataModule moduleContext = NSpaceManager.getSpace(location.context());
-		
-		
 		
 		List<NepticalData> data = moduleContext.getDataAt(location.fragment());
 
@@ -184,153 +188,6 @@ public final class Origin implements SystemCursor {
 		locationCache.invalidateAll();
 	}
 
-	public static class CursorLocation implements Location {
-
-		private static final Logger LOGGER = LoggerFactory.getLogger(CursorLocation.class);
-
-		private final String context;
-		private final String fragment;
-		private final String name;
-
-		CursorLocation(String context, String fragment, String name) {
-			this.context = context;
-			this.fragment = fragment;
-			this.name = name;
-		}
-
-		@Override
-		public String context() {
-			return context;
-		}
-
-		@Override
-		public String fragment() {
-			return fragment;
-		}
-
-		@Override
-		public String name() {
-			return name;
-		}
-
-		@Override
-		public URI getResourceIdentity() {
-			try {
-				return new URI(context + "/" + fragment + "." + name);
-			} catch (URISyntaxException e) {
-				LOGGER.debug("Something bad happened creating uri for Location " + this + "(" + e.getMessage() + ")",
-						e);
-				throw new RuntimeException(e);
-			}
-		}
-
-		@Override
-		public Cursor moveCursorHere() {
-			return getCursor().moveTo(this);
-		}
-
-		@Override
-		public NepticalData getData() {
-			Location previousLocation = getCursor().getLocation();
-			getCursor().moveTo(this);
-
-			NepticalData nepticalData = getCursor().getData();
-
-			getCursor().moveTo(previousLocation);
-
-			return nepticalData;
-		}
-
-		@Override
-		public CursorContext getCursorContext() {
-			return NSpaceManager.getCursorContext(this);
-		}
-
-		@Override
-		public String toString() {
-			return getResourceIdentity().toString();
-		}
-
-		public static final class CursorWrapper implements CursorProvider, Cursor {
-
-			private volatile ContextKey contextKey;
-
-			CursorWrapper(ContextKey contextKey) {
-				this.contextKey = contextKey;
-			}
-
-			CursorWrapper() {
-			}
-
-			@Override
-			public Cursor moveTo(Location location) {
-				LOGGER.warn("Could not move to " + location + " Cursor is not initalized.");
-				return get() == null ? this : get().moveTo(location);
-			}
-
-			@Override
-			public Location getLocation() {
-				return get() == null ? null : get().getLocation();
-			}
-
-			@Override
-			public Location find(String query) throws DataDefinitionException {
-				return get() == null ? null : get().find(query);
-			}
-
-			@Override
-			public Cursor get() {
-				return getCursor();
-			}
-
-			@Override
-			public NepticalData getData() {
-				return get() == null ? NepticalData.NULL_DATA : get().getData();
-			}
-
-			@Override
-			public ContextKey getContextKey() {
-				return contextKey;
-			}
-
-			@Override
-			public void setContextKey(ContextKey contextKey) {
-				this.contextKey = contextKey;
-			}
-
-			@Override
-			public URI getIdentity() {
-
-				ContextKey contextKey = getContextKey();
-
-				if (contextKey == null && get() == null) {
-					return NSpace.NEPTICAL_SYSTEM_SPACE.getIdentity();
-				}
-
-				if (getContextKey() == null) {
-					return get().getLocation().getResourceIdentity();
-				}
-				try {
-					return new URI(getContextKey().name());
-				} catch (URISyntaxException e) {
-					throw new LookupFailureException(e.getMessage(), e);
-				}
-
-			}
-
-			@Override
-			public String toString() {
-				return get() == null ? "UNKOWN" : get().toString();
-			}
-
-			@Override
-			public Cursor moveTo(String path) throws DataDefinitionException {
-				return get() == null ? this : get().moveTo(path);
-			}
-
-		}
-
-	}
 
 	@Override
 	public ContextKey getContextKey() {
@@ -345,6 +202,51 @@ public final class Origin implements SystemCursor {
 	@Override
 	public URI getIdentity() {
 		return rootLocation.getIdentity();
+	}
+
+	@Override
+	public Cursor moveUp() {
+		return null;
+	}
+
+	@Override
+	public Cursor moveUp(int distance) {
+		return null;
+	}
+
+	@Override
+	public Cursor moveDown() {
+		return null;
+	}
+
+	@Override
+	public Cursor moveDown(int distance) {
+		return null;
+	}
+
+	@Override
+	public Cursor moveRight() {
+		Location location = getLocation();
+		URI uri = location.getResourceIdentity();
+		
+		
+		
+		return null;
+	}
+
+	@Override
+	public Cursor moveRight(int distance) {
+		return null;
+	}
+
+	@Override
+	public Cursor moveLeft() {
+		return null;
+	}
+
+	@Override
+	public Cursor moveLeft(int distance) {
+		return null;
 	}
 
 }

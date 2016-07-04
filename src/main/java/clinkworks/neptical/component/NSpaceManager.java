@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import clinkworks.neptical.component.Origin.CursorLocation;
-import clinkworks.neptical.component.Origin.CursorLocation.CursorWrapper;
+import clinkworks.neptical.component.CursorProvider.CursorWrapper;
 import clinkworks.neptical.datatype.CursorContext;
 import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
