@@ -24,6 +24,11 @@ import clinkworks.neptical.util.PathUtil;
 
 public final class Origin implements SystemCursor {
 
+	private static final String MODULE_FRAGMENT_SELECTED = "-1";
+
+	private static final String NEPTICAL_SCHEME = "neptical://";
+	private static final String SCHEME_FRAGMENT_END = "/";
+	
 	private static volatile Cursor CURRENT_CURSOR;
 
 	private final Cache<URI, Location> locationCache;
@@ -100,12 +105,11 @@ public final class Origin implements SystemCursor {
 			parentModule = currentSpace.getDataModule(segment);
 			path = PathUtil.chompFirstSegment(path);
 			
-			if (StringUtils.isEmpty(path)) {
-				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, "/");
+			if (StringUtils.isEmpty(path) || StringUtils.endsWith(segment, MODULE_FRAGMENT_SELECTED)) {
+				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, SCHEME_FRAGMENT_END);
 				locationCache.put(newLocation.getResourceIdentity(), newLocation);
 				currentLocation = newLocation;
 				return newLocation;
-				
 			}
 			
 			segment = PathUtil.firstSegment(path);
@@ -121,8 +125,16 @@ public final class Origin implements SystemCursor {
 		}
 
 		List<NepticalData> dataList = parentModule.getDataAt(segment);
-		CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment,
-				String.valueOf(dataList.size() - 1));
+		
+		//TODO: imbed the template concept into the locations
+		String selectedTemplateId = String.valueOf(dataList.size() - 1);
+		
+		if(Integer.valueOf(MODULE_FRAGMENT_SELECTED).equals(selectedTemplateId)){
+			selectedTemplateId = SCHEME_FRAGMENT_END;
+		}
+		
+		CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, selectedTemplateId);
+		
 		locationCache.put(newLocation.getResourceIdentity(), newLocation);
 
 		currentLocation = newLocation;
@@ -227,7 +239,6 @@ public final class Origin implements SystemCursor {
 	public Cursor moveRight() {
 		Location location = getLocation();
 		
-		if(location.name().equals("/")){
 			//need to move to the first segment available in the module identified here.
 			NSpace nspace = NSpaceManager.getSpace(location.context());
 			
@@ -241,7 +252,7 @@ public final class Origin implements SystemCursor {
 				locationCache.put(newLocation.getResourceIdentity(), newLocation);
 				return this;
 			}	
-		}
+		
 		
 		
 		return this;

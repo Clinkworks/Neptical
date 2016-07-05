@@ -88,11 +88,15 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	}
 
 	public void addData(String segment, Object data) throws DataDefinitionException {
-		getCurrentModule().addData(segment, new GenericImmutableData(data));
+		NepticalData dataItem = null;
+		if(dataItem == null){
+			dataItem = NepticalData.NULL_DATA;
+		}
+		getCurrentModule().addData(segment, buildNepticalData(data));
 	}
 	
 	public void addData(String dataModule, String segment, Object data) throws DataDefinitionException {
-		getDataModule(dataModule).addData(segment, new GenericImmutableData(data));
+		getDataModule(dataModule).addData(segment, buildNepticalData(data));
 	}
 
 	
@@ -251,6 +255,18 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	@Override
 	public String toString(){
 		return getIdentity().toString();
+	}
+	
+	private static final NepticalData buildNepticalData(Object data){
+		if(data == null){
+			return NepticalData.NULL_DATA;
+		}
+		
+		if(data instanceof NepticalData){
+			return (NepticalData)data;
+		}
+		
+		return new GenericImmutableData(data);
 	}
 
 }
