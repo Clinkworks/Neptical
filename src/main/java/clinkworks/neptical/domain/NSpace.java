@@ -183,6 +183,11 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	}
 
 	public DataModule getDataModule(String moduleName) {
+		
+		if(!fragments.contains(moduleName)){
+			addModule(moduleName);
+		}
+		
 		return NSpaceManager.getDataModule(moduleName);
 	}
 

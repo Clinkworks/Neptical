@@ -9,7 +9,6 @@ import org.junit.Test;
 import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.component.Origin;
 import clinkworks.neptical.datatype.DataDefinitionException;
-import clinkworks.neptical.datatype.DataModule;
 import clinkworks.neptical.datatype.Location;
 import clinkworks.neptical.domain.NSpace;
 import mockit.Deencapsulation;
@@ -63,10 +62,9 @@ public class OriginCursorUnitTest {
 		String module = "Column Select Test";
 		String[] columns = new String[]{"Column1", "Column2", "Column3"};
 
-		originSpace.addModule(module);
-		originSpace.addData("Column Select Test", columns[0], objectInModule1);
-		originSpace.addData("Column Select Test", columns[1], objectInModule2);
-		originSpace.addData("Column Select Test", columns[2], objectInModule3);
+		originSpace.addData(module, columns[0], null);
+		originSpace.addData(module, columns[1], null);
+		originSpace.addData(module, columns[2], null);
 		
 		originCursor.moveTo(module);
 		
@@ -78,6 +76,8 @@ public class OriginCursorUnitTest {
 		assertEquals(module, column1Location.fragment());
 		assertEquals(columns[0], column1Location.name());
 		assertEquals("default/Column%20Select%20Test.Column1", column1Location.getResourceIdentity().toString());
+		assertEquals("default/Column Select Test.Column1", column1Location.toString());
+		assertEquals("default/Column Select Test.Column1", originCursor.toString());
 		
 	}
 	

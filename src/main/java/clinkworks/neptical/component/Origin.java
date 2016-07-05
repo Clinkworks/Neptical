@@ -28,7 +28,7 @@ public final class Origin implements SystemCursor {
 
 	private static final String NEPTICAL_SCHEME = "neptical://";
 	private static final String SCHEME_FRAGMENT_END = "/";
-	
+
 	private static volatile Cursor CURRENT_CURSOR;
 
 	private final Cache<URI, Location> locationCache;
@@ -63,20 +63,20 @@ public final class Origin implements SystemCursor {
 	}
 
 	@Override
-	public Cursor moveTo(String path) throws DataDefinitionException{
+	public Cursor moveTo(String path) throws DataDefinitionException {
 		currentLocation = find(path);
 		return this;
 	}
-	
+
 	@Override
-	public Cursor moveTo(Location location){
+	public Cursor moveTo(Location location) {
 		this.currentLocation = location;
 		return this;
 	}
-	
+
 	@Override
 	public Location find(String query) throws DataDefinitionException {
-		
+
 		String path = query;
 		String nepticalProtocol = "neptical://";
 		NSpace currentSpace = rootLocation;
@@ -104,37 +104,37 @@ public final class Origin implements SystemCursor {
 		if (currentSpace.containsModule(segment)) {
 			parentModule = currentSpace.getDataModule(segment);
 			path = PathUtil.chompFirstSegment(path);
-			
+
 			if (StringUtils.isEmpty(path) || StringUtils.endsWith(segment, MODULE_FRAGMENT_SELECTED)) {
 				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, SCHEME_FRAGMENT_END);
 				locationCache.put(newLocation.getResourceIdentity(), newLocation);
 				currentLocation = newLocation;
 				return newLocation;
 			}
-			
+
 			segment = PathUtil.firstSegment(path);
 		}
-		
-		if(parentModule == null){
+
+		if (parentModule == null) {
 			parentModule = currentSpace.getDataModuleContaining(segment);
 		}
-		
+
 		if (parentModule == null) {
 			currentSpace.addModule(segment);
 			parentModule = currentSpace.getDataModule(segment);
 		}
 
 		List<NepticalData> dataList = parentModule.getDataAt(segment);
-		
-		//TODO: imbed the template concept into the locations
+
+		// TODO: imbed the template concept into the locations
 		String selectedTemplateId = String.valueOf(dataList.size() - 1);
-		
-		if(Integer.valueOf(MODULE_FRAGMENT_SELECTED).equals(selectedTemplateId)){
+
+		if (Integer.valueOf(MODULE_FRAGMENT_SELECTED).equals(selectedTemplateId)) {
 			selectedTemplateId = SCHEME_FRAGMENT_END;
 		}
-		
+
 		CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, selectedTemplateId);
-		
+
 		locationCache.put(newLocation.getResourceIdentity(), newLocation);
 
 		currentLocation = newLocation;
@@ -147,7 +147,7 @@ public final class Origin implements SystemCursor {
 		Location location = getLocation();
 
 		DataModule moduleContext = NSpaceManager.getSpace(location.context());
-		
+
 		List<NepticalData> data = moduleContext.getDataAt(location.fragment());
 
 		if (data.isEmpty()) {
@@ -186,10 +186,10 @@ public final class Origin implements SystemCursor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public String toString(){
-		return getLocation().getResourceIdentity().toString();
+	public String toString() {
+		return getLocation().toString();
 	}
 
 	public void clearLocations() {
@@ -198,7 +198,6 @@ public final class Origin implements SystemCursor {
 
 		locationCache.invalidateAll();
 	}
-
 
 	@Override
 	public ContextKey getContextKey() {
@@ -238,23 +237,22 @@ public final class Origin implements SystemCursor {
 	@Override
 	public Cursor moveRight() {
 		Location location = getLocation();
-		
-			//need to move to the first segment available in the module identified here.
-			NSpace nspace = NSpaceManager.getSpace(location.context());
-			
-			DataModule dataModule = nspace.getDataModule(location.fragment());
-			
-			String[] segments = dataModule.segments();
-			
-			if(segments.length > 0){
-				CursorLocation newLocation = new CursorLocation(location.context(), location.fragment(), segments[0]);
-				currentLocation = newLocation;
-				locationCache.put(newLocation.getResourceIdentity(), newLocation);
-				return this;
-			}	
-		
-		
-		
+
+		// need to move to the first segment available in the module identified
+		// here.
+		NSpace nspace = NSpaceManager.getSpace(location.context());
+
+		DataModule dataModule = nspace.getDataModule(location.fragment());
+
+		String[] segments = dataModule.segments();
+
+		if (segments.length > 0) {
+			CursorLocation newLocation = new CursorLocation(location.context(), location.fragment(), segments[0]);
+			currentLocation = newLocation;
+			locationCache.put(newLocation.getResourceIdentity(), newLocation);
+			return this;
+		}
+
 		return this;
 	}
 
