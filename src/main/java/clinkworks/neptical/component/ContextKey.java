@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 
 import clinkworks.neptical.datatype.CursorContext;
+import clinkworks.neptical.util.Constants;
 
 public class ContextKey {
 	
@@ -46,7 +47,7 @@ public class ContextKey {
 	
 	@Override
 	public String toString(){
-		return getClass().getSimpleName() + "." +contextName + "@" + contextType.getSimpleName();
+		return contextName + Constants.DOT + partition + "@" + contextType.getSimpleName();
 	}
 
 	public String name() {

@@ -65,7 +65,6 @@ public class NSpaceUnitTest {
 		
 		nspace.defineModules("module3", "module1", "module2");
 		
-		nspace.addModule("module2");
 		assertSame(objectInModule2, nspace.getDataAt("data", 0).get());
 		
 	}

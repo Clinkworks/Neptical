@@ -5,6 +5,6 @@ import javax.inject.Provider;
 public interface CursorContext {
 	Provider<Cursor> getContextCursorProvider();
 	Location getLocation();
-	String[] columns();
-	String[] rows();
+	String[] segments();
+	String[] templates();
 }
