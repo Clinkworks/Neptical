@@ -1,16 +1,9 @@
 package clinkworks.neptical.component;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import javax.inject.Provider;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 import clinkworks.neptical.datatype.Cursor;
 import clinkworks.neptical.datatype.Cursor.SystemCursor;
@@ -31,7 +24,6 @@ public final class Origin implements SystemCursor {
 
 	private static volatile Cursor CURRENT_CURSOR;
 
-	private final Cache<URI, Location> locationCache;
 	private final NSpace rootLocation;
 
 	private volatile Location currentLocation;
@@ -46,15 +38,13 @@ public final class Origin implements SystemCursor {
 		return CURRENT_CURSOR;
 	}
 
-	public static Provider<Cursor> getCursorContext() {
+	public static CursorProvider getCursorProvider() {
 		return new CursorWrapper();
 	}
 
 	private Origin(NSpace definedSpace) {
 		rootLocation = definedSpace;
 		currentLocation = rootLocation;
-		locationCache = CacheBuilder.newBuilder().build();
-		locationCache.put(definedSpace.getResourceIdentity(), definedSpace);
 	}
 
 	@Override
@@ -82,20 +72,15 @@ public final class Origin implements SystemCursor {
 		DataModule parentModule = null;
 
 		boolean changeNSpace = StringUtils.startsWith(path, NEPTICAL_SCHEME)
-				&& !StringUtils.startsWith(path, rootLocation.getResourceIdentity().toString());
+				&& !StringUtils.startsWith(path, NEPTICAL_SCHEME + rootLocation.name());
 
 		if (changeNSpace) {
 			path = new String(path.substring(NEPTICAL_SCHEME.length()));
 			String nspaceToSwitch = PathUtil.firstSegment(path);
 			path = PathUtil.chompFirstSegment(path);
 
-			try {
-				currentSpace = (NSpace) locationCache.get(new URI(NEPTICAL_SCHEME + nspaceToSwitch),
-						() -> NSpaceManager.getSpace(nspaceToSwitch));
-				currentLocation = currentSpace;
-			} catch (ExecutionException | URISyntaxException e) {
-				throw new DataDefinitionException("Something went wrong when loading a new nspace from the query");
-			}
+			currentSpace = NSpaceManager.getSpace(nspaceToSwitch);
+			currentLocation = currentSpace;
 		}
 
 		String segment = PathUtil.firstSegment(path);
@@ -106,7 +91,6 @@ public final class Origin implements SystemCursor {
 
 			if (StringUtils.isEmpty(path) || StringUtils.endsWith(segment, MODULE_FRAGMENT_SELECTED)) {
 				CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, SCHEME_FRAGMENT_END);
-				locationCache.put(newLocation.getResourceIdentity(), newLocation);
 				currentLocation = newLocation;
 				return newLocation;
 			}
@@ -132,13 +116,9 @@ public final class Origin implements SystemCursor {
 			selectedTemplateId = SCHEME_FRAGMENT_END;
 		}
 
-		CursorLocation newLocation = new CursorLocation(currentSpace.getName(), segment, selectedTemplateId);
+		currentLocation = new CursorLocation(currentSpace.getName(), segment, selectedTemplateId);;
 
-		locationCache.put(newLocation.getResourceIdentity(), newLocation);
-
-		currentLocation = newLocation;
-
-		return newLocation;
+		return currentLocation;
 	}
 
 	@Override
@@ -195,7 +175,6 @@ public final class Origin implements SystemCursor {
 		// this can only be used in origin by design
 		currentLocation = rootLocation;
 
-		locationCache.invalidateAll();
 	}
 
 	@Override
@@ -227,12 +206,17 @@ public final class Origin implements SystemCursor {
 	public Cursor moveDown() {
 		Location location = getLocation();
 		
-		if("/".equals(getLocation().name())){
-			CursorLocation newLocation = new CursorLocation(location.context(), location.fragment() + location.name(), "1");
+		
+		if ("/".equals(getLocation().name())) {
+			
+			
+			
+			CursorLocation newLocation = new CursorLocation(location.context(), location.fragment() + location.name(),
+					"1");
 			currentLocation = newLocation;
 			return this;
 		}
-		
+
 		return null;
 	}
 
@@ -254,9 +238,7 @@ public final class Origin implements SystemCursor {
 		String[] segments = dataModule.segments();
 
 		if (segments.length > 0) {
-			CursorLocation newLocation = new CursorLocation(location.context(), location.fragment(), segments[0]);
-			currentLocation = newLocation;
-			locationCache.put(newLocation.getResourceIdentity(), newLocation);
+			currentLocation = new CursorLocation(location.context(), location.fragment(), segments[0]);
 			return this;
 		}
 
@@ -271,40 +253,40 @@ public final class Origin implements SystemCursor {
 	@Override
 	public Cursor moveLeft() {
 		Location location = getLocation();
-		
+
 		NSpace nspace = NSpaceManager.getSpace(location.context());
-		
+
 		DataModule dataModule = nspace.getDataModule(location.fragment());
-		
-		if(location.name().equals("/")){
+
+		if (location.name().equals("/")) {
 			currentLocation = nspace;
 			return this;
 		}
-		
+
 		String[] segments = dataModule.segments();
-		
+
 		String leftSegment = null;
-		
-		for(int i = segments.length; i >= 0; i--){
-			if(segments[i].equals(location.name())){
-				if(i == 0){
+
+		for (int i = segments.length; i >= 0; i--) {
+			if (segments[i].equals(location.name())) {
+				if (i == 0) {
 					currentLocation = nspace;
 					return this;
-				}else{
+				} else {
 					leftSegment = segments[i - 1];
 					break;
 				}
 			}
 		}
-		
-		if(leftSegment == null){
+
+		if (leftSegment == null) {
 			currentLocation = nspace;
 			return this;
 		}
-		
+
 		Location newLocation = new CursorLocation(location.context(), location.fragment(), leftSegment);
 		this.currentLocation = newLocation;
-		
+
 		return this;
 	}
 

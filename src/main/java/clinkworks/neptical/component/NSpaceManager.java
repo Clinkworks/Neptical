@@ -75,8 +75,24 @@ public class NSpaceManager implements ContextKeyFactory {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public static void addSpace(NSpace nspace){
+		CONTEXT_CACHE_MODULE.put(new NSpaceKey(nspace.name()), nspace);
+	}
+	
+	public static void addModule(DataModule dataModule){
+		CONTEXT_CACHE_MODULE.put(new ContextKey(dataModule.getName(), DataModule.class), dataModule);
+	}
 
+	public static DataModule getDataModule(ContextKey contextKey){
+		if(DataModule.class.isAssignableFrom(contextKey.contextType())){
+			
+		}
+		return null;
+	}
+	
 	public static DataModule getDataModule(String context) {
+		
 		try {
 			return CONTEXT_CACHE_MODULE.get(new ContextKey(context, DataModule.class),
 					() -> new GenericDataModule(context));
@@ -97,7 +113,7 @@ public class NSpaceManager implements ContextKeyFactory {
 		}
 		return lookupContext(nepticalContext.getContextKey());
 	}
-
+	
 	static CursorContext lookupContext(ContextKey contextKey) {
 		return CONTEXT_CACHE_CURSOR.getIfPresent(contextKey);
 	}
@@ -136,10 +152,10 @@ public class NSpaceManager implements ContextKeyFactory {
 	}
 
 	private static CursorContext manifestCursorContext(Location location, Class<?> contextType) {
-
+		ContextKey locationKey = getLocationKey(location);
 		try {
-			return CONTEXT_CACHE_CURSOR.get(getLocationKey(location),
-					() -> new GenericCursorContext(location, new CursorWrapper()));
+			return CONTEXT_CACHE_CURSOR.get(locationKey,
+					() -> new GenericCursorContext(location, new CursorWrapper(locationKey)));
 		} catch (ExecutionException e) {
 			throw new RuntimeException(e);
 		}
@@ -149,6 +165,10 @@ public class NSpaceManager implements ContextKeyFactory {
 	private static final Location getLocation(ContextKey contextKey){
 		URI uri = URI.create(contextKey.name());
 		return new CursorLocation(uri.getHost(), uri.getPath(), uri.getQuery());
+	}
+	
+	private static final ContextKey getLocationKey(DataModule dataModule){
+		return getLocationKey(getModuleHome(dataModule));
 	}
 	
 	private static final ContextKey getLocationKey(Location location) {

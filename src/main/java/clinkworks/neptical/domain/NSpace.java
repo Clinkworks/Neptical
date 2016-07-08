@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import clinkworks.neptical.component.ContextKey;
+import clinkworks.neptical.component.CursorProvider;
 import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.component.Origin;
 import clinkworks.neptical.datatype.Cursor;
@@ -39,16 +40,16 @@ public class NSpace implements DataModule, Location, Provider<Cursor>, NepticalC
 	
 
 	public NSpace(String name, String... dataModules){
-		this(Origin.getCursorContext(), name, dataModules);
+		this(Origin.getCursorProvider(), name, dataModules);
 	}
 	
 	@Inject
-	NSpace(Provider<Cursor> cursorProvider, String name, String... dataModules) {
+	NSpace(CursorProvider cursorProvider, String name, String... dataModules) {
 		this(cursorProvider, name, Stream.of(dataModules).map((moduleName) -> NSpaceManager.getDataModule(moduleName))
 				.toArray(DataModule[]::new));
 	}
 
-	NSpace(Provider<Cursor> cursorProvider, String name, DataModule... dataModules) {
+	NSpace(CursorProvider cursorProvider, String name, DataModule... dataModules) {
 
 		// hold the search order as Nspaces has different semantics than Modules
 		fragments = new CopyOnWriteArrayList<>();

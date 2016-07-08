@@ -3,10 +3,8 @@ package clinkworks.neptical;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import clinkworks.neptical.component.NSpaceManager;
 import clinkworks.neptical.component.Origin;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.Location;
@@ -32,12 +30,7 @@ public class OriginCursorUnitTest {
 	private Object objectInColumn3Row2;
 	
 	private Object objectInColumn4Row3;
-	
-	@BeforeClass
-	public static void clearCacheFromPreviousContexts(){
-		/** REMEMBER TO DELETE THIS CRAP! **/
-		NSpaceManager.clearCache();
-	}
+
 	
 	@Before
 	public void setup() throws DataDefinitionException{
