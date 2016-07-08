@@ -78,20 +78,19 @@ public final class Origin implements SystemCursor {
 	public Location find(String query) throws DataDefinitionException {
 
 		String path = query;
-		String nepticalProtocol = "neptical://";
 		NSpace currentSpace = rootLocation;
 		DataModule parentModule = null;
 
-		boolean changeNSpace = StringUtils.startsWith(path, nepticalProtocol)
+		boolean changeNSpace = StringUtils.startsWith(path, NEPTICAL_SCHEME)
 				&& !StringUtils.startsWith(path, rootLocation.getResourceIdentity().toString());
 
 		if (changeNSpace) {
-			path = new String(path.substring(nepticalProtocol.length()));
+			path = new String(path.substring(NEPTICAL_SCHEME.length()));
 			String nspaceToSwitch = PathUtil.firstSegment(path);
 			path = PathUtil.chompFirstSegment(path);
 
 			try {
-				currentSpace = (NSpace) locationCache.get(new URI(nepticalProtocol + nspaceToSwitch),
+				currentSpace = (NSpace) locationCache.get(new URI(NEPTICAL_SCHEME + nspaceToSwitch),
 						() -> NSpaceManager.getSpace(nspaceToSwitch));
 				currentLocation = currentSpace;
 			} catch (ExecutionException | URISyntaxException e) {
@@ -263,7 +262,42 @@ public final class Origin implements SystemCursor {
 
 	@Override
 	public Cursor moveLeft() {
-		return null;
+		Location location = getLocation();
+		
+		NSpace nspace = NSpaceManager.getSpace(location.context());
+		
+		DataModule dataModule = nspace.getDataModule(location.fragment());
+		
+		if(location.name().equals("/")){
+			currentLocation = nspace;
+			return this;
+		}
+		
+		String[] segments = dataModule.segments();
+		
+		String leftSegment = null;
+		
+		for(int i = segments.length; i >= 0; i--){
+			if(segments[i].equals(location.name())){
+				if(i == 0){
+					currentLocation = nspace;
+					return this;
+				}else{
+					leftSegment = segments[i - 1];
+					break;
+				}
+			}
+		}
+		
+		if(leftSegment == null){
+			currentLocation = nspace;
+			return this;
+		}
+		
+		Location newLocation = new CursorLocation(location.context(), location.fragment(), leftSegment);
+		this.currentLocation = newLocation;
+		
+		return this;
 	}
 
 	@Override
