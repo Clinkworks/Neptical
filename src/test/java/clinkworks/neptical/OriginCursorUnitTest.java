@@ -105,9 +105,13 @@ public class OriginCursorUnitTest {
 		originCursor.moveLeft();
 		assertEquals("neptical://default", originCursor.toString());
 	}
-
-	public Object getObjectInColumn4Row3() {
-		return objectInColumn4Row3;
-	}
 	
+	@Test
+	public void movingDownAtASegmentOfSpaceWillTakeYouToTheFirstTempateDefined() throws DataDefinitionException{
+		originCursor.moveTo(module);
+		originCursor.moveDown();
+		assertEquals("default/Column Select Test/1", originCursor.toString());
+	}
+
+
 }

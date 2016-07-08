@@ -45,7 +45,7 @@ public class CursorLocation implements Location {
 
 		String actualName = name();
 
-		if(!StringUtils.isBlank(actualName) && !actualName.equals("/")){
+		if(!StringUtils.isBlank(actualName) && !actualName.equals("/") && !fragment().endsWith("/")){
 			actualName = "." + actualName; 
 		}
 		

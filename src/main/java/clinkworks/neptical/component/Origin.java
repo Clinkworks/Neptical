@@ -225,6 +225,14 @@ public final class Origin implements SystemCursor {
 
 	@Override
 	public Cursor moveDown() {
+		Location location = getLocation();
+		
+		if("/".equals(getLocation().name())){
+			CursorLocation newLocation = new CursorLocation(location.context(), location.fragment() + location.name(), "1");
+			currentLocation = newLocation;
+			return this;
+		}
+		
 		return null;
 	}
 
