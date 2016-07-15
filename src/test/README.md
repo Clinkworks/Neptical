@@ -11,7 +11,7 @@ Within system space, 6 modules we be defined as so.
     * data: BLANK_KEYWORD, object2    
 * Module3
   * segments
-    * data: TEMPLATE_MODULE_LOOKUP_FOR_MODULE1_SEGMENT_DATA
+    * data: NULL, TEMPLATE_MODULE_LOOKUP_FOR_MODULE1_SEGMENT_DATA
     * column5: object3, null, object5
 * Module4
   * segments
@@ -39,7 +39,7 @@ Within system space, 6 modules we be defined as so.
     "default": {
         "module1": {"data": [{}]},
         "module2": {"data": ["{{BLANK}}",{}]},
-        "module3": {"data": ["{{module1.data}}"], "column3": [{}, {}, "{{BLANK}}"], "column5": ["{}", null, "{}"]},
+        "module3": {"data": [null, "{{module1.data}}"], "column3": [{}, {}, "{{BLANK}}"], "column5": ["{}", null, "{}"]},
         "module4": {"data": [{}, null, {}]},   
         "Column Select Test": {"column1": [{}], "column2": [{}], "column3": [{}, {}], "column4":[null, null, "{{data}}"], "column5": [{}]}
 }
