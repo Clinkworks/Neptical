@@ -5,26 +5,26 @@ Most of the tests dealing with cursor movement, generic data module construction
 ### Within system space, 6 modules we be defined as so.
 
 * Modules
- * Module1
-  * segments
-    * data: object1
-* Module2
-  * segments
-    * data: BLANK_KEYWORD, object2    
-* Module3
-  * segments
-    * data: NULL, TEMPLATE_MODULE_LOOKUP_FOR_MODULE1_SEGMENT_DATA
-    * column5: object3, null, object5
-* Module4
-  * segments
-    * data: object5, NULL, object6    
-* Column Select Test
-  * segments
-    * column1: object7
-    * column2: object8
-    * column3: object9, object10
-    * column4: NULL, NULL, TEMPLATE_NSPACE_LOOKUP_SEGMENT_DATA
-    * column5 -> object11
+  * Module1
+    * segments
+      * data: object1
+  * Module2
+    * segments
+      * data: BLANK_KEYWORD, object2    
+  * Module3
+    * segments
+      * data: NULL, TEMPLATE_MODULE_LOOKUP_FOR_MODULE1_SEGMENT_DATA
+      * column5: object3, null, object5
+  * Module4
+    * segments
+      * data: object5, NULL, object6    
+  * Column Select Test
+    * segments
+      * column1: object7
+      * column2: object8
+      * column3: object9, object10
+      * column4: NULL, NULL, TEMPLATE_NSPACE_LOOKUP_SEGMENT_DATA
+      * column5 -> object11
 * NSpaces
   * SYSTEM
     * dataModules 
