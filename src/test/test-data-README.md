@@ -17,14 +17,20 @@ Most of the tests dealing with cursor movement, generic data module construction
       * column5: object3, null, object5
   * Module4
     * segments
-      * data: object5, NULL, object6    
+      * data: object5, NULL, object6
   * Column Select Test
     * segments
       * column1: object7
       * column2: object8
       * column3: object9, object10
       * column4: NULL, NULL, TEMPLATE_NSPACE_LOOKUP_SEGMENT_DATA
-      * column5 -> object11
+      * column5: object11
+  * Module5
+    * templateId: data 
+    * segments
+      * data: object12, BLANK_KEYWORD, object13
+      * column4: object13, object14
+      * column1: null, null, object15
 * NSpaces
   * SYSTEM
     * dataModules 
