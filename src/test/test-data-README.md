@@ -48,9 +48,7 @@ Most of the tests dealing with cursor movement, generic data module construction
 
 ```
 
-As a TemplateContext
-
-### default
+### As a TemplateContext
 
 
 default| | | | | | |
