@@ -2,16 +2,16 @@ package clinkworks.neptical.component;
 
 import java.net.URI;
 
-import clinkworks.neptical.datatype.Location;
+import clinkworks.neptical.api.Location;
 
-public interface ContextKeyFactory {
-	
-	ContextKey createLocationKey(URI location);
-	
-	ContextKey createLocationKey(Location location);
-	
-	ContextKey createContextKey(String context, Class<?> contextType);
-	
-	ContextKey createContextPartitionKey(int partition, String context, Class<?> contextType);
-	
+public interface ContextKeyFactory{
+
+  ContextKey createLocationKey(URI location);
+
+  ContextKey createLocationKey(Location location);
+
+  ContextKey createContextKey(String context, Class<?> contextType);
+
+  ContextKey createContextPartitionKey(int partition, String context, Class<?> contextType);
+
 }
