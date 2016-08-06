@@ -10,7 +10,9 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static clinkworks.neptical.Constants.RegexPatterns.IS_FLOATING_NUMBER_PATTERN;
+import static clinkworks.neptical.Constants.RegexPatterns.IS_INTEGER_PATTERN;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -157,8 +159,6 @@ public class JsonUtil {
 		return root;
 	}
 
-	private static final Pattern IS_FLOATING_NUMBER_PATTERN = Pattern.compile("[-+]?(\\d*[.])?\\d+");
-	private static final Pattern IS_INTEGER_PATTERN = Pattern.compile("[-+]?\\d+");
 	
 	private static final JsonElement createValueElement(String key, Configuration configuration) {
 		
@@ -183,7 +183,7 @@ public class JsonUtil {
 		}
 		
 		if(isInteger){
-			return new JsonPrimitive(configuration.getInt(key));
+			return new JsonPrimitive(configuration.getBigInteger(key));
 		}
 		
 		if(isDecimal){
