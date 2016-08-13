@@ -1,11 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.clinkworks</groupId>
+	<groupId>clinkworks</groupId>
 	<artifactId>neptical</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Neptical</name>
-
+	<packaging>pom</packaging>
 
 	<description>Test framework to support unit testing from a data perspective</description>
 
@@ -42,10 +41,18 @@
 		<junit.version>4.12</junit.version>
 		<jmockit.version>1.24</jmockit.version>
 		<apache.commons.version>3.4</apache.commons.version>
+		<apache.commons.configuration.version>1.10</apache.commons.configuration.version>
+		<selenium.version>3.0.0-beta2</selenium.version>
 		<gson.version>2.7</gson.version>
+		<guice.version>4.1.0</guice.version>
 		<guava.version>19.0</guava.version>
-		<archaius.version>0.7.4</archaius.version>
+		<handlebars.version>4.0.5</handlebars.version>
+		<neo4j.version>3.1.0-M06</neo4j.version>
 		<slf4j.version>1.7.21</slf4j.version>
+
+		<javaslang.version>2.0.2</javaslang.version>
+
+		<neptical.version>${project.version}</neptical.version>
 
 		<neptical.java.version>1.8</neptical.java.version>
 		<maven.plugins.version.surefire>2.19.1</maven.plugins.version.surefire>
@@ -54,58 +61,150 @@
 
 	</properties>
 
-	<dependencies>
+	<modules>
+		<module>neptical-api</module>
+		<module>neptical-core</module>
+		<module>neptical-neo</module>
+		<module>neptical-selenium</module>
+	</modules>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
+	<dependencyManagement>
+		<dependencies>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>clinkworks</groupId>
+				<artifactId>neptical-api</artifactId>
+				<version>${neptical.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>com.netflix.archaius</groupId>
-			<artifactId>archaius-core</artifactId>
-			<version>${archaius.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>clinkworks</groupId>
+				<artifactId>neptical-core</artifactId>
+				<version>${neptical.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>clinkworks</groupId>
+				<artifactId>neptical-neo</artifactId>
+				<version>${neptical.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
+			<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+				<version>${guice.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${apache.commons.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>org.neo4j</groupId>
+				<artifactId>neo4j</artifactId>
+				<version>${neo4j.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.jmockit</groupId>
-			<artifactId>jmockit</artifactId>
-			<version>${jmockit.version}</version>
-			<scope>test</scope>
-		</dependency>
+			<dependency>
+				<groupId>com.github.jknack</groupId>
+				<artifactId>handlebars</artifactId>
+				<version>${handlebars.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${apache.commons.configuration.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+
+			<!-- included here for api jar -->
+			<dependency>
+				<groupId>io.javaslang</groupId>
+				<artifactId>javaslang-match</artifactId>
+				<version>${javaslang.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-api</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-chrome-driver</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-firefox-driver</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-ie-driver</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-htmlunit-driver</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-safari-driver</artifactId>
+				<version>${selenium.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>${gson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>javax.inject</artifactId>
+				<version>1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${apache.commons.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jmockit</groupId>
+				<artifactId>jmockit</artifactId>
+				<version>${jmockit.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
