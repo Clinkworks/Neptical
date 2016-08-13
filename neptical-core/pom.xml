@@ -14,7 +14,11 @@
 		<dependency>
 			<groupId>clinkworks</groupId>
 			<artifactId>neptical-api</artifactId>
-			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.jknack</groupId>
+			<artifactId>handlebars</artifactId>
 		</dependency>
 
 		<dependency>
@@ -35,6 +39,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

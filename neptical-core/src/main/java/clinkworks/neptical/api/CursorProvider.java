@@ -1,4 +1,4 @@
-package clinkworks.neptical.component;
+package clinkworks.neptical.api;
 
 import javax.inject.Provider;
 

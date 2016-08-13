@@ -37,7 +37,7 @@ public class GenericSpace implements NSpace, NepticalContext{
 	
 	private List<String> fragments;
 	private ContextKey contextKey;
-	
+	private final DataModule contextFreeData;
 
 	public GenericSpace(String name, String... dataModules){
 		this(Origin.getCursorProvider(), name, dataModules);
@@ -58,10 +58,14 @@ public class GenericSpace implements NSpace, NepticalContext{
 			fragments.add(dataModules[i].getName());
 			
 		}
+		
+		this.contextFreeData = new GenericDataModule(name);
+		
 		this.cursorProvider = cursorProvider;
 		this.name = name;
 	}
-
+	
+	@Override
 	public boolean containsModule(String module){
 		return fragments.contains(module);
 	}
@@ -76,6 +80,28 @@ public class GenericSpace implements NSpace, NepticalContext{
 
 	}
 	
+	@Override
+	public void addModule(DataModule dataModule){
+		
+		if(dataModule == null){
+			return;
+		}
+		
+		if(dataModule == this){
+			return;
+		}
+		
+		DataModule cachedModule = getDataModule(dataModule.getName());
+		
+		if(dataModule == cachedModule){
+			addModule(dataModule.getName());
+			return;
+		}
+		
+		NSpaceManager.addModule(dataModule);
+	}
+	
+	@Override
 	public void addModule(String moduleName){
 		int currentFragmentIndex = fragments.indexOf(moduleName);
 		
@@ -176,13 +202,6 @@ public class GenericSpace implements NSpace, NepticalContext{
 		return null;
 	}
 
-	private DataModule getCurrentModule() {
-		if (fragments.isEmpty()) {
-			return null;
-		}
-		return getDataModule(fragments.get(fragments.size() - 1));
-	}
-
 	public DataModule getDataModule(String moduleName) {
 		
 		if(!fragments.contains(moduleName)){
@@ -262,6 +281,13 @@ public class GenericSpace implements NSpace, NepticalContext{
 	public String toString(){
 		return getIdentity().toString();
 	}
+
+	private DataModule getCurrentModule() {
+		if (fragments.isEmpty()) {
+			return contextFreeData;
+		}
+		return getDataModule(fragments.get(fragments.size() - 1));
+	}
 	
 	private static final NepticalData buildNepticalData(Object data){
 		if(data == null){
@@ -274,5 +300,6 @@ public class GenericSpace implements NSpace, NepticalContext{
 		
 		return new GenericImmutableData(data);
 	}
+
 
 }

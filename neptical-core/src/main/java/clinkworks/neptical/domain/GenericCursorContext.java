@@ -95,10 +95,5 @@ public class GenericCursorContext implements Provider<Cursor>, Location, CursorC
 		return templateIds;
 	}
 
-	@Override
-	public Provider<Cursor> getContextCursorProvider() {
-		return cursorProvider;
-	}
-
 	
 }

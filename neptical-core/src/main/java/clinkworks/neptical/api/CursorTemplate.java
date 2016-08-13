@@ -1,7 +1,4 @@
-package clinkworks.neptical.component;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+package clinkworks.neptical.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,21 +6,19 @@ import org.slf4j.LoggerFactory;
 import clinkworks.neptical.datatype.Cursor;
 import clinkworks.neptical.datatype.DataDefinitionException;
 import clinkworks.neptical.datatype.Location;
-import clinkworks.neptical.datatype.LookupFailureException;
 import clinkworks.neptical.datatype.NepticalData;
-import clinkworks.neptical.domain.GenericSpace;
 
-final class CursorWrapper implements CursorProvider, Cursor {
+abstract class CursorTemplate implements CursorProvider, Cursor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CursorWrapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CursorTemplate.class);
 	
 	private volatile ContextKey contextKey;
 
-	CursorWrapper(ContextKey contextKey) {
+	CursorTemplate(ContextKey contextKey) {
 		this.contextKey = contextKey;
 	}
 
-	CursorWrapper() {
+	CursorTemplate() {
 	}
 
 	@Override
@@ -44,11 +39,6 @@ final class CursorWrapper implements CursorProvider, Cursor {
 	}
 
 	@Override
-	public Cursor get() {
-		return Origin.getCursor();
-	}
-
-	@Override
 	public NepticalData getData() {
 		return get().getData();
 	}
@@ -61,26 +51,6 @@ final class CursorWrapper implements CursorProvider, Cursor {
 	@Override
 	public void setContextKey(ContextKey contextKey) {
 		this.contextKey = contextKey;
-	}
-
-	@Override
-	public URI getIdentity() {
-
-		ContextKey contextKey = getContextKey();
-
-		if (contextKey == null && get() == null) {
-			return GenericSpace.NEPTICAL_SYSTEM_SPACE.getIdentity();
-		}
-
-		if (getContextKey() == null) {
-			return get().getLocation().getResourceIdentity();
-		}
-		try {
-			return new URI(getContextKey().name());
-		} catch (URISyntaxException e) {
-			throw new LookupFailureException(e.getMessage(), e);
-		}
-
 	}
 
 	@Override

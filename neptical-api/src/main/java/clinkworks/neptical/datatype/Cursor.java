@@ -32,6 +32,7 @@ public interface Cursor {
 	NepticalData getData();
 
 	public static interface SystemCursor extends Callable<Location>, Provider<Cursor>, Cursor {
+		
 		NSpace currentNSpace();
 
 		List<DataModule> activeModules();

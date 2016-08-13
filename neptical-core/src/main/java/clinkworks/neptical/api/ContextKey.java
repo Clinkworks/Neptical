@@ -1,12 +1,15 @@
-package clinkworks.neptical.component;
+package clinkworks.neptical.api;
 
 import java.net.URI;
 import java.util.Objects;
 
-import clinkworks.neptical.Constants;
+import static clinkworks.neptical.Constants.ContextSymbols.IN_CONTEXT;
+import static clinkworks.neptical.Constants.ContextSymbols.IN_PARTITION;
 import clinkworks.neptical.datatype.CursorContext;
 
 public class ContextKey {
+	
+	private static final int GENERIC_CONTEXT = -1;
 	
 	private final String contextName;
 	private final Class<?> contextType;
@@ -15,15 +18,15 @@ public class ContextKey {
 	private final int partition;
 	
 	ContextKey(URI contextIdentity){
-		this(CursorContext.class.hashCode(), contextIdentity.toString(), CursorContext.class);
+		this(contextIdentity.toString(), CursorContext.class);
 	}
 	
 	ContextKey(String contextName, Class<?> contextType) {
-		this(-1, contextName, contextType);
+		this(GENERIC_CONTEXT, contextName, contextType);
 	}
 
-	ContextKey(int partitionId, String contextName, Class<?> contextType){
-		this.contextName = contextName;
+	ContextKey(int partitionId, String context, Class<?> contextType){
+		this.contextName = context;
 		this.contextType = contextType;
 		partition = partitionId == -1 ? getClass().hashCode() : partitionId;
 	}
@@ -35,6 +38,10 @@ public class ContextKey {
 			return false;
 		}
 
+		if(object == this){
+			return true;
+		}
+		
 		ContextKey that = (ContextKey) object;
 
 		return that == this || this.name().equals(that.name()) && this.contextType().equals(that.contextType());
@@ -47,7 +54,7 @@ public class ContextKey {
 	
 	@Override
 	public String toString(){
-		return contextName + Constants.DOT + partition + "@" + contextType.getSimpleName();
+		return new StringBuilder().append(contextType).append(IN_PARTITION).append(partition).append(IN_CONTEXT).append(contextName).toString();
 	}
 
 	public String name() {
